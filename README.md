@@ -1,0 +1,57 @@
+# Strapi plugin scaleflexFilerobot
+
+- Node v12.18.2
+- Strapi v3.6.1
+- Sqlite3 v5.0.0
+
+## Server
+
+- https://strapi.sfxconnector.com/
+- user: hello@scaleflex.com
+- pass: 9Y!LdQLue3wAh3mF
+- `ssh root@strapi.sfxconnector.com -p8022`
+
+## Setup Strapi v3.6.1
+
+`npx create-strapi-app@3.6.1 scaleflex-strapi-filerobot --quickstart`
+
+## Setup plugin
+
+`yarn strapi generate:plugin scaleflexFilerobot`
+
+## Run
+
+In root
+```
+yarn strapi build
+yarn develop
+yarn develop --watch-admin # Or this for hot reload
+```
+
+In `plugins/scaleflex-filerobot`
+`npm install`
+
+## Todo
+
+- Hooks 
+	- https://strapi.gitee.io/documentation/3.0.0-alpha.x/advanced/hooks.html
+	- https://discord.com/channels/811989166782021633/811989167357689922/951816720971075584
+- Language Strings
+	- https://docs.strapi.io/developer-docs/latest/plugins/i18n.html#getting-localized-entries-with-the-locale-parameter
+	- https://strapi.io/blog/i18n-implementation-best-practices-in-strapi
+
+## Potential problems
+
+- Localhost XAMPP, when `npm install`
+	- https://developpaper.com/gyp-err-find-python-solution/
+	- https://github.com/mapbox/node-sqlite3/issues/1424#issuecomment-934302012
+
+## Docs
+
+- https://github.com/strapi/strapi/releases
+- Support: https://discord.com/invite/strapi
+- CMS: https://docs.strapi.io/developer-docs/latest/getting-started/quick-start.html
+- Install: https://www.codegrepper.com/code-examples/shell/how+to+install+latest+version+of+strapi
+- Plugin: 
+	- https://strapi.io/blog/how-to-build-a-strapi-custom-plugin
+	- https://www.youtube.com/watch?v=kIZHzbmnhnU&t=960s

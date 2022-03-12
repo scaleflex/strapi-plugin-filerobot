@@ -1,0 +1,28 @@
+{
+  "routes": [
+    {
+      "method": "GET",
+      "path": "/",
+      "handler": "scaleflex-filerobot.index",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/config",
+      "handler": "scaleflex-filerobot.getConfig",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "PUT",
+      "path": "/update-config",
+      "handler": "scaleflex-filerobot.updateConfig",
+      "config": {
+        "policies": []
+      }
+    }
+  ]
+}
