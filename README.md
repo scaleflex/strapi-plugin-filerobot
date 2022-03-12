@@ -7,8 +7,6 @@
 ## Server
 
 - https://strapi.sfxconnector.com/
-- user: hello@scaleflex.com
-- pass: 9Y!LdQLue3wAh3mF
 - `ssh root@strapi.sfxconnector.com -p8022`
 
 ## Setup Strapi v3.6.1
@@ -28,7 +26,7 @@ yarn develop
 yarn develop --watch-admin # Or this for hot reload
 ```
 
-In `plugins/scaleflex-filerobot`
+In `plugins/scaleflex-filerobot`  
 `npm install`
 
 ## Todo
@@ -45,6 +43,7 @@ In `plugins/scaleflex-filerobot`
 - Localhost XAMPP, when `npm install`
 	- https://developpaper.com/gyp-err-find-python-solution/
 	- https://github.com/mapbox/node-sqlite3/issues/1424#issuecomment-934302012
+	- Windows have problems installing strapi-plugin-upload > sharp > libvips . https://github.com/lovell/sharp/issues/1627
 
 ## Docs
 
