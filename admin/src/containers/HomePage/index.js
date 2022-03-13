@@ -8,6 +8,8 @@ import React, { memo, useEffect, useState } from 'react';
 // import PropTypes from 'prop-types';
 import pluginId from '../../pluginId';
 
+import $ from 'jquery';
+
 import { Container, Row, Col, Tabs, Tab } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
@@ -35,7 +37,7 @@ const HomePage = () => {
           <h1>{pluginId.replace(/([A-Z])/g, ' $1').replace(/^./, function(str){ return str.toUpperCase(); })}</h1>
 
           <Tabs defaultActiveKey="configurations">
-            <Tab eventKey="configurations" title="Configurations">
+            <Tab id="config-tab" eventKey="configurations" title="Configurations">
               <Configurations config={config} />
             </Tab>
             <Tab eventKey="fmaw" title="FMAW">
