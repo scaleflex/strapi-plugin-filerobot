@@ -22,13 +22,24 @@ const FMAW = (props) => {
       return;
     }
 
+    var folder = config.folder;
+
+    if (folder === '')
+    {
+      folder = '/';
+    }
+    else if ( !folder.startsWith('/') )
+    {
+      folder = '/' + folder;
+    }
+
     filerobot.current = Filerobot({
       securityTemplateID : config.sec_temp,
       container          : config.token
     })
       .use(Explorer, {
         config: {
-          rootFolderPath: config.folder
+          rootFolderPath: folder
         },
         target : '#filerobot-widget',
         inline : true,
@@ -59,21 +70,22 @@ const FMAW = (props) => {
   const uploadMedia = async (files, action) => {
     // https://strapi.io/blog/a-beginners-guide-to-authentication-and-authorization-in-strapi
     // https://www.youtube.com/watch?v=N4JpylgjRK0&list=PL4cUxeGkcC9h6OY8_8Oq6JerWqsKdAPxn&index=4
-    const credentials = { "identifier": "admin@admin.com", "password": "Abcdefghijk1!" }; //@Todo: Don't hardcode
-    // https://github.com/strapi/strapi/blob/master/packages/core/helper-plugin/lib/src/utils/request/index.js
+    const credentials = { "identifier": config.user, "password": config.pass };
     var authResponse = await request(`/auth/local`, {method: 'POST', body: credentials});
     console.dir(authResponse.jwt);
 
     files.forEach(async (file, index) => {
       console.dir(file);
       var url = (action === 'export') ? file.link : file.url.cdn;
+      var name = (action === 'export') ? file.file.name : file.name;
+      var alt = (action === 'export') ? file.file.uuid : file.uuid;
 
       var fileResponse = await fetch(url);
       var fileBlob = await fileResponse.blob();
 
       var formData = new FormData();
       formData.append('files', fileBlob);
-      formData.append('fileInfo', JSON.stringify({"alternativeText":"","caption":"","name":null}));
+      formData.append('fileInfo', JSON.stringify({"alternativeText":alt,"caption":"","name":name}));
 
       // https://dev.to/bassel17/how-to-upload-an-image-to-strapi-2hhg
       // https://forum.strapi.io/t/upload-image-url/3484/2
@@ -81,6 +93,7 @@ const FMAW = (props) => {
       console.dir(uploadResponse);
 
       //@Todo: Optional - find out why it won't work when it's like this
+      // https://github.com/strapi/strapi/blob/master/packages/core/helper-plugin/lib/src/utils/request/index.js
       // var uploadResponse = await request(`/upload`, { method: 'POST', headers: { "Authorization": `Bearer ${authResponse.jwt}` }, body: formData } );
       // console.dir(uploadResponse);
     });
