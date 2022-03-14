@@ -33,12 +33,12 @@ In `plugins/scaleflex-filerobot`
 
 - Hooks 
 	- https://strapi.io/blog/understanding-the-different-types-categories-of-strapi-hooks
-	- https://strapi.io/video-library/strapi-conf-2021-extending-strapi-app
 	- https://discord.com/channels/811989166782021633/845300588312789063/952393677421039618
 - Implement this https://forum.strapi.io/t/upload-image-url/3484/2
 - Language Strings
 	- https://docs.strapi.io/developer-docs/latest/plugins/i18n.html#getting-localized-entries-with-the-locale-parameter
 	- https://strapi.io/blog/i18n-implementation-best-practices-in-strapi
+- Update Strapi to v4 https://strapi.io/blog/v4-plugin-migration-guide
 
 ## Potential problems
 
@@ -54,6 +54,6 @@ In `plugins/scaleflex-filerobot`
 - CMS: https://docs.strapi.io/developer-docs/latest/getting-started/quick-start.html
 - Install: https://www.codegrepper.com/code-examples/shell/how+to+install+latest+version+of+strapi
 - Plugin: 
-	- https://strapi.io/blog/how-to-build-a-strapi-custom-
+	- https://strapi.io/blog/how-to-build-a-strapi-custom-plugin
 	- https://strapi.io/blog/how-to-create-an-import-content-plugin-part-1-4
 	- https://www.youtube.com/watch?v=kIZHzbmnhnU&t=960s

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import pluginId from '../../pluginId';
 
 import { Form, Button } from 'react-bootstrap';
@@ -6,8 +6,15 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 
 import { request } from "strapi-helper-plugin";
 
+import Popup from 'reactjs-popup';
+import 'reactjs-popup/dist/index.css';
+
 const Configurations = (props) => {
   const config = props.config;
+
+  const [open, setOpen] = useState(false);
+  const closeModal = () => setOpen(false);
+
   const update = async (event) => {
     event.preventDefault();
     var config = [...event.currentTarget.elements]
@@ -21,8 +28,9 @@ const Configurations = (props) => {
 
     if (config.token === '' || config.sec_temp === '')
     {
+      setOpen(o => !o);
+
       return;
-      //@Todo: Show error too
     }
 
     const result = await request(`/${pluginId.replace(/([A-Z])/g, ' $1').toLowerCase().replace(' ', '-')}/update-config`, {method: 'PUT', body: config});
@@ -61,6 +69,18 @@ const Configurations = (props) => {
           Submit
         </Button>
       </Form>
+
+      {/* https://github.com/yjose/reactjs-popup */}
+      <div>
+        <Popup open={open} closeOnDocumentClick onClose={closeModal} modal>
+          <div className="content">
+            Token and Security Template Identifier are required fields.
+          </div>
+          <div className="actions">
+            <button className="button" onClick={closeModal}>close modal</button>
+          </div>
+        </Popup>
+      </div>
     </div>
   );
 };

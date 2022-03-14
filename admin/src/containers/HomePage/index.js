@@ -37,7 +37,7 @@ const HomePage = () => {
           <h1>{pluginId.replace(/([A-Z])/g, ' $1').replace(/^./, function(str){ return str.toUpperCase(); })}</h1>
 
           <Tabs defaultActiveKey="configurations">
-            <Tab id="config-tab" eventKey="configurations" title="Configurations">
+            <Tab eventKey="configurations" title="Configurations">
               <Configurations config={config} />
             </Tab>
             <Tab eventKey="fmaw" title="FMAW">

@@ -41,47 +41,13 @@ const FMAW = (props) => {
         },
       })
       .use(XHRUpload)
-      .on('export', (files, popupExportSucessMsgFn, downloadFilesPackagedFn, downloadFileFn) => {
-        // https://dev.to/bassel17/how-to-upload-an-image-to-strapi-2hhg
-        // https://forum.strapi.io/t/upload-image-url/3484/2
-        files.forEach((file, index) => {
-          console.dir(file.link);
-
-          fetch(file.link)
-            .then(response => response.blob())
-            .then(function (myBlob) {
-              const formData = new FormData();
-              formData.append('files', myBlob);
-
-              // fetch('http://localhost:1337/upload', {
-              //   method: 'POST',
-              //   headers: {
-              //     "Authorization": "Bearer ", // <- Don't forget Authorization header if you are using it.
-              //   },
-              //   body: formData,
-              // }).then((response) => {
-              //   const result = response.json()
-              //   console.log("result", result)
-              // }).catch(function (err) {
-              //   console.log("error:");
-              //   console.log(err)
-              // });
-              request(`/upload`, {method: 'POST', body: formData})
-                .then((response) => {
-                  console.dir(response);
-                })
-                .catch(function (err) {
-                  console.dir(err);
-                });
-            });
-        });
+      .on('export', async (files, popupExportSucessMsgFn, downloadFilesPackagedFn, downloadFileFn) => {
+        await uploadMedia(files, 'export');
       })
-      .on('complete', ({ failed, uploadID, successful }) => {
+      .on('complete', async ({ failed, uploadID, successful }) => {
         if (successful)
         {
-          successful.forEach((file, index) => {
-            console.dir(file);
-          });
+          await uploadMedia(successful, 'complete');
         }
       });
 
@@ -89,6 +55,36 @@ const FMAW = (props) => {
       filerobot.current.close();
     }
   }, [config]);
+
+  const uploadMedia = async (files, action) => {
+    // https://strapi.io/blog/a-beginners-guide-to-authentication-and-authorization-in-strapi
+    // https://www.youtube.com/watch?v=N4JpylgjRK0&list=PL4cUxeGkcC9h6OY8_8Oq6JerWqsKdAPxn&index=4
+    const credentials = { "identifier": "admin@admin.com", "password": "Abcdefghijk1!" }; //@Todo: Don't hardcode
+    // https://github.com/strapi/strapi/blob/master/packages/core/helper-plugin/lib/src/utils/request/index.js
+    var authResponse = await request(`/auth/local`, {method: 'POST', body: credentials});
+    console.dir(authResponse.jwt);
+
+    files.forEach(async (file, index) => {
+      console.dir(file);
+      var url = (action === 'export') ? file.link : file.url.cdn;
+
+      var fileResponse = await fetch(url);
+      var fileBlob = await fileResponse.blob();
+
+      var formData = new FormData();
+      formData.append('files', fileBlob);
+      formData.append('fileInfo', JSON.stringify({"alternativeText":"","caption":"","name":null}));
+
+      // https://dev.to/bassel17/how-to-upload-an-image-to-strapi-2hhg
+      // https://forum.strapi.io/t/upload-image-url/3484/2
+      var uploadResponse = await fetch(`${strapi.backendURL}/upload`, { method: 'POST', headers: { "Authorization": `Bearer ${authResponse.jwt}` }, body: formData });
+      console.dir(uploadResponse);
+
+      //@Todo: Optional - find out why it won't work when it's like this
+      // var uploadResponse = await request(`/upload`, { method: 'POST', headers: { "Authorization": `Bearer ${authResponse.jwt}` }, body: formData } );
+      // console.dir(uploadResponse);
+    });
+  }
 
   return (
     <div>
