@@ -29,11 +29,25 @@ yarn develop --watch-admin # Or this for hot reload
 In `plugins/scaleflex-filerobot`  
 `npm install`
 
+## Update Server
+
+### SSH into server
+
+`ssh root@strapi.sfxconnector.com -p8022`
+
+### Update plugin
+
+Either via git or:
+
+`scp -r -P 8022 ./scaleflex-filerobot root@strapi.sfxconnector.com:/var/www/scaleflex-strapi-filerobot/plugins`
+
 ## Todo
 
 - Hooks 
 	- https://strapi.io/blog/understanding-the-different-types-categories-of-strapi-hooks
 	- https://discord.com/channels/811989166782021633/845300588312789063/952393677421039618
+- Have a table: image ID | local URL | FR URL
+- Have sync status and trigger sync buttons
 - Language Strings
 	- https://docs.strapi.io/developer-docs/latest/plugins/i18n.html#getting-localized-entries-with-the-locale-parameter
 	- https://strapi.io/blog/i18n-implementation-best-practices-in-strapi

@@ -45,9 +45,12 @@ const FMAW = (props) => {
         inline : true,
         width  : 10000,
         height : 1000,
+        disableExportButton: true, 
+        hideExportButtonIcon: true, 
+        preventExportDefaultBehavior: true,
         locale: {
           strings: {
-            export: 'Add'
+            exportButtonLabel: 'Add'
           }
         },
       })
