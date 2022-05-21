@@ -52,7 +52,13 @@ Either via git or:
 	- https://docs.strapi.io/developer-docs/latest/plugins/i18n.html#getting-localized-entries-with-the-locale-parameter
 	- https://strapi.io/blog/i18n-implementation-best-practices-in-strapi
 	- https://discord.com/channels/811989166782021633/845300588312789063/952806377200422973
-- Update Strapi to v4 https://strapi.io/blog/v4-plugin-migration-guide
+- Update Strapi from v3.6.1 to v4: 
+    - CMS: 
+        - https://discord.com/channels/811989166782021633/963236405641887744
+        - https://docs.strapi.io/developer-docs/latest/update-migration-guides/migration-guides.html#v3-to-v4-migration-guide
+    - Plugin: 
+        - https://strapi.io/blog/v4-plugin-migration-guide
+            - New: https://docs.strapi.io/developer-docs/latest/update-migration-guides/migration-guides/v4/plugin-migration.html
 - CSS
 - Messages
 
