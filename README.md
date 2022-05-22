@@ -19,15 +19,15 @@
 
 ## Run
 
+In `plugins/scaleflex-filerobot`  
+`npm install`
+
 In root
 ```
 yarn strapi build
 yarn develop
 yarn develop --watch-admin # Or this for hot reload
 ```
-
-In `plugins/scaleflex-filerobot`  
-`npm install`
 
 ## Update Server
 
@@ -44,14 +44,14 @@ Either via git or:
 ## Todo
 
 - Hooks 
-	- https://strapi.io/blog/understanding-the-different-types-categories-of-strapi-hooks
 	- https://discord.com/channels/811989166782021633/845300588312789063/952393677421039618
 - Have a table: image ID | local URL | FR URL
 - Have sync status and trigger sync buttons
 - Language Strings
-	- https://docs.strapi.io/developer-docs/latest/plugins/i18n.html#getting-localized-entries-with-the-locale-parameter
 	- https://strapi.io/blog/i18n-implementation-best-practices-in-strapi
 	- https://discord.com/channels/811989166782021633/845300588312789063/952806377200422973
+- CSS
+- Messages
 - Update Strapi from v3.6.1 to v4: 
     - CMS: 
         - https://discord.com/channels/811989166782021633/963236405641887744
@@ -59,8 +59,6 @@ Either via git or:
     - Plugin: 
         - https://strapi.io/blog/v4-plugin-migration-guide
             - New: https://docs.strapi.io/developer-docs/latest/update-migration-guides/migration-guides/v4/plugin-migration.html
-- CSS
-- Messages
 
 ## Potential problems
 
@@ -73,10 +71,10 @@ Either via git or:
 
 - https://github.com/strapi/strapi/releases
 - Support: https://discord.com/invite/strapi
-- CMS: https://docs.strapi.io/developer-docs/latest/getting-started/quick-start.html
-- Tutorial: https://www.youtube.com/playlist?list=PL4cUxeGkcC9h6OY8_8Oq6JerWqsKdAPxn
-- Install: https://www.codegrepper.com/code-examples/shell/how+to+install+latest+version+of+strapi
-- Plugin: 
-	- https://strapi.io/blog/how-to-build-a-strapi-custom-plugin
+- Tutorials: 
+	- https://www.youtube.com/playlist?list=PL4cUxeGkcC9h6OY8_8Oq6JerWqsKdAPxn
+	- https://www.youtube.com/playlist?list=PLjhq46XB5LWukdEt29lTaJl9XFG9CBMOp
+- Plugin Tutorials: 
 	- https://strapi.io/blog/how-to-create-an-import-content-plugin-part-1-4
 	- https://www.youtube.com/watch?v=kIZHzbmnhnU&t=960s
+	- https://docs-v3.strapi.io/developer-docs/latest/development/local-plugins-customization.html#front-end-development
