@@ -29,6 +29,15 @@ yarn develop
 yarn develop --watch-admin # Or this for hot reload
 ```
 
+In the past, the root folder contains a file called `server.js`
+```js
+const strapi = require('strapi');
+
+strapi(/* {...} */).start();
+```
+The serving background process was created by running: `node /var/www/scaleflex-strapi-filerobot/server.js`.  
+However, now that's unnecessary, because we can just run: `yarn develop`.
+
 ## Update Server
 
 ### SSH into server
@@ -40,6 +49,12 @@ yarn develop --watch-admin # Or this for hot reload
 Either via git or:
 
 `scp -r -P 8022 ./scaleflex-filerobot root@strapi.sfxconnector.com:/var/www/scaleflex-strapi-filerobot/plugins`
+
+#### Useful commands
+
+- List all node processes: `ps -ef | grep node`
+- Make background process: Use "screen". https://askubuntu.com/questions/8653/how-to-keep-processes-running-after-ending-ssh-session/8657#8657
+- Kill background process: `pkill -9 {process ID}`. https://linuxhint.com/kill-background-process-linux/
 
 ## Todo
 
