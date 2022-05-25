@@ -56,6 +56,10 @@ Either via git or:
 - Make background process: Use "screen". https://askubuntu.com/questions/8653/how-to-keep-processes-running-after-ending-ssh-session/8657#8657
 - Kill background process: `pkill -9 {process ID}`. https://linuxhint.com/kill-background-process-linux/
 
+## Usage
+
+https://scaleflexhq.atlassian.net/wiki/spaces/FIL/pages/19104023/Strapi+Plugin
+
 ## Todo
 
 - Hooks 
@@ -65,6 +69,8 @@ Either via git or:
 - Language Strings
 	- https://strapi.io/blog/i18n-implementation-best-practices-in-strapi
 	- https://discord.com/channels/811989166782021633/845300588312789063/952806377200422973
+	- https://docs.strapi.io/developer-docs/latest/development/admin-customization.html#extending-translations
+	- https://www.youtube.com/watch?v=bWyP1piDEcg
 - CSS
 - Messages
 - Update Strapi from v3.6.1 to v4: 
@@ -74,6 +80,10 @@ Either via git or:
     - Plugin: 
         - https://strapi.io/blog/v4-plugin-migration-guide
             - New: https://docs.strapi.io/developer-docs/latest/update-migration-guides/migration-guides/v4/plugin-migration.html
+- IMPORTANT: Development of this plugin for Strapi v3.6.1 stops on 25/May/2022
+	- This Filerobot plugin for Strapi v3.6.1 was never completed; Only the FMAW functionality was completed.
+	- Development stuck on the 4 questions described in this ticket: https://sfx.li/C7xKUBqvA7Fzys
+	- Continued development of this plugin will be in version 4: https://code.scaleflex.cloud/Dung0812/strapi-plugin-new/-/tree/plugin-v4
 
 ## Potential problems
 
