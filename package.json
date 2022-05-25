@@ -1,0 +1,33 @@
+{
+  "name": "scaleflex-filerobot",
+  "version": "0.0.0",
+  "description": "Scaleflex Filerobot",
+  "strapi": {
+    "name": "scaleflex-filerobot",
+    "description": "Scaleflex Filerobot",
+    "kind": "plugin"
+  },
+  "dependencies": {
+    "@filerobot/core": "^1.0.108-rc.1",
+    "@filerobot/explorer": "^1.0.108-rc.1",
+    "@filerobot/xhr-upload": "^1.0.108-rc.1",
+    "@strapi/helper-plugin": "^4.1.11",
+    "bootstrap": "^5.1.3",
+    "jquery": "^3.6.0",
+    "react-bootstrap": "^2.2.0",
+    "reactjs-popup": "^2.0.5"
+  },
+  "author": {
+    "name": "Ruslan Aliyev"
+  },
+  "maintainers": [
+    {
+      "name": "Ruslan Aliyev"
+    }
+  ],
+  "engines": {
+    "node": ">=12.x. <=16.x.x",
+    "npm": ">=6.0.0"
+  },
+  "license": "MIT"
+}
