@@ -69,8 +69,8 @@ https://scaleflexhq.atlassian.net/wiki/spaces/FIL/pages/19104023/Strapi+Plugin
 - Language Strings
 	- https://strapi.io/blog/i18n-implementation-best-practices-in-strapi
 	- https://discord.com/channels/811989166782021633/845300588312789063/952806377200422973
-	- https://docs.strapi.io/developer-docs/latest/development/admin-customization.html#extending-translations
 	- https://www.youtube.com/watch?v=bWyP1piDEcg
+	- https://docs-v3.strapi.io/developer-docs/latest/development/local-plugins-customization.html#i18n
 - CSS
 - Messages
 - Update Strapi from v3.6.1 to v4: 
@@ -103,7 +103,7 @@ https://scaleflexhq.atlassian.net/wiki/spaces/FIL/pages/19104023/Strapi+Plugin
 - Plugin Tutorials: 
 	- https://strapi.io/blog/how-to-create-an-import-content-plugin-part-1-4
 	- https://www.youtube.com/watch?v=kIZHzbmnhnU&t=960s
-	- https://docs-v3.strapi.io/developer-docs/latest/development/local-plugins-customization.html#front-end-development
+	- https://docs-v3.strapi.io/developer-docs/latest/development/local-plugins-customization.html
 - Auth
 	- https://www.youtube.com/watch?v=TIK9CYDgs5k&list=PL2dKqfImstaROBMu304aaEfIVTGodkdHh&index=3
 	- https://www.youtube.com/watch?v=EjBpJuqqi3U
