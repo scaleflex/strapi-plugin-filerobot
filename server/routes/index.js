@@ -5,6 +5,7 @@ module.exports = [
     handler: 'scaleflexFilerobot.index',
     config: {
       policies: [],
+      auth: false,
     },
   },
   {
@@ -13,6 +14,7 @@ module.exports = [
     handler: 'scaleflexFilerobot.getConfig',
     config: {
       policies: [],
+      auth: false,
     },
   },
   {
@@ -21,6 +23,7 @@ module.exports = [
     handler: 'scaleflexFilerobot.updateConfig',
     config: {
       policies: [],
+      auth: false,
     },
   },
 ];

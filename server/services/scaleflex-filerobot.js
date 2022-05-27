@@ -35,7 +35,7 @@ module.exports = ({ strapi }) => ({
       key: 'options',
       value: ctx.request.body
     });
-    const config = pluginStore.get({ key: 'options' });//@Todo: Make this work correctly
+    const config = await pluginStore.get({ key: 'options' });//@Todo: Make this work correctly
 
     return config;
   },

@@ -83,6 +83,7 @@ https://scaleflexhq.atlassian.net/wiki/spaces/FIL/pages/19104023/Strapi+Plugin
 	- https://discord.com/channels/811989166782021633/845300588312789063/952806377200422973
 	- https://docs.strapi.io/developer-docs/latest/development/admin-customization.html#extending-translations
 	- https://www.youtube.com/watch?v=bWyP1piDEcg
+	- https://docs.strapi.io/developer-docs/latest/developer-resources/database-apis-reference/rest/filtering-locale-publication.html#locale
 - CSS
 - Messages
 
@@ -90,13 +91,25 @@ https://scaleflexhq.atlassian.net/wiki/spaces/FIL/pages/19104023/Strapi+Plugin
 
 - https://github.com/strapi/strapi/releases
 - Support: https://discord.com/invite/strapi
+- Quickstart: https://docs.strapi.io/developer-docs/latest/getting-started/quick-start.html
 - Tutorials: 
-	- https://docs.strapi.io/developer-docs/latest/getting-started/quick-start.html
 	- https://www.youtube.com/watch?v=vcopLqUq594
 	- https://www.youtube.com/playlist?list=PL7Q0DQYATmvjJyxrLw0xCOKwjv8Bh7yLx
-	- DB: https://strapi.io/blog/using-database-transactions-to-write-queries-in-strapi
 - Plugin Tutorials: 
+	- https://www.youtube.com/playlist?list=PL7Q0DQYATmvjd5D57P8CN0_xp_HsRd3wn
+	- https://strapi.io/plugin-resources
   - https://docs.strapi.io/developer-docs/latest/development/plugins-development.html
   - https://strapi.io/blog/how-to-create-a-strapi-v4-plugin
 	- https://strapi.io/blog/how-to-build-a-strapi-custom-plugin
 	- https://strapi.io/blog/how-to-create-a-strapi-v4-plugin-generate-a-plugin-1-6
+- DB: 
+	- https://strapi.io/blog/using-database-transactions-to-write-queries-in-strapi
+	- https://docs.strapi.io/developer-docs/latest/developer-resources/database-apis-reference/query-engine-api.html
+		- https://docs.strapi.io/developer-docs/latest/developer-resources/database-apis-reference/entity-service-api.html
+- Auth
+	- https://www.youtube.com/watch?v=TIK9CYDgs5k&list=PL2dKqfImstaROBMu304aaEfIVTGodkdHh&index=3 (v3, but still applicable to v4)
+	- https://www.youtube.com/watch?v=EjBpJuqqi3U (v3, but still applicable to v4)
+	- https://www.youtube.com/watch?v=xv5TWP3tCKs (v3, but still applicable to v4)
+	- https://forum.strapi.io/t/retrieve-user-details/5082/2 (v3, but still applicable to v4)
+	- https://strapi.io/blog/a-beginners-guide-to-authentication-and-authorization-in-strapi
+		- https://www.youtube.com/watch?v=vcopLqUq594&t=4336s
