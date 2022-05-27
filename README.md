@@ -96,6 +96,7 @@ https://scaleflexhq.atlassian.net/wiki/spaces/FIL/pages/19104023/Strapi+Plugin
 
 - https://github.com/strapi/strapi/releases
 - Support: https://discord.com/invite/strapi
+- Quickstart: https://www.youtube.com/watch?v=6FnwAbd2SDY
 - Tutorials: 
 	- https://www.youtube.com/playlist?list=PL4cUxeGkcC9h6OY8_8Oq6JerWqsKdAPxn
 	- https://www.youtube.com/playlist?list=PLjhq46XB5LWukdEt29lTaJl9XFG9CBMOp
@@ -103,3 +104,8 @@ https://scaleflexhq.atlassian.net/wiki/spaces/FIL/pages/19104023/Strapi+Plugin
 	- https://strapi.io/blog/how-to-create-an-import-content-plugin-part-1-4
 	- https://www.youtube.com/watch?v=kIZHzbmnhnU&t=960s
 	- https://docs-v3.strapi.io/developer-docs/latest/development/local-plugins-customization.html#front-end-development
+- Auth
+	- https://www.youtube.com/watch?v=TIK9CYDgs5k&list=PL2dKqfImstaROBMu304aaEfIVTGodkdHh&index=3
+	- https://www.youtube.com/watch?v=EjBpJuqqi3U
+	- https://www.youtube.com/watch?v=xv5TWP3tCKs
+	- https://forum.strapi.io/t/retrieve-user-details/5082/2
