@@ -82,7 +82,6 @@ https://scaleflexhq.atlassian.net/wiki/spaces/FIL/pages/19104023/Strapi+Plugin
 	- https://docs.strapi.io/developer-docs/latest/plugins/i18n.html#getting-localized-entries-with-the-locale-parameter
 	- https://discord.com/channels/811989166782021633/845300588312789063/952806377200422973
 	- https://docs.strapi.io/developer-docs/latest/development/admin-customization.html#extending-translations
-	- https://www.youtube.com/watch?v=bWyP1piDEcg
 	- https://docs.strapi.io/developer-docs/latest/developer-resources/database-apis-reference/rest/filtering-locale-publication.html#locale
 - CSS
 - Messages
