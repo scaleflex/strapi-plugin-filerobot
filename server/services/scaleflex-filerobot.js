@@ -4,20 +4,21 @@ module.exports = ({ strapi }) => ({
   getWelcomeMessage() {
     return 'Thank you for using Scaleflex Filerobot';
   },
-  getConfig() {
+  async getConfig() {
     const pluginStore = strapi.store({
       environment: strapi.config.environment,
       type: 'plugin',
       name: 'filerobot',
     });
-    const config = pluginStore.get({ key: 'options' });
+
+    const config = await pluginStore.get({ key: 'options' });
 
     if (Object.keys(config).length === 0) {
       return {
         token: '',
         sec_temp: '',
         folder: '',
-        fr_url: '',
+        fr_url: 1,
         user: '',
         pass: ''
       };
@@ -31,11 +32,13 @@ module.exports = ({ strapi }) => ({
       type: 'plugin',
       name: 'filerobot',
     });
+
     await pluginStore.set({
       key: 'options',
       value: ctx.request.body
     });
-    const config = await pluginStore.get({ key: 'options' });//@Todo: Make this work correctly
+
+    const config = await pluginStore.get({ key: 'options' });
 
     return config;
   },

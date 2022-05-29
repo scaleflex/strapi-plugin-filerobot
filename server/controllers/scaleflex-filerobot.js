@@ -1,20 +1,20 @@
 'use strict';
 
 module.exports = {
-  index(ctx) {
-    ctx.body = strapi
+  async index(ctx) {
+    ctx.body = await strapi
       .plugin('scaleflex-filerobot')
       .service('scaleflexFilerobot')
       .getWelcomeMessage();
   },
-  getConfig(ctx) {
-    ctx.body = strapi
+  async getConfig(ctx) {
+    ctx.body = await strapi
       .plugin('scaleflex-filerobot')
       .service('scaleflexFilerobot')
       .getConfig();
   },
-  updateConfig(ctx) {
-    ctx.body = strapi
+  async updateConfig(ctx) {
+    ctx.body = await strapi
       .plugin('scaleflex-filerobot')
       .service('scaleflexFilerobot')
       .updateConfig(ctx);
