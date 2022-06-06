@@ -36,6 +36,60 @@ const Configurations = (props) => {
     await request(`/${pluginId.replace(/([A-Z])/g, ' $1').toLowerCase().replace(' ', '-')}/update-config`, {method: 'PUT', body: config});
   }
 
+  const check_connection = async () => {
+    const configs = await request(`/${pluginId.replace(/([A-Z])/g, ' $1').toLowerCase().replace(' ', '-')}/config`, {method: 'GET'});
+    
+    var domain = 'https://api.filerobot.com';
+
+    var headers = new Headers();
+    headers.append("Content-Type", "application/json");
+
+    var requestOptions = {
+      method: 'GET',
+      headers: headers
+    };
+
+    var tokenCheck = await fetch(`${domain}/${configs.token}/v4/files?folder=/&limit=1&`, requestOptions);
+
+    if (tokenCheck.status != 200)
+    {
+      return false;
+    }
+    
+    var tokenCheckJson = await tokenCheck.json();
+
+    if (tokenCheckJson.status !== 'success')
+    {
+      return false;
+    }
+    
+    var checkSecTemp = await fetch(`${domain}/${configs.token}/key/${configs.sec_temp}`, requestOptions);
+
+    if (checkSecTemp.status != 200)
+    {
+      return false;
+    }
+    
+    var checkSecTempJson = await checkSecTemp.json();
+
+    if (checkSecTempJson.status !== 'success')
+    {
+      return false;
+    }
+    console.log("OK");
+    return true;
+  }
+
+  const sync_status = async () => {
+    const media = await request(`/${pluginId.replace(/([A-Z])/g, ' $1').toLowerCase().replace(' ', '-')}/sync-status`, {method: 'GET'});
+
+    console.dir(media.length);
+  }
+
+  const trigger_sync = () => {
+    console.log("trigger_sync");
+  }
+
   return (
     <div>
       <h2>Filerobot Configurations</h2>
@@ -80,6 +134,12 @@ const Configurations = (props) => {
           </Button>
         </Form.Group>
       </Form>
+
+      <div className="mb-2">
+        <Button variant="secondary" size="sm" onClick={check_connection}>Check Connection</Button>{' '}
+        <Button variant="secondary" size="sm" onClick={sync_status}>Synchronization Status</Button>{' '}
+        <Button variant="secondary" size="sm" onClick={trigger_sync}>Trigger Synchronization</Button>
+      </div>
 
       {/* https://github.com/yjose/reactjs-popup */}
       <div>

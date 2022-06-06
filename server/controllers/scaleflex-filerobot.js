@@ -19,4 +19,10 @@ module.exports = {
       .service('scaleflexFilerobot')
       .updateConfig(ctx);
   },
+  async syncStatus(ctx) {
+    ctx.body = await strapi
+      .plugin('scaleflex-filerobot')
+      .service('scaleflexFilerobot')
+      .syncStatus(ctx);
+  },
 };

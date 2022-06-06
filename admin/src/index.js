@@ -13,7 +13,7 @@ export default {
       icon: PluginIcon,
       intlLabel: {
         id: `${pluginId}.plugin.name`,
-        defaultMessage: name.replace(/([A-Z])/g, ' $1').replace(/^./, function(str){ return str.toUpperCase(); }), // https://stackoverflow.com/a/4149393
+        defaultMessage: name.replace('-', ' ').replace(/(?:^|\s)\S/g, function(a) { return a.toUpperCase(); }),
       },
       Component: async () => {
         const component = await import(/* webpackChunkName: "[request]" */ './pages/App');

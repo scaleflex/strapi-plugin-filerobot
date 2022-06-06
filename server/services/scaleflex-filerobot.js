@@ -42,4 +42,12 @@ module.exports = ({ strapi }) => ({
 
     return config;
   },
+  async syncStatus() {
+    const media = await strapi.entityService.findMany('plugin::upload.file', {
+      //fields: ['name', 'caption'],
+      populate: { category: true },
+    });
+    
+    return media;
+  },
 });

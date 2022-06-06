@@ -73,12 +73,10 @@ https://scaleflexhq.atlassian.net/wiki/spaces/FIL/pages/19104023/Strapi+Plugin
 
 ## Todo
 
-- Hooks 
-	- https://strapi.io/blog/understanding-the-different-types-categories-of-strapi-hooks
-	- https://discord.com/channels/811989166782021633/845300588312789063/952393677421039618
 - Have a table: image ID | local URL | FR URL
 - Have sync status and trigger sync buttons
 - Language Strings
+	- GOOD https://docs-v3.strapi.io/developer-docs/latest/development/local-plugins-customization.html#i18n
 	- https://docs.strapi.io/developer-docs/latest/plugins/i18n.html#getting-localized-entries-with-the-locale-parameter
 	- https://discord.com/channels/811989166782021633/845300588312789063/952806377200422973
 	- https://docs.strapi.io/developer-docs/latest/development/admin-customization.html#extending-translations

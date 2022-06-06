@@ -26,4 +26,13 @@ module.exports = [
       auth: false,
     },
   },
+  {
+    method: 'GET',
+    path: '/sync-status',
+    handler: 'scaleflexFilerobot.syncStatus',
+    config: {
+      policies: [],
+      auth: false,
+    },
+  },
 ];
