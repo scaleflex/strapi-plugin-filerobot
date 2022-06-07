@@ -42,11 +42,27 @@ module.exports = ({ strapi }) => ({
 
     return config;
   },
-  async syncStatus() {
-    const media = await strapi.entityService.findMany('plugin::upload.file', {
-      //fields: ['name', 'caption'],
+  async checkDbFiles() {
+    var filerobotMedia = await strapi.entityService.findMany('plugin::upload.file', {
+      filters: {
+        $not: {
+          provider: 'filerobot',
+        },
+      },
       populate: { category: true },
     });
+    
+    var nonFilerobotMedia = await strapi.entityService.findMany('plugin::upload.file', {
+      filters: {
+        provider: 'filerobot',
+      },
+      populate: { category: true },
+    });
+
+    var media = {
+      filerobot: filerobotMedia,
+      nonFilerobot: nonFilerobotMedia
+    };
     
     return media;
   },

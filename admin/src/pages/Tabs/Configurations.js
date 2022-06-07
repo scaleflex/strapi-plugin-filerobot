@@ -81,9 +81,41 @@ const Configurations = (props) => {
   }
 
   const sync_status = async () => {
-    const media = await request(`/${pluginId.replace(/([A-Z])/g, ' $1').toLowerCase().replace(' ', '-')}/sync-status`, {method: 'GET'});
+    var media = await request(`/${pluginId.replace(/([A-Z])/g, ' $1').toLowerCase().replace(' ', '-')}/db-files`, {method: 'GET'});
 
-    console.dir(media.length);
+    var toSyncUp = media.nonFilerobot;
+    var alreadyDown = media.filerobot;
+
+    console.log(`There are ${toSyncUp.length} to sync up`);
+    
+    var alreadyDownNames = alreadyDown.map(x => x['name']);
+
+    var configs = await request(`/${pluginId.replace(/([A-Z])/g, ' $1').toLowerCase().replace(' ', '-')}/config`, {method: 'GET'});
+    
+    var domain = 'https://api.filerobot.com';
+
+    var headers = new Headers();
+    headers.append("Content-Type", "application/json");
+
+    var requestOptions = {
+      method: 'GET',
+      headers: headers
+    };
+
+    var filerobotResponse = await fetch(`${domain}/${configs.token}/v4/files?folder=${configs.folder}`, requestOptions);
+
+    if (filerobotResponse.status != 200)
+    {
+      return false;
+    }
+
+    var filerobotResponseJson = await filerobotResponse.json();
+    var filerobotMedia = filerobotResponseJson.files;
+    var filerobotMediaNames = filerobotMedia.map(x => x['name']);
+
+    var toSyncDownNames = filerobotMediaNames.filter(x => !alreadyDownNames.includes(x));
+
+    console.log(`There are ${toSyncDownNames.length} to sync down`);
   }
 
   const trigger_sync = () => {

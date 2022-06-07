@@ -28,8 +28,8 @@ module.exports = [
   },
   {
     method: 'GET',
-    path: '/sync-status',
-    handler: 'scaleflexFilerobot.syncStatus',
+    path: '/db-files',
+    handler: 'scaleflexFilerobot.checkDbFiles',
     config: {
       policies: [],
       auth: false,
