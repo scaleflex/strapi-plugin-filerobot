@@ -23,7 +23,6 @@ const HomePage = () => {
     token: '',
     sec_temp: '',
     folder: '',
-    fr_url: '',
     user: '',
     pass: ''
   });

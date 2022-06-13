@@ -56,9 +56,9 @@ const FMAW = (props) => {
       })
       .use(XHRUpload)
       .on('export', async (files, popupExportSucessMsgFn, downloadFilesPackagedFn, downloadFileFn) => {
-        await uploadMedia(files, 'export');
+        await uploadMedia(files, 'export'); // @Todo: Maybe dont need this
       })
-      .on('complete', async ({ failed, uploadID, successful }) => {
+      .on('complete', async ({ failed, uploadID, successful }) => { // @Todo: update DB : plugin::upload.file
         if (successful)
         {
           await uploadMedia(successful, 'complete');

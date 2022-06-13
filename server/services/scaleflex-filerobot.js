@@ -18,7 +18,6 @@ module.exports = ({ strapi }) => ({
         token: '',
         sec_temp: '',
         folder: '',
-        fr_url: 1,
         user: '',
         pass: ''
       };

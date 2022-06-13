@@ -1,6 +1,6 @@
 # Strapi plugin scaleflexFilerobot
 
-- Node v14.0.0
+- Node v14.8.0
 - Strapi v4.1.0
 - Sqlite3 v5.0.2
 
@@ -44,22 +44,13 @@ In `plugins/scaleflex-filerobot`
 
 In root
 ```
-yarn strapi build
+yarn build
 yarn start # No hot reload
 yarn develop # With hot reload
+yarn develop --watch-admin # With hot reload (Backend included)
 ```
 
-## Update Server
-
-### SSH into server
-
-`ssh root@strapi.sfxconnector.com -p8022`
-
-### Update plugin
-
-Either via git or:
-
-`scp -r -P 8022 ./scaleflex-filerobot root@strapi.sfxconnector.com:/var/www/scaleflex-strapi-filerobot/plugins`
+## Server
 
 #### Useful commands
 
@@ -73,16 +64,10 @@ https://scaleflexhq.atlassian.net/wiki/spaces/FIL/pages/19104023/Strapi+Plugin
 
 ## Todo
 
-- Have a table: image ID | local URL | FR URL
-- Have sync status and trigger sync buttons
-- Language Strings
-	- GOOD https://docs-v3.strapi.io/developer-docs/latest/development/local-plugins-customization.html#i18n
-	- https://docs.strapi.io/developer-docs/latest/plugins/i18n.html#getting-localized-entries-with-the-locale-parameter
-	- https://discord.com/channels/811989166782021633/845300588312789063/952806377200422973
-	- https://docs.strapi.io/developer-docs/latest/development/admin-customization.html#extending-translations
-	- https://docs.strapi.io/developer-docs/latest/developer-resources/database-apis-reference/rest/filtering-locale-publication.html#locale
-- CSS
-- Messages
+- Have a table: image ID | local URL | FR URL (probably wont need this)
+- ~~Have sync status and~~ trigger sync buttons
+- ~~Messages~~ Better popups
+- Documentation
 
 ## Docs
 

@@ -1,19 +1,22 @@
-import React, { useState } from "react";
+import React from "react";
 import pluginId from '../../pluginId';
+
+import $ from 'jquery';
 
 import { Form, Button } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 import { request } from "@strapi/helper-plugin";
 
-import Popup from 'reactjs-popup';
-import 'reactjs-popup/dist/index.css';
+import { sprintf } from 'sprintf-js';
+import { useIntl } from 'react-intl';
+
+import '../../theme/index.css';
 
 const Configurations = (props) => {
-  const config = props.config;
+  const intl = useIntl();
 
-  const [open, setOpen] = useState(false);
-  const closeModal = () => setOpen(false);
+  const config = props.config;
 
   const update = async (event) => {
     event.preventDefault();
@@ -28,7 +31,7 @@ const Configurations = (props) => {
 
     if (config.token === '' || config.sec_temp === '' || config.user === '' || config.pass === '')
     {
-      setOpen(o => !o);
+      alert(intl.formatMessage({id:'scaleflex-filerobot.notification.error.fill_required'})); // @Todo: Better popups
 
       return;
     }
@@ -37,6 +40,8 @@ const Configurations = (props) => {
   }
 
   const check_connection = async () => {
+    $("button").attr("disabled", "disabled");
+
     const configs = await request(`/${pluginId.replace(/([A-Z])/g, ' $1').toLowerCase().replace(' ', '-')}/config`, {method: 'GET'});
     
     var domain = 'https://api.filerobot.com';
@@ -53,6 +58,9 @@ const Configurations = (props) => {
 
     if (tokenCheck.status != 200)
     {
+      alert(intl.formatMessage({id:'scaleflex-filerobot.notification.error.check_token_issue'}));
+      $("button").attr("disabled", false);
+
       return false;
     }
     
@@ -60,6 +68,9 @@ const Configurations = (props) => {
 
     if (tokenCheckJson.status !== 'success')
     {
+      alert(intl.formatMessage({id:'scaleflex-filerobot.notification.error.wrong_token'}));
+      $("button").attr("disabled", false);
+
       return false;
     }
     
@@ -67,6 +78,9 @@ const Configurations = (props) => {
 
     if (checkSecTemp.status != 200)
     {
+      alert(intl.formatMessage({id:'scaleflex-filerobot.notification.error.check_sectmp_issue'}));
+      $("button").attr("disabled", false);
+
       return false;
     }
     
@@ -74,19 +88,25 @@ const Configurations = (props) => {
 
     if (checkSecTempJson.status !== 'success')
     {
+      alert(intl.formatMessage({id:'scaleflex-filerobot.notification.error.wrong_sectmp'}));
+      $("button").attr("disabled", false);
+
       return false;
     }
-    console.log("OK");
+    
+    alert(intl.formatMessage({id:'scaleflex-filerobot.notification.success.sync_connection'}));
+    $("button").attr("disabled", false);
+
     return true;
   }
 
   const sync_status = async () => {
+    $("button").attr("disabled", "disabled");
+
     var media = await request(`/${pluginId.replace(/([A-Z])/g, ' $1').toLowerCase().replace(' ', '-')}/db-files`, {method: 'GET'});
 
     var toSyncUp = media.nonFilerobot;
     var alreadyDown = media.filerobot;
-
-    console.log(`There are ${toSyncUp.length} to sync up`);
     
     var alreadyDownNames = alreadyDown.map(x => x['name']);
 
@@ -102,10 +122,15 @@ const Configurations = (props) => {
       headers: headers
     };
 
-    var filerobotResponse = await fetch(`${domain}/${configs.token}/v4/files?folder=${configs.folder}`, requestOptions);
+    var filerobotDirectory = (configs.folder.charAt(0) === '/') ? configs.folder : `/${configs.folder}`;
+
+    var filerobotResponse = await fetch(`${domain}/${configs.token}/v4/files?folder=${filerobotDirectory}`, requestOptions);
 
     if (filerobotResponse.status != 200)
     {
+      alert(intl.formatMessage({id:'scaleflex-filerobot.notification.error.sync_status'}));
+      $("button").attr("disabled", false);
+
       return false;
     }
 
@@ -115,11 +140,20 @@ const Configurations = (props) => {
 
     var toSyncDownNames = filerobotMediaNames.filter(x => !alreadyDownNames.includes(x));
 
-    console.log(`There are ${toSyncDownNames.length} to sync down`);
+    alert( sprintf(intl.formatMessage({id:'scaleflex-filerobot.notification.success.sync_status'}), toSyncUp.length, toSyncDownNames.length) );
+    $("button").attr("disabled", false);
+
+    return true;
   }
 
-  const trigger_sync = () => {
-    console.log("trigger_sync");
+  const trigger_sync = () => { // @Todo: Finish
+    $("button").attr("disabled", "disabled");
+    alert("trigger_sync");
+    $("button").attr("disabled", false);
+
+    // Update DB too : plugin::upload.file
+
+    return true;
   }
 
   return (
@@ -142,14 +176,6 @@ const Configurations = (props) => {
           <Form.Control name="folder" type="text" defaultValue={config.folder} />
         </Form.Group>
 
-        <Form.Group controlId="fr_url" className="form-group">
-          <Form.Label>Use Filerobot URL</Form.Label>
-          <Form.Select name="fr_url">
-            <option value="1" selected={config.fr_url == 1} >Yes</option>
-            <option value="0" selected={config.fr_url == 0} >No</option>
-          </Form.Select>
-        </Form.Group>
-
         <Form.Group controlId="user" className="form-group">
           <Form.Label>Strapi Authenticated User *</Form.Label>
           <Form.Control name="user" type="text" defaultValue={config.user} />
@@ -160,30 +186,19 @@ const Configurations = (props) => {
           <Form.Control name="pass" type="password" defaultValue={config.pass} />
         </Form.Group>
 
-        <Form.Group class="btn-group">
+        <Form.Group className="btn-group">{/*  @Todo: Use ajax, disable buttons until finish */}
           <Button className="btn btn-primary" type="submit">
             Submit
           </Button>
         </Form.Group>
       </Form>
 
-      <div className="mb-2">
-        <Button variant="secondary" size="sm" onClick={check_connection}>Check Connection</Button>{' '}
-        <Button variant="secondary" size="sm" onClick={sync_status}>Synchronization Status</Button>{' '}
+      <div className="mb-2 btn-group">
+        <Button variant="secondary" size="sm" onClick={check_connection}>Check Connection</Button>
+        <Button variant="secondary" size="sm" onClick={sync_status}>Synchronization Status</Button>
         <Button variant="secondary" size="sm" onClick={trigger_sync}>Trigger Synchronization</Button>
       </div>
 
-      {/* https://github.com/yjose/reactjs-popup */}
-      <div>
-        <Popup open={open} closeOnDocumentClick onClose={closeModal} modal>
-          <div className="content">
-            Please fill the required fields *.
-          </div>
-          <div className="actions">
-            <button className="button" onClick={closeModal}>Close</button>
-          </div>
-        </Popup>
-      </div>
     </div>
   );
 };
