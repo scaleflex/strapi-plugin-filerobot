@@ -25,4 +25,10 @@ module.exports = {
       .service('scaleflexFilerobot')
       .checkDbFiles(ctx);
   },
+  async recordFile(ctx) {
+    ctx.body = await strapi
+      .plugin('scaleflex-filerobot')
+      .service('scaleflexFilerobot')
+      .recordFile(ctx);
+  },
 };

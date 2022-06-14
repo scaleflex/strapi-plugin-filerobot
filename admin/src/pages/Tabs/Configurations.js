@@ -20,6 +20,8 @@ const Configurations = (props) => {
 
   const update = async (event) => {
     event.preventDefault();
+    $("button").attr("disabled", "disabled");
+
     var config = [...event.currentTarget.elements]
         .filter((ele) => ele.type !== "submit")
         .map((ele) => {
@@ -32,17 +34,19 @@ const Configurations = (props) => {
     if (config.token === '' || config.sec_temp === '' || config.user === '' || config.pass === '')
     {
       alert(intl.formatMessage({id:'scaleflex-filerobot.notification.error.fill_required'})); // @Todo: Better popups
+      $("button").attr("disabled", false);
 
       return;
     }
 
-    await request(`/${pluginId.replace(/([A-Z])/g, ' $1').toLowerCase().replace(' ', '-')}/update-config`, {method: 'PUT', body: config});
+    await request(`/${pluginId}/update-config`, {method: 'PUT', body: config});
+    $("button").attr("disabled", false);
   }
 
   const check_connection = async () => {
     $("button").attr("disabled", "disabled");
 
-    const configs = await request(`/${pluginId.replace(/([A-Z])/g, ' $1').toLowerCase().replace(' ', '-')}/config`, {method: 'GET'});
+    const configs = await request(`/${pluginId}/config`, {method: 'GET'});
     
     var domain = 'https://api.filerobot.com';
 
@@ -103,14 +107,14 @@ const Configurations = (props) => {
   const sync_status = async () => {
     $("button").attr("disabled", "disabled");
 
-    var media = await request(`/${pluginId.replace(/([A-Z])/g, ' $1').toLowerCase().replace(' ', '-')}/db-files`, {method: 'GET'});
+    var media = await request(`/${pluginId}/db-files`, {method: 'GET'});
 
     var toSyncUp = media.nonFilerobot;
     var alreadyDown = media.filerobot;
     
     var alreadyDownNames = alreadyDown.map(x => x['name']);
 
-    var configs = await request(`/${pluginId.replace(/([A-Z])/g, ' $1').toLowerCase().replace(' ', '-')}/config`, {method: 'GET'});
+    var configs = await request(`/${pluginId}/config`, {method: 'GET'});
     
     var domain = 'https://api.filerobot.com';
 
@@ -186,7 +190,7 @@ const Configurations = (props) => {
           <Form.Control name="pass" type="password" defaultValue={config.pass} />
         </Form.Group>
 
-        <Form.Group className="btn-group">{/*  @Todo: Use ajax, disable buttons until finish */}
+        <Form.Group className="btn-group">
           <Button className="btn btn-primary" type="submit">
             Submit
           </Button>

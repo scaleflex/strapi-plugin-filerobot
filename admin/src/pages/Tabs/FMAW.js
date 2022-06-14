@@ -1,5 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 
+import pluginId from '../../pluginId';
+
 // https://www.npmjs.com/package/@filerobot/core
 // https://www.npmjs.com/package/@filerobot/explorer#filerobotexplorer
 
@@ -12,7 +14,10 @@ import '@filerobot/explorer/dist/style.min.css';
 
 import { request } from "@strapi/helper-plugin";
 
+import { useIntl } from 'react-intl';
+
 const FMAW = (props) => {
+  const intl = useIntl();
   const config = props.config;
   const filerobot = useRef(null);
 
@@ -50,15 +55,15 @@ const FMAW = (props) => {
         preventExportDefaultBehavior: true,
         locale: {
           strings: {
-            exportButtonLabel: 'Add'
+            exportButtonLabel: intl.formatMessage({id:'scaleflex-filerobot.label.button.fmaw.export'})
           }
         },
       })
       .use(XHRUpload)
-      .on('export', async (files, popupExportSucessMsgFn, downloadFilesPackagedFn, downloadFileFn) => {
-        await uploadMedia(files, 'export'); // @Todo: Maybe dont need this
+      .on('export', async (files, popupExportSucessMsgFn, downloadFilesPackagedFn, downloadFileFn) => { // @Todo Disable Export and Upload buttons while processing
+        await uploadMedia(files, 'export');
       })
-      .on('complete', async ({ failed, uploadID, successful }) => { // @Todo: update DB : plugin::upload.file
+      .on('complete', async ({ failed, uploadID, successful }) => { // @Todo Disable Export and Upload buttons while processing
         if (successful)
         {
           await uploadMedia(successful, 'complete');
@@ -73,32 +78,36 @@ const FMAW = (props) => {
   const uploadMedia = async (files, action) => {
     // https://strapi.io/blog/a-beginners-guide-to-authentication-and-authorization-in-strapi
     // https://www.youtube.com/watch?v=N4JpylgjRK0&list=PL4cUxeGkcC9h6OY8_8Oq6JerWqsKdAPxn&index=4
-    const credentials = { "identifier": config.user, "password": config.pass };
-    var authResponse = await request(`/auth/local`, {method: 'POST', body: credentials});
-    console.dir(authResponse.jwt);
+    var formdata = new FormData();
+    formdata.append("identifier", config.user);
+    formdata.append("password", config.pass);
+
+    var requestOptions = {
+      method: 'POST',
+      body: formdata
+    };
+
+    var authResponse = await fetch(`${strapi.backendURL}/api/auth/local`, requestOptions);
+
+    if (authResponse.status != 200)
+    {
+      return;
+    }
+
+    var authData = await authResponse.json();
+
+    if (authData.hasOwnProperty('error'))
+    {
+      return;
+    }
 
     files.forEach(async (file, index) => {
-      console.dir(file);
-      var url = (action === 'export') ? file.link : file.url.cdn;
-      var name = (action === 'export') ? file.file.name : file.name;
-      var alt = (action === 'export') ? file.file.uuid : file.uuid;
+      // @Todo: Move into service
+      // var url = (action === 'export') ? file.link : file.url.cdn;
+      // var name = (action === 'export') ? file.file.name : file.name;
+      // var alt = (action === 'export') ? file.file.uuid : file.uuid;
 
-      var fileResponse = await fetch(url);
-      var fileBlob = await fileResponse.blob();
-
-      var formData = new FormData();
-      formData.append('files', fileBlob);
-      formData.append('fileInfo', JSON.stringify({"alternativeText":alt,"caption":"","name":name}));
-
-      // https://dev.to/bassel17/how-to-upload-an-image-to-strapi-2hhg
-      // https://forum.strapi.io/t/upload-image-url/3484/2
-      var uploadResponse = await fetch(`${strapi.backendURL}/upload`, { method: 'POST', headers: { "Authorization": `Bearer ${authResponse.jwt}` }, body: formData });
-      console.dir(uploadResponse);
-
-      //@Todo: Optional - find out why it won't work when it's like this
-      // https://github.com/strapi/strapi/blob/master/packages/core/helper-plugin/lib/src/utils/request/index.js
-      // var uploadResponse = await request(`/upload`, { method: 'POST', headers: { "Authorization": `Bearer ${authResponse.jwt}` }, body: formData } );
-      // console.dir(uploadResponse);
+      await request(`/${pluginId}/record-file`, {method: 'POST', body: file});
     });
   }
 

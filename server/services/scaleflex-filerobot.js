@@ -65,4 +65,7 @@ module.exports = ({ strapi }) => ({
     
     return media;
   },
+  async recordFile(ctx) {
+    console.dir(ctx.request.body);
+  },
 });

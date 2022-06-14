@@ -66,7 +66,7 @@ https://scaleflexhq.atlassian.net/wiki/spaces/FIL/pages/19104023/Strapi+Plugin
 
 - Have a table: image ID | local URL | FR URL (probably wont need this)
 - ~~Have sync status and~~ trigger sync buttons
-- ~~Messages~~ Better popups
+- ~~Messages~~ Better popups. Eg: material ui snackbar, react-simple-snackbar, react-popper, floating-ui
 - Documentation
 
 ## Docs

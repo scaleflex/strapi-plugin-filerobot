@@ -35,4 +35,13 @@ module.exports = [
       auth: false,
     },
   },
+  {
+    method: 'POST',
+    path: '/record-file',
+    handler: 'scaleflexFilerobot.recordFile',
+    config: {
+      policies: [],
+      auth: false,
+    },
+  },
 ];
