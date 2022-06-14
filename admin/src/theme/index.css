@@ -5,3 +5,8 @@
 button {
 	margin-right: 10px;
 }
+
+.filerobot-Explorer-TopBar-centerSide,
+.filerobot-Explorer-TopBar-rightSide {
+	display: none !important;
+}

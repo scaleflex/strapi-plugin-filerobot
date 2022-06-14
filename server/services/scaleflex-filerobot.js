@@ -66,6 +66,20 @@ module.exports = ({ strapi }) => ({
     return media;
   },
   async recordFile(ctx) {
-    console.dir(ctx.request.body);
+    var file = ctx.request.body.file;
+    var action = ctx.request.body.action;
+
+    var url = (action === 'export') ? file.link : file.url.cdn;
+    var name = (action === 'export') ? file.file.name : file.name;
+    var alt = (action === 'export') ? file.file.uuid : file.uuid;
+
+    await strapi.entityService.create('plugin::upload.file', {
+      data: {
+        name: name,
+        url: url,
+        provider: 'filerobot',
+        // @Todo: hash must be defined. mime must be defined.size must be defined.
+      },
+    });
   },
 });

@@ -33,7 +33,7 @@ const Configurations = (props) => {
 
     if (config.token === '' || config.sec_temp === '' || config.user === '' || config.pass === '')
     {
-      alert(intl.formatMessage({id:'scaleflex-filerobot.notification.error.fill_required'})); // @Todo: Better popups
+      alert(intl.formatMessage({id:'scaleflex-filerobot.notification.error.fill_required'}));
       $("button").attr("disabled", false);
 
       return;
