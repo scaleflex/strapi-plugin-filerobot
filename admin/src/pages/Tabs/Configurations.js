@@ -150,14 +150,63 @@ const Configurations = (props) => {
     return true;
   }
 
-  const trigger_sync = () => { // @Todo: Finish
+  const trigger_sync = async () => { // @Todo: Repeated code. DRY
     $("button").attr("disabled", "disabled");
-    alert("trigger_sync");
+
+    var media = await request(`/${pluginId}/db-files`, {method: 'GET'});
+
+    var toSyncUp = media.nonFilerobot;
+    var alreadyDown = media.filerobot;
+
+    var configs = await request(`/${pluginId}/config`, {method: 'GET'});
+    
+    var domain = 'https://api.filerobot.com';
+
+    var headers = new Headers();
+    headers.append("Content-Type", "application/json");
+
+    var requestOptions = {
+      method: 'GET',
+      headers: headers
+    };
+
+    var filerobotDirectory = (configs.folder.charAt(0) === '/') ? configs.folder : `/${configs.folder}`;
+
+    var filerobotResponse = await fetch(`${domain}/${configs.token}/v4/files?folder=${filerobotDirectory}`, requestOptions);
+
+    if (filerobotResponse.status != 200)
+    {
+      alert(intl.formatMessage({id:'scaleflex-filerobot.notification.error.sync_status'}));
+      $("button").attr("disabled", false);
+
+      return false;
+    }
+
+    var filerobotResponseJson = await filerobotResponse.json();
+    var filerobotMedia = filerobotResponseJson.files;
+
+    // Better to sync down then up
+    sync_down(filerobotMedia);
+    sync_up(toSyncUp);
+
     $("button").attr("disabled", false);
 
-    // Update DB too : plugin::upload.file
-
     return true;
+  }
+
+  function sync_down(filerobotMedia)
+  {
+    $(filerobotMedia).each(function( index ) {
+      console.dir( this.name );
+      // @Todo: Finish
+    });
+  }
+  function sync_up(toSyncUp)
+  {
+    $(toSyncUp).each(function( index ) {
+      console.dir( this.name );
+      // @Todo: Finish
+    });
   }
 
   return (

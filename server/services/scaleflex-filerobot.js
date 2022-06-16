@@ -72,13 +72,29 @@ module.exports = ({ strapi }) => ({
     var url = (action === 'export') ? file.link : file.url.cdn;
     var name = (action === 'export') ? file.file.name : file.name;
     var alt = (action === 'export') ? file.file.uuid : file.uuid;
+    var ext = (action === 'export') ? file.file.extension : file.extension;
+    var mime = (action === 'export') ? file.file.type : file.type;
+    var size = parseFloat( (action === 'export') ? file.file.size.pretty : file.size.pretty );
+    var hash = (action === 'export') ? file.file.hash.sha1 : file.hash.sha1;
+    var width = (action === 'export') ? file.file.info.img_w : file.info.img_w;
+    var height = (action === 'export') ? file.file.info.img_h : file.info.img_h;
+
+    // @Todo: check if already exist in DB (name, url, provider=filerobot)
 
     await strapi.entityService.create('plugin::upload.file', {
       data: {
-        name: name,
         url: url,
+        name: name,
+        caption: name,
+        alternativeText: alt,
         provider: 'filerobot',
-        // @Todo: hash must be defined. mime must be defined.size must be defined.
+        ext: `.${ext}`,
+        mime: mime,
+        size: size,
+        hash: hash,
+        width: width,
+        height: height, 
+        // @Todo: get current user id too
       },
     });
   },
