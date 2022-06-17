@@ -105,108 +105,87 @@ const Configurations = (props) => {
   }
 
   const sync_status = async () => {
-    $("button").attr("disabled", "disabled");
+    var { localMedia, filerobotMedia } = await getSyncStatus();
+    var toSyncUp = localMedia.nonFilerobot;
+    var alreadyDown = localMedia.filerobot;
+    var alreadyDownHashs = alreadyDown.map(x => x['hash']);
+    var filerobotMediaHashs = filerobotMedia.map(x => x['hash']['sha1']);
+    var toSyncDown = filerobotMediaHashs.filter(x => !alreadyDownHashs.includes(x));
 
-    var media = await request(`/${pluginId}/db-files`, {method: 'GET'});
-
-    var toSyncUp = media.nonFilerobot;
-    var alreadyDown = media.filerobot;
-    
-    var alreadyDownNames = alreadyDown.map(x => x['name']);
-
-    var configs = await request(`/${pluginId}/config`, {method: 'GET'});
-    
-    var domain = 'https://api.filerobot.com';
-
-    var headers = new Headers();
-    headers.append("Content-Type", "application/json");
-
-    var requestOptions = {
-      method: 'GET',
-      headers: headers
-    };
-
-    var filerobotDirectory = (configs.folder.charAt(0) === '/') ? configs.folder : `/${configs.folder}`;
-
-    var filerobotResponse = await fetch(`${domain}/${configs.token}/v4/files?folder=${filerobotDirectory}`, requestOptions);
-
-    if (filerobotResponse.status != 200)
-    {
-      alert(intl.formatMessage({id:'scaleflex-filerobot.notification.error.sync_status'}));
-      $("button").attr("disabled", false);
-
-      return false;
-    }
-
-    var filerobotResponseJson = await filerobotResponse.json();
-    var filerobotMedia = filerobotResponseJson.files;
-    var filerobotMediaNames = filerobotMedia.map(x => x['name']);
-
-    var toSyncDownNames = filerobotMediaNames.filter(x => !alreadyDownNames.includes(x));
-
-    alert( sprintf(intl.formatMessage({id:'scaleflex-filerobot.notification.success.sync_status'}), toSyncUp.length, toSyncDownNames.length) );
+    alert( sprintf(intl.formatMessage({id:'scaleflex-filerobot.notification.success.sync_status'}), toSyncUp.length, toSyncDown.length) );
     $("button").attr("disabled", false);
 
     return true;
   }
 
-  const trigger_sync = async () => { // @Todo: Repeated code. DRY
-    $("button").attr("disabled", "disabled");
-
-    var media = await request(`/${pluginId}/db-files`, {method: 'GET'});
-
-    var toSyncUp = media.nonFilerobot;
-    var alreadyDown = media.filerobot;
-
-    var configs = await request(`/${pluginId}/config`, {method: 'GET'});
-    
-    var domain = 'https://api.filerobot.com';
-
-    var headers = new Headers();
-    headers.append("Content-Type", "application/json");
-
-    var requestOptions = {
-      method: 'GET',
-      headers: headers
-    };
-
-    var filerobotDirectory = (configs.folder.charAt(0) === '/') ? configs.folder : `/${configs.folder}`;
-
-    var filerobotResponse = await fetch(`${domain}/${configs.token}/v4/files?folder=${filerobotDirectory}`, requestOptions);
-
-    if (filerobotResponse.status != 200)
-    {
-      alert(intl.formatMessage({id:'scaleflex-filerobot.notification.error.sync_status'}));
-      $("button").attr("disabled", false);
-
-      return false;
-    }
-
-    var filerobotResponseJson = await filerobotResponse.json();
-    var filerobotMedia = filerobotResponseJson.files;
+  const trigger_sync = async () => {
+    var { localMedia, filerobotMedia } = await getSyncStatus();
+    var toSyncUp = localMedia.nonFilerobot;
+    var alreadyDown = localMedia.filerobot;
 
     // Better to sync down then up
-    sync_down(filerobotMedia);
+    sync_down(filerobotMedia, alreadyDown);
     sync_up(toSyncUp);
 
     $("button").attr("disabled", false);
 
     return true;
   }
-
-  function sync_down(filerobotMedia)
+  function sync_down(filerobotMedia, alreadyDown)
   {
-    $(filerobotMedia).each(function( index ) {
-      console.dir( this.name );
-      // @Todo: Finish
+    var alreadyDownHashs = alreadyDown.map(x => x['hash']);
+    var filerobotMediaHashs = filerobotMedia.map(x => x['hash']['sha1']);
+    var toSyncDown = filerobotMediaHashs.filter(x => !alreadyDownHashs.includes(x));
+    
+    var count = 0;
+    
+    $(filerobotMedia).each(async function( index ) {
+      if ( !alreadyDownHashs.includes(this.hash.sha1) )
+      {
+        await request(`/${pluginId}/record-file`, {method: 'POST', body: {file:this, action:'sync-down'}});
+        count++;
+        console.log(`Synced down ${count} / ${toSyncDown.length}`); // @Todo: Use some React Progress Bar library
+      }
     });
   }
   function sync_up(toSyncUp)
   {
-    $(toSyncUp).each(function( index ) {
-      console.dir( this.name );
-      // @Todo: Finish
+    $(toSyncUp).each(async function( index ) {
+      await request(`/${pluginId}/sync-up`, {method: 'POST', body: {file:this}});
     });
+  }
+
+  async function getSyncStatus()
+  {
+    $("button").attr("disabled", "disabled");
+
+    var localMedia = await request(`/${pluginId}/db-files`, {method: 'GET'});
+    var configs = await request(`/${pluginId}/config`, {method: 'GET'});
+    var domain = 'https://api.filerobot.com';
+
+    var headers = new Headers();
+    headers.append("Content-Type", "application/json");
+
+    var requestOptions = {
+      method: 'GET',
+      headers: headers
+    };
+
+    var filerobotDirectory = (configs.folder.charAt(0) === '/') ? configs.folder : `/${configs.folder}`;
+    var filerobotResponse = await fetch(`${domain}/${configs.token}/v4/files?folder=${filerobotDirectory}`, requestOptions);
+
+    if (filerobotResponse.status != 200)
+    {
+      alert(intl.formatMessage({id:'scaleflex-filerobot.notification.error.sync_status'}));
+      $("button").attr("disabled", false);
+
+      return false;
+    }
+
+    var filerobotResponseJson = await filerobotResponse.json();
+    var filerobotMedia = filerobotResponseJson.files;
+
+    return {'localMedia':localMedia, 'filerobotMedia':filerobotMedia};
   }
 
   return (

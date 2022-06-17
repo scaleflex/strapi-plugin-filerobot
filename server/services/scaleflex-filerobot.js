@@ -1,5 +1,10 @@
 'use strict';
 
+const fs = require('fs');
+const path = require('path');
+const fetch = require("node-fetch");
+const filerobotApiDomain = 'https://api.filerobot.com';
+
 module.exports = ({ strapi }) => ({
   getWelcomeMessage() {
     return 'Thank you for using Scaleflex Filerobot';
@@ -42,7 +47,7 @@ module.exports = ({ strapi }) => ({
     return config;
   },
   async checkDbFiles() {
-    var filerobotMedia = await strapi.entityService.findMany('plugin::upload.file', {
+    var nonFilerobotMedia = await strapi.entityService.findMany('plugin::upload.file', {
       filters: {
         $not: {
           provider: 'filerobot',
@@ -51,7 +56,7 @@ module.exports = ({ strapi }) => ({
       populate: { category: true },
     });
     
-    var nonFilerobotMedia = await strapi.entityService.findMany('plugin::upload.file', {
+    var filerobotMedia = await strapi.entityService.findMany('plugin::upload.file', {
       filters: {
         provider: 'filerobot',
       },
@@ -79,9 +84,9 @@ module.exports = ({ strapi }) => ({
     var width = (action === 'export') ? file.file.info.img_w : file.info.img_w;
     var height = (action === 'export') ? file.file.info.img_h : file.info.img_h;
 
-    // @Todo: check if already exist in DB (name, url, provider=filerobot)
+    // @Todo: check if already exist in DB (name, url, hash, provider=filerobot)
 
-    await strapi.entityService.create('plugin::upload.file', {
+    var result = await strapi.entityService.create('plugin::upload.file', {
       data: {
         url: url,
         name: name,
@@ -97,5 +102,23 @@ module.exports = ({ strapi }) => ({
         // @Todo: get current user id too
       },
     });
+
+    return result;
+  },
+  async syncUp(ctx) {
+    var file = ctx.request.body.file;
+    var imagePath = path.join(strapi.dirs.public, file.url);
+    var base64 = fs.readFileSync(imagePath, {encoding: 'base64'});
+    
+    // var headers = new fetch.Headers();
+    // headers.append("Content-Type", "application/json");
+
+    // var requestOptions = {
+    //   method: 'GET',
+    //   headers: headers
+    // };
+
+    // @Todo: Finish
+
   },
 });

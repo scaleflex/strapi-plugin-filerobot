@@ -44,4 +44,13 @@ module.exports = [
       auth: false,
     },
   },
+  {
+    method: 'POST',
+    path: '/sync-up',
+    handler: 'scaleflexFilerobot.syncUp',
+    config: {
+      policies: [],
+      auth: false,
+    },
+  },
 ];
