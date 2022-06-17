@@ -9,12 +9,15 @@ module.exports = ({ strapi }) => ({
   getWelcomeMessage() {
     return 'Thank you for using Scaleflex Filerobot';
   },
-  async getConfig() {
-    const pluginStore = strapi.store({
+  getPluginStore() {
+    return strapi.store({
       environment: strapi.config.environment,
       type: 'plugin',
       name: 'filerobot',
     });
+  },
+  async getConfig() {
+    const pluginStore = this.getPluginStore();
 
     const config = await pluginStore.get({ key: 'options' });
 
@@ -31,11 +34,7 @@ module.exports = ({ strapi }) => ({
     }
   },
   async updateConfig(ctx) {
-    const pluginStore = strapi.store({
-      environment: strapi.config.environment,
-      type: 'plugin',
-      name: 'filerobot',
-    });
+    const pluginStore = this.getPluginStore();
 
     await pluginStore.set({
       key: 'options',
@@ -109,16 +108,73 @@ module.exports = ({ strapi }) => ({
     var file = ctx.request.body.file;
     var imagePath = path.join(strapi.dirs.public, file.url);
     var base64 = fs.readFileSync(imagePath, {encoding: 'base64'});
+
+    var pluginStore = this.getPluginStore();
+    var config = await pluginStore.get({ key: 'options' });
     
-    // var headers = new fetch.Headers();
-    // headers.append("Content-Type", "application/json");
+    var sassReqHeaders = new fetch.Headers();
+    sassReqHeaders.append("Content-Type", "application/json");
 
-    // var requestOptions = {
-    //   method: 'GET',
-    //   headers: headers
-    // };
+    var sassReqOpt = {
+      method: 'GET',
+      headers: sassReqHeaders
+    };
 
-    // @Todo: Finish
+    var sassRes = await fetch(`${filerobotApiDomain}/${config.token}/key/${config.sec_temp}`, sassReqOpt);
 
+    if (sassRes.status != 200)
+    {
+      return false; // @Todo: better erroneous return
+    }
+
+    var sassInfo = await sassRes.json();
+
+    if (sassInfo.status !== "success")
+    {
+      return false; // @Todo: better erroneous return
+    }
+
+    var sass = sassInfo.key; // @Todo: Save SASS key into browser, instead of getting it via API all the time.
+
+    var uploadHeaders = new fetch.Headers();
+    uploadHeaders.append("Content-Type", "application/json");
+    uploadHeaders.append("X-Filerobot-Key", sass);
+
+    var raw = JSON.stringify({
+      "name": file.name,
+      "data": base64,
+      "postactions": "decode_base64"
+    });
+
+    var uploadRequestOptions = {
+      method: 'POST',
+      headers: uploadHeaders,
+      body: raw
+    };
+
+    var uploadRes = await fetch(`${filerobotApiDomain}/${config.token}/v4/files?folder=/${config.folder}`, uploadRequestOptions);
+
+    if (uploadRes.status != 200)
+    {
+      return false; // @Todo: better erroneous return
+    }
+
+    var uploadResult = await uploadRes.json();
+
+    if (uploadResult.status !== "success")
+    {
+      return false; // @Todo: better erroneous return
+    }
+
+    const updatedFileEntry = await strapi.entityService.update('plugin::upload.file', file.id, {
+      data: {
+        url: uploadResult.file.url.cdn,
+        hash: uploadResult.file.hash.sha1,
+        provider: 'filerobot',
+        alternativeText: uploadResult.file.uuid,
+      },
+    });
+
+    return updatedFileEntry;
   },
 });

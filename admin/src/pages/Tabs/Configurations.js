@@ -143,15 +143,19 @@ const Configurations = (props) => {
       if ( !alreadyDownHashs.includes(this.hash.sha1) )
       {
         await request(`/${pluginId}/record-file`, {method: 'POST', body: {file:this, action:'sync-down'}});
-        count++;
+        count++; // @Todo: Dont count the failed ones
         console.log(`Synced down ${count} / ${toSyncDown.length}`); // @Todo: Use some React Progress Bar library
       }
     });
   }
   function sync_up(toSyncUp)
   {
+    var count = 0;
+    
     $(toSyncUp).each(async function( index ) {
       await request(`/${pluginId}/sync-up`, {method: 'POST', body: {file:this}});
+      count++; // @Todo: Dont count the failed ones
+      console.log(`Synced up ${count} / ${toSyncUp.length}`); // @Todo: Use some React Progress Bar library
     });
   }
 
