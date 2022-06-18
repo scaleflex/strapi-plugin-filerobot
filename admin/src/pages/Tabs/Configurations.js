@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useState} from "react";
 import pluginId from '../../pluginId';
 
 import $ from 'jquery';
@@ -13,10 +13,34 @@ import { useIntl } from 'react-intl';
 
 import '../../theme/index.css';
 
+// https://www.npmjs.com/package/react-popup-alert
+import Alert from 'react-popup-alert'
+import 'react-popup-alert/dist/index.css';
+
 const Configurations = (props) => {
   const intl = useIntl();
 
   const config = props.config;
+
+  const [alert, setAlert] = React.useState({
+    type: 'warning',
+    text: '',
+    show: false
+  })
+  function onCloseAlert() {
+    setAlert({
+      type: '',
+      text: '',
+      show: false
+    })
+  }
+  function onShowAlert(type, text) {
+    setAlert({
+      type: type,
+      text: text,
+      show: true
+    })
+  }
 
   const update = async (event) => {
     event.preventDefault();
@@ -33,7 +57,7 @@ const Configurations = (props) => {
 
     if (config.token === '' || config.sec_temp === '' || config.user === '' || config.pass === '')
     {
-      alert(intl.formatMessage({id:'scaleflex-filerobot.notification.error.fill_required'}));
+      onShowAlert('warning', intl.formatMessage({id:'scaleflex-filerobot.notification.error.fill_required'}));
       $("button").attr("disabled", false);
 
       return;
@@ -62,7 +86,7 @@ const Configurations = (props) => {
 
     if (tokenCheck.status != 200)
     {
-      alert(intl.formatMessage({id:'scaleflex-filerobot.notification.error.check_token_issue'}));
+      onShowAlert('warning', intl.formatMessage({id:'scaleflex-filerobot.notification.error.check_token_issue'}));
       $("button").attr("disabled", false);
 
       return false;
@@ -72,7 +96,7 @@ const Configurations = (props) => {
 
     if (tokenCheckJson.status !== 'success')
     {
-      alert(intl.formatMessage({id:'scaleflex-filerobot.notification.error.wrong_token'}));
+      onShowAlert('warning', intl.formatMessage({id:'scaleflex-filerobot.notification.error.wrong_token'}));
       $("button").attr("disabled", false);
 
       return false;
@@ -82,7 +106,7 @@ const Configurations = (props) => {
 
     if (checkSecTemp.status != 200)
     {
-      alert(intl.formatMessage({id:'scaleflex-filerobot.notification.error.check_sectmp_issue'}));
+      onShowAlert('warning', intl.formatMessage({id:'scaleflex-filerobot.notification.error.check_sectmp_issue'}));
       $("button").attr("disabled", false);
 
       return false;
@@ -92,13 +116,13 @@ const Configurations = (props) => {
 
     if (checkSecTempJson.status !== 'success')
     {
-      alert(intl.formatMessage({id:'scaleflex-filerobot.notification.error.wrong_sectmp'}));
+      onShowAlert('warning', intl.formatMessage({id:'scaleflex-filerobot.notification.error.wrong_sectmp'}));
       $("button").attr("disabled", false);
 
       return false;
     }
-    
-    alert(intl.formatMessage({id:'scaleflex-filerobot.notification.success.sync_connection'}));
+
+    onShowAlert('warning', intl.formatMessage({id:'scaleflex-filerobot.notification.success.sync_connection'}));
     $("button").attr("disabled", false);
 
     return true;
@@ -112,7 +136,7 @@ const Configurations = (props) => {
     var filerobotMediaHashs = filerobotMedia.map(x => x['hash']['sha1']);
     var toSyncDown = filerobotMediaHashs.filter(x => !alreadyDownHashs.includes(x));
 
-    alert( sprintf(intl.formatMessage({id:'scaleflex-filerobot.notification.success.sync_status'}), toSyncUp.length, toSyncDown.length) );
+    onShowAlert('warning', sprintf(intl.formatMessage({id:'scaleflex-filerobot.notification.success.sync_status'}), toSyncUp.length, toSyncDown.length) );
     $("button").attr("disabled", false);
 
     return true;
@@ -180,7 +204,7 @@ const Configurations = (props) => {
 
     if (filerobotResponse.status != 200)
     {
-      alert(intl.formatMessage({id:'scaleflex-filerobot.notification.error.sync_status'}));
+      onShowAlert('warning', intl.formatMessage({id:'scaleflex-filerobot.notification.error.sync_status'}));
       $("button").attr("disabled", false);
 
       return false;
@@ -235,6 +259,20 @@ const Configurations = (props) => {
         <Button variant="secondary" size="sm" onClick={trigger_sync}>Trigger Synchronization</Button>
       </div>
 
+      <Alert
+        header={'Scaleflex Filerobot'}
+        btnText={'Close'}
+        text={alert.text}
+        type={alert.type}
+        show={alert.show}
+        onClosePress={onCloseAlert}
+        pressCloseOnOutsideClick={true}
+        showBorderBottom={false}
+        alertStyles={{}}
+        headerStyles={{}}
+        textStyles={{}}
+        buttonStyles={{}}
+      />
     </div>
   );
 };
