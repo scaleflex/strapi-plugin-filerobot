@@ -3,7 +3,7 @@ import pluginId from '../../pluginId';
 
 import $ from 'jquery';
 
-import { Form, Button } from 'react-bootstrap';
+import { Container, Row, Col, Form, Button } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 import { request } from "@strapi/helper-plugin";
@@ -16,6 +16,10 @@ import '../../theme/index.css';
 // https://www.npmjs.com/package/react-popup-alert
 import Alert from 'react-popup-alert'
 import 'react-popup-alert/dist/index.css';
+
+// https://www.youtube.com/watch?v=3sH_Kq9e5hQ
+// https://www.npmjs.com/package/react-animated-progress-bar
+import ProgressBar from 'react-animated-progress-bar';
 
 const Configurations = (props) => {
   const intl = useIntl();
@@ -41,6 +45,9 @@ const Configurations = (props) => {
       show: true
     })
   }
+
+  const [down, setDown] = React.useState(0);
+  const [up, setUp] = React.useState(0);
 
   const update = async (event) => {
     event.preventDefault();
@@ -148,8 +155,10 @@ const Configurations = (props) => {
     var alreadyDown = localMedia.filerobot;
 
     // Better to sync down then up
+    //$('.progress-bars').show();
     sync_down(filerobotMedia, alreadyDown);
     sync_up(toSyncUp);
+    //$('.progress-bars').hide();
 
     $("button").attr("disabled", false);
 
@@ -168,7 +177,9 @@ const Configurations = (props) => {
       {
         await request(`/${pluginId}/record-file`, {method: 'POST', body: {file:this, action:'sync-down'}});
         count++; // @Todo: Dont count the failed ones
-        console.log(`Synced down ${count} / ${toSyncDown.length}`); // @Todo: Use some React Progress Bar library
+        console.log(`Synced down ${count} / ${toSyncDown.length}`);
+        var percentage = (toSyncDown.length === 0) ? 100 : Math.ceil(count/toSyncDown.length*100);
+        setDown(percentage);
       }
     });
   }
@@ -179,7 +190,9 @@ const Configurations = (props) => {
     $(toSyncUp).each(async function( index ) {
       await request(`/${pluginId}/sync-up`, {method: 'POST', body: {file:this}});
       count++; // @Todo: Dont count the failed ones
-      console.log(`Synced up ${count} / ${toSyncUp.length}`); // @Todo: Use some React Progress Bar library
+      console.log(`Synced up ${count} / ${toSyncUp.length}`);
+      var percentage = (toSyncUp.length === 0) ? 100 : Math.ceil(count/toSyncUp.length*100);
+      setUp(percentage);
     });
   }
 
@@ -218,46 +231,79 @@ const Configurations = (props) => {
 
   return (
     <div>
-      <h2>Filerobot Configurations</h2>
+      <Container>
+        <h2>Filerobot Configurations</h2>
 
-      <Form onSubmit={update}>
-        <Form.Group controlId="token" className="form-group">
-          <Form.Label>Token *</Form.Label>
-          <Form.Control name="token" type="text" defaultValue={config.token} />
-        </Form.Group>
+        <Form onSubmit={update}>
+          <Form.Group controlId="token" className="form-group">
+            <Form.Label>Token *</Form.Label>
+            <Form.Control name="token" type="text" defaultValue={config.token} />
+          </Form.Group>
 
-        <Form.Group controlId="sec_temp" className="form-group">
-          <Form.Label>Security Template Identifier *</Form.Label>
-          <Form.Control name="sec_temp" type="text" defaultValue={config.sec_temp} />
-        </Form.Group>
+          <Form.Group controlId="sec_temp" className="form-group">
+            <Form.Label>Security Template Identifier *</Form.Label>
+            <Form.Control name="sec_temp" type="text" defaultValue={config.sec_temp} />
+          </Form.Group>
 
-        <Form.Group controlId="folder" className="form-group">
-          <Form.Label>Folder</Form.Label>
-          <Form.Control name="folder" type="text" defaultValue={config.folder} />
-        </Form.Group>
+          <Form.Group controlId="folder" className="form-group">
+            <Form.Label>Folder</Form.Label>
+            <Form.Control name="folder" type="text" defaultValue={config.folder} />
+          </Form.Group>
 
-        <Form.Group controlId="user" className="form-group">
-          <Form.Label>Strapi Authenticated User *</Form.Label>
-          <Form.Control name="user" type="text" defaultValue={config.user} />
-        </Form.Group>
+          <Form.Group controlId="user" className="form-group">
+            <Form.Label>Strapi Authenticated User *</Form.Label>
+            <Form.Control name="user" type="text" defaultValue={config.user} />
+          </Form.Group>
 
-        <Form.Group controlId="pass" className="form-group">
-          <Form.Label>Strapi Authenticated User Password *</Form.Label>
-          <Form.Control name="pass" type="password" defaultValue={config.pass} />
-        </Form.Group>
+          <Form.Group controlId="pass" className="form-group">
+            <Form.Label>Strapi Authenticated User Password *</Form.Label>
+            <Form.Control name="pass" type="password" defaultValue={config.pass} />
+          </Form.Group>
 
-        <Form.Group className="btn-group">
-          <Button className="btn btn-primary" type="submit">
-            Submit
-          </Button>
-        </Form.Group>
-      </Form>
+          <Form.Group className="btn-group">
+            <Button className="btn btn-primary" type="submit">
+              Submit
+            </Button>
+          </Form.Group>
+        </Form>
 
-      <div className="mb-2 btn-group">
-        <Button variant="secondary" size="sm" onClick={check_connection}>Check Connection</Button>
-        <Button variant="secondary" size="sm" onClick={sync_status}>Synchronization Status</Button>
-        <Button variant="secondary" size="sm" onClick={trigger_sync}>Trigger Synchronization</Button>
-      </div>
+        <div className="mb-2 btn-group">
+          <Button variant="secondary" size="sm" onClick={check_connection}>Check Connection</Button>
+          <Button variant="secondary" size="sm" onClick={sync_status}>Synchronization Status</Button>
+          <Button variant="secondary" size="sm" onClick={trigger_sync}>Trigger Synchronization</Button>
+        </div>
+
+        <Row className="progress-bars">
+          <Col>
+            <ProgressBar
+              width="100%"
+              height="10px"
+              rect
+              fontColor="gray"
+              percentage={down}
+              rectPadding="1px"
+              rectBorderRadius="20px"
+              trackPathColor="transparent"
+              bgColor="transparent"
+              trackBorderColor="grey"
+            />
+          </Col>
+          <Col>
+            <ProgressBar
+              width="100%"
+              height="10px"
+              rect
+              fontColor="gray"
+              percentage={up}
+              rectPadding="1px"
+              rectBorderRadius="20px"
+              trackPathColor="transparent"
+              bgColor="transparent"
+              trackBorderColor="grey"
+            />
+          </Col>
+        </Row>
+      </Container>
 
       <Alert
         header={'Scaleflex Filerobot'}
