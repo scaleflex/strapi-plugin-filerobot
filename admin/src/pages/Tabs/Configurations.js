@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React from "react";
 import pluginId from '../../pluginId';
 
 import $ from 'jquery';
@@ -17,9 +17,9 @@ import '../../theme/index.css';
 import Alert from 'react-popup-alert'
 import 'react-popup-alert/dist/index.css';
 
+// https://react-bootstrap.github.io/components/progress/
 // https://www.youtube.com/watch?v=3sH_Kq9e5hQ
-// https://www.npmjs.com/package/react-animated-progress-bar
-import ProgressBar from 'react-animated-progress-bar';
+import ProgressBar from 'react-bootstrap/ProgressBar'
 
 const Configurations = (props) => {
   const intl = useIntl();
@@ -155,10 +155,8 @@ const Configurations = (props) => {
     var alreadyDown = localMedia.filerobot;
 
     // Better to sync down then up
-    //$('.progress-bars').show();
     sync_down(filerobotMedia, alreadyDown);
     sync_up(toSyncUp);
-    //$('.progress-bars').hide();
 
     $("button").attr("disabled", false);
 
@@ -275,34 +273,13 @@ const Configurations = (props) => {
 
         <Row className="progress-bars">
           <Col>
-            <ProgressBar
-              width="100%"
-              height="10px"
-              rect
-              fontColor="gray"
-              percentage={down}
-              rectPadding="1px"
-              rectBorderRadius="20px"
-              trackPathColor="transparent"
-              bgColor="transparent"
-              trackBorderColor="grey"
-            />
+            <ProgressBar now={down} label={`${down}%`} />
           </Col>
           <Col>
-            <ProgressBar
-              width="100%"
-              height="10px"
-              rect
-              fontColor="gray"
-              percentage={up}
-              rectPadding="1px"
-              rectBorderRadius="20px"
-              trackPathColor="transparent"
-              bgColor="transparent"
-              trackBorderColor="grey"
-            />
+            <ProgressBar now={up} label={`${up}%`} />
           </Col>
         </Row>
+
       </Container>
 
       <Alert
@@ -314,10 +291,10 @@ const Configurations = (props) => {
         onClosePress={onCloseAlert}
         pressCloseOnOutsideClick={true}
         showBorderBottom={false}
-        alertStyles={{}}
+        alertStyles={{'min-height': 'fit-content', 'padding': '20px'}}
         headerStyles={{}}
         textStyles={{}}
-        buttonStyles={{}}
+        buttonStyles={{'background-color': 'rgb(0,0,0,0.1)','color': 'black', 'margin': 0}}
       />
     </div>
   );

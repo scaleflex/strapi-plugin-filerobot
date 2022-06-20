@@ -10,7 +10,3 @@ button {
 .filerobot-Explorer-TopBar-rightSide, {
 	display: none !important;
 }
-
-.progress-bar {
-	background-color: transparent !important;
-}
