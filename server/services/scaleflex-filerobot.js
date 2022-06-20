@@ -177,4 +177,11 @@ module.exports = ({ strapi }) => ({
 
     return updatedFileEntry;
   },
+  async getMedia(ctx) {
+    var media = await strapi.entityService.findMany('plugin::upload.file', {
+      populate: { category: true },
+    });
+
+    return media;
+  },
 });

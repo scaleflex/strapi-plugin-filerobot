@@ -53,4 +53,13 @@ module.exports = [
       auth: false,
     },
   },
+  {
+    method: 'GET',
+    path: '/media',
+    handler: 'scaleflexFilerobot.getMedia',
+    config: {
+      policies: [],
+      auth: false,
+    },
+  },
 ];

@@ -15,6 +15,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 
 import Configurations from '../Tabs/Configurations.js'
 import FMAW from '../Tabs/FMAW.js'
+import Media from '../Tabs/Media.js'
 
 import { request } from "@strapi/helper-plugin";
 
@@ -43,6 +44,9 @@ const HomePage = () => {
             </Tab>
             <Tab eventKey="fmaw" title="FMAW">
               <FMAW config={config} />
+            </Tab>
+            <Tab eventKey="media" title="Media">
+              <Media config={config} />
             </Tab>
           </Tabs>
         </Col>

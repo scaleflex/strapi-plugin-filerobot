@@ -64,7 +64,6 @@ https://scaleflexhq.atlassian.net/wiki/spaces/FIL/pages/19104023/Strapi+Plugin
 
 ## Todo
 
-- Have a table: image ID | local URL | FR URL (probably wont need this)
 - Documentation
 
 ## Docs
