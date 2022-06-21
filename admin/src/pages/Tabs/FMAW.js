@@ -94,7 +94,7 @@ const FMAW = (props) => {
       await request(`/${pluginId}/record-file`, {method: 'POST', body: {file:file, action:action}});
     });
 
-    window.location.reload(); // @Todo: Do something better than refresh
+    //window.location.reload(); // @Todo: Do something better than refresh
   }
 
   return (
