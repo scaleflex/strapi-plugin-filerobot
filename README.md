@@ -35,29 +35,6 @@ module.exports = {
 };
 ```
 
-## For upload provider
-
-```js
-module.exports = [
-  'strapi::errors',
-  { // start here
-    name: 'strapi::security',
-    config: {
-      contentSecurityPolicy: {
-        useDefaults: true,
-        directives: {
-          'connect-src': ["'self'", 'https:'],
-          'img-src': ["'self'", 'data:', 'blob:', 'dl.airtable.com', 'fkklnkdm.filerobot.com'],
-          'media-src': ["'self'", 'data:', 'blob:', 'dl.airtable.com', 'fkklnkdm.filerobot.com'],
-          upgradeInsecureRequests: null,
-        },
-      },
-    },
-  }, // end here
-  'strapi::cors',
-  // ...
-```
-
 ## Run
 
 In `plugins/scaleflex-filerobot`  
