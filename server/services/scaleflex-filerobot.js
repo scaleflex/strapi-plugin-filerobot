@@ -85,6 +85,9 @@ module.exports = ({ strapi }) => ({
 
     // @Todo: check if already exist in DB (name, url, hash, provider=filerobot)
 
+    var admins = await strapi.entityService.findMany('admin::user');
+    var admin1 = admins[0];
+
     var result = await strapi.entityService.create('plugin::upload.file', {
       data: {
         url: url,
@@ -98,7 +101,8 @@ module.exports = ({ strapi }) => ({
         hash: hash,
         width: width,
         height: height, 
-        // @Todo: get current user id too
+        created_by_id: admin1.id,
+        updated_by_id: admin1.id,
       },
     });
 

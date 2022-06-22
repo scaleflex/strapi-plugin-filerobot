@@ -30,6 +30,13 @@ const HomePage = () => {
 
   useEffect(() => {
     request(`/${pluginId}/config`, {method: 'GET'}).then(setConfig);
+
+    var activeTab = localStorage.getItem("activeTab");
+    if (activeTab) 
+    {
+      $(`button[id$='tab-${activeTab}']`).click();
+      localStorage.removeItem("activeTab");
+    }
   }, []);
 
   return (
