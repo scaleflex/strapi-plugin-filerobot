@@ -22,16 +22,6 @@ module.exports = {
     enabled: true,
     resolve: "./src/plugins/scaleflex-filerobot", // Folder of your plugin
   },
-  'upload': {
-    config: {
-      provider: 'filerobot',
-      providerOptions: {
-        token: '...',
-        sec_tmp_id: '...',
-        fr_dir: 'wp_demo',
-      },
-    },
-  },
 };
 ```
 
