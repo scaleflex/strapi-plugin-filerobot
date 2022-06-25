@@ -1,29 +1,14 @@
 # Strapi plugin scaleflexFilerobot
 
-- Node v12.18.2
+- Node v12.18.2 (any version from 12 to 14 is ok)
 - Strapi v3.6.1
 - Sqlite3 v5.0.0
 
-## Setup Strapi v3.6.1
+## Full details 
 
-`npx create-strapi-app@3.6.1 scaleflex-strapi-filerobot --quickstart`
+https://scaleflexhq.atlassian.net/wiki/spaces/FIL/pages/19104023/Strapi+Plugin
 
-## Setup plugin
-
-`yarn strapi generate:plugin scaleflexFilerobot`
-
-## Run
-
-In `plugins/scaleflex-filerobot`  
-`npm install`
-
-In root
-```
-yarn build
-yarn start # For production
-yarn develop # For development, with hot reload
-yarn develop --watch-admin # For development, with hot reload (backend included)
-```
+## Note
 
 In the past, the root folder contains a file called `server.js`
 ```js
@@ -33,16 +18,6 @@ strapi(/* {...} */).start();
 ```
 The serving background process was created by running: `node /var/www/scaleflex-strapi-filerobot/server.js`.  
 However, now that's unnecessary, because we can just run: `yarn develop`.
-
-## Update Server
-
-### SSH into server
-
-`ssh root@strapi.sfxconnector.com -p8022`
-
-## Usage
-
-https://scaleflexhq.atlassian.net/wiki/spaces/FIL/pages/19104023/Strapi+Plugin
 
 ## Deprecation
 
