@@ -96,7 +96,11 @@ const FMAW = (props) => {
       if (files.length-1==index)
       {
         // https://stackoverflow.com/questions/69703218/reactjs-bootstrap-tab-active-after-page-reload-or-how-can-i-save-active-tabs-us/69722943#69722943
-        localStorage.setItem("activeTab", "fmaw");
+        if (typeof(Storage) !== "undefined")
+        {
+          sessionStorage.setItem("activeTab", "fmaw");
+        }
+        
         window.location.reload();
       }
     });

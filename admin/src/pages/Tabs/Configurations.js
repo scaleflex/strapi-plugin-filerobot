@@ -174,7 +174,7 @@ const Configurations = (props) => {
       if ( !alreadyDownHashs.includes(this.hash.sha1) )
       {
         await request(`/${pluginId}/record-file`, {method: 'POST', body: {file:this, action:'sync-down'}});
-        count++; // @Todo: Dont count the failed ones
+        count++; // @Todo: Take account of the failed ones
         console.log(`Synced down ${count} / ${toSyncDown.length}`);
         var percentage = (toSyncDown.length === 0) ? 100 : Math.ceil(count/toSyncDown.length*100);
         setDown(percentage);
@@ -187,7 +187,7 @@ const Configurations = (props) => {
     
     $(toSyncUp).each(async function( index ) {
       await request(`/${pluginId}/sync-up`, {method: 'POST', body: {file:this}});
-      count++; // @Todo: Dont count the failed ones
+      count++; // @Todo: Take account of the failed ones
       console.log(`Synced up ${count} / ${toSyncUp.length}`);
       var percentage = (toSyncUp.length === 0) ? 100 : Math.ceil(count/toSyncUp.length*100);
       setUp(percentage);

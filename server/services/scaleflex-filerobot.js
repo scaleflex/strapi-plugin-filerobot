@@ -83,7 +83,7 @@ module.exports = ({ strapi }) => ({
     var width = (action === 'export') ? file.file.info.img_w : file.info.img_w;
     var height = (action === 'export') ? file.file.info.img_h : file.info.img_h;
 
-    // @Todo: check if already exist in DB (name, url, hash, provider=filerobot)
+    // @Todo: check if already exist in DB (name, url, hash, provider=filerobot) (?)
 
     var admins = await strapi.entityService.findMany('admin::user');
     var admin1 = admins[0];
@@ -115,30 +115,44 @@ module.exports = ({ strapi }) => ({
 
     var pluginStore = this.getPluginStore();
     var config = await pluginStore.get({ key: 'options' });
+
+    var sass = '';
     
-    var sassReqHeaders = new fetch.Headers();
-    sassReqHeaders.append("Content-Type", "application/json");
-
-    var sassReqOpt = {
-      method: 'GET',
-      headers: sassReqHeaders
-    };
-
-    var sassRes = await fetch(`${filerobotApiDomain}/${config.token}/key/${config.sec_temp}`, sassReqOpt);
-
-    if (sassRes.status != 200)
+    if (typeof(Storage) !== "undefined" && sessionStorage.getItem("sassKey"))
     {
-      return false; // @Todo: better erroneous return
+      sass = sessionStorage.getItem("sassKey");
     }
-
-    var sassInfo = await sassRes.json();
-
-    if (sassInfo.status !== "success")
+    else
     {
-      return false; // @Todo: better erroneous return
-    }
+      var sassReqHeaders = new fetch.Headers();
+      sassReqHeaders.append("Content-Type", "application/json");
 
-    var sass = sassInfo.key; // @Todo: Save SASS key into browser, instead of getting it via API all the time.
+      var sassReqOpt = {
+        method: 'GET',
+        headers: sassReqHeaders
+      };
+
+      var sassRes = await fetch(`${filerobotApiDomain}/${config.token}/key/${config.sec_temp}`, sassReqOpt);
+
+      if (sassRes.status != 200)
+      {
+        return false; // @Todo: better erroneous return
+      }
+
+      var sassInfo = await sassRes.json();
+
+      if (sassInfo.status !== "success")
+      {
+        return false; // @Todo: better erroneous return
+      }
+
+      sass = sassInfo.key;
+
+      if (typeof(Storage) !== "undefined")
+      {
+        sessionStorage.setItem("sassKey", sass);
+      }
+    }
 
     var uploadHeaders = new fetch.Headers();
     uploadHeaders.append("Content-Type", "application/json");

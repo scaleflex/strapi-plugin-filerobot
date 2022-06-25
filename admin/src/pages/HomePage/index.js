@@ -31,11 +31,15 @@ const HomePage = () => {
   useEffect(() => {
     request(`/${pluginId}/config`, {method: 'GET'}).then(setConfig);
 
-    var activeTab = localStorage.getItem("activeTab");
-    if (activeTab) 
+    if (typeof(Storage) !== "undefined")
     {
-      $(`button[id$='tab-${activeTab}']`).click();
-      localStorage.removeItem("activeTab");
+      var activeTab = sessionStorage.getItem("activeTab");
+      
+      if (activeTab) 
+      {
+        $(`button[id$='tab-${activeTab}']`).click();
+        sessionStorage.removeItem("activeTab");
+      }
     }
   }, []);
 
