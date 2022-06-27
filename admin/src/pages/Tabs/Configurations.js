@@ -157,7 +157,7 @@ const Configurations = (props) => {
     // Better to sync down then up
     sync_down(filerobotMedia, alreadyDown);
     sync_up(toSyncUp);
-
+    // @Todo: Ensure syncs are all done before re-enabling all the buttons
     $("button").attr("disabled", false);
 
     return true;

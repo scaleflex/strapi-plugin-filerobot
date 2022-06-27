@@ -121,36 +121,26 @@ module.exports = ({ strapi }) => ({
     if (typeof(Storage) !== "undefined" && sessionStorage.getItem("sassKey"))
     {
       sass = sessionStorage.getItem("sassKey");
+
+      var sassValidation = await this.validateSass(sass, config.token);
+
+      if (sassValidation.code === 'KEY_EXPIRED' || sassValidation.code === 'UNAUTHORIZED')
+      {
+        sass = await this.getNewSassKey(config);
+
+        if (sass === false)
+        {
+          return false;
+        }
+      }
     }
     else
     {
-      var sassReqHeaders = new fetch.Headers();
-      sassReqHeaders.append("Content-Type", "application/json");
+      sass = await this.getNewSassKey(config);
 
-      var sassReqOpt = {
-        method: 'GET',
-        headers: sassReqHeaders
-      };
-
-      var sassRes = await fetch(`${filerobotApiDomain}/${config.token}/key/${config.sec_temp}`, sassReqOpt);
-
-      if (sassRes.status != 200)
+      if (sass === false)
       {
-        return false; // @Todo: better erroneous return
-      }
-
-      var sassInfo = await sassRes.json();
-
-      if (sassInfo.status !== "success")
-      {
-        return false; // @Todo: better erroneous return
-      }
-
-      sass = sassInfo.key;
-
-      if (typeof(Storage) !== "undefined")
-      {
-        sessionStorage.setItem("sassKey", sass);
+        return false;
       }
     }
 
@@ -201,5 +191,54 @@ module.exports = ({ strapi }) => ({
     });
 
     return media;
+  },
+  async validateSass(sassKey, token) 
+  {
+    var headers = new Headers();
+    headers.append("Content-Type", "application/json");
+    headers.append("X-Filerobot-Key", sassKey);
+
+    var requestOptions = {
+      method: 'GET',
+      headers: headers,
+      redirect: 'follow'
+    };
+
+    var response = await fetch(`${filerobotApiDomain}/${token}/v4/files/`, requestOptions);
+
+    return response.json();
+  },
+  async getNewSassKey(config) 
+  {
+    var sassReqHeaders = new fetch.Headers();
+    sassReqHeaders.append("Content-Type", "application/json");
+
+    var sassReqOpt = {
+      method: 'GET',
+      headers: sassReqHeaders
+    };
+
+    var sassRes = await fetch(`${filerobotApiDomain}/${config.token}/key/${config.sec_temp}`, sassReqOpt);
+
+    if (sassRes.status != 200)
+    {
+      return false; // @Todo: better erroneous return
+    }
+
+    var sassInfo = await sassRes.json();
+
+    if (sassInfo.status !== "success")
+    {
+      return false; // @Todo: better erroneous return
+    }
+
+    var sass = sassInfo.key;
+
+    if (typeof(Storage) !== "undefined")
+    {
+      sessionStorage.setItem("sassKey", sass);
+    }
+
+    return sass;
   },
 });
