@@ -7,3 +7,7 @@
 ## Full details 
 
 https://scaleflexhq.atlassian.net/wiki/spaces/FIL/pages/19104023/Strapi+Plugin
+
+## Todo
+
+- CNAME

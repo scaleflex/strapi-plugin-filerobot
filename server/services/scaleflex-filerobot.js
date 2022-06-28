@@ -111,7 +111,18 @@ module.exports = ({ strapi }) => ({
   async syncUp(ctx) {
     var file = ctx.request.body.file;
     var imagePath = path.join(strapi.dirs.public, file.url);
-    var base64 = fs.readFileSync(imagePath, {encoding: 'base64'});
+    var base64 = '';
+
+    try 
+    {
+      base64 = fs.readFileSync(imagePath, {encoding: 'base64'});
+    } 
+    catch (err) 
+    {
+      console.error(err);
+      
+      return false;
+    }
 
     var pluginStore = this.getPluginStore();
     var config = await pluginStore.get({ key: 'options' });

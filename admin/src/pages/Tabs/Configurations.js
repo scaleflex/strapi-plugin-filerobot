@@ -54,13 +54,13 @@ const Configurations = (props) => {
     $("button").attr("disabled", "disabled");
 
     var config = [...event.currentTarget.elements]
-        .filter((ele) => ele.type !== "submit")
-        .map((ele) => {
-            return {
-                [ele.getAttribute("name")]: ele.value,
-            };
-        })
-        .reduce((a, b) => ({ ...a, [Object.keys(b)[0]]: b[Object.keys(b)[0]] }), {});
+      .filter((ele) => ele.type !== "submit")
+      .map((ele) => {
+        return {
+          [ele.getAttribute("name")]: ele.value,
+        };
+      })
+      .reduce((a, b) => ({ ...a, [Object.keys(b)[0]]: b[Object.keys(b)[0]] }), {});
 
     if (config.token === '' || config.sec_temp === '' || config.user === '' || config.pass === '')
     {
@@ -155,14 +155,15 @@ const Configurations = (props) => {
     var alreadyDown = localMedia.filerobot;
 
     // Better to sync down then up
-    sync_down(filerobotMedia, alreadyDown);
-    sync_up(toSyncUp);
-    // @Todo: Ensure syncs are all done before re-enabling all the buttons
+    var downResult = await sync_down(filerobotMedia, alreadyDown);
+    var upResult = await sync_up(toSyncUp);
+
+    onShowAlert('warning', sprintf(intl.formatMessage({id:'scaleflex-filerobot.notification.success.sync_results'}), downResult, upResult) );
     $("button").attr("disabled", false);
 
     return true;
   }
-  function sync_down(filerobotMedia, alreadyDown)
+  async function sync_down(filerobotMedia, alreadyDown)
   {
     var alreadyDownHashs = alreadyDown.map(x => x['hash']);
     var filerobotMediaHashs = filerobotMedia.map(x => x['hash']['sha1']);
@@ -170,28 +171,43 @@ const Configurations = (props) => {
     
     var count = 0;
     
-    $(filerobotMedia).each(async function( index ) {
+    // https://advancedweb.hu/how-to-use-async-functions-with-array-foreach-in-javascript/
+    await Promise.all( $(filerobotMedia).map(async function( index ) {
       if ( !alreadyDownHashs.includes(this.hash.sha1) )
       {
-        await request(`/${pluginId}/record-file`, {method: 'POST', body: {file:this, action:'sync-down'}});
-        count++; // @Todo: Take account of the failed ones
+        var result = await request(`/${pluginId}/record-file`, {method: 'POST', body: {file:this, action:'sync-down'}});
+
+        if (result !== false)
+        {
+          count++;
+        }
+        
         console.log(`Synced down ${count} / ${toSyncDown.length}`);
         var percentage = (toSyncDown.length === 0) ? 100 : Math.ceil(count/toSyncDown.length*100);
         setDown(percentage);
       }
-    });
+    }) );
+
+    return `${count} / ${toSyncDown.length}`;
   }
-  function sync_up(toSyncUp)
+  async function sync_up(toSyncUp)
   {
     var count = 0;
     
-    $(toSyncUp).each(async function( index ) {
-      await request(`/${pluginId}/sync-up`, {method: 'POST', body: {file:this}});
-      count++; // @Todo: Take account of the failed ones
+    await Promise.all( $(toSyncUp).map(async function( index ) {
+      var result = await request(`/${pluginId}/sync-up`, {method: 'POST', body: {file:this}});
+
+      if (result !== false)
+      {
+        count++;
+      }
+        
       console.log(`Synced up ${count} / ${toSyncUp.length}`);
       var percentage = (toSyncUp.length === 0) ? 100 : Math.ceil(count/toSyncUp.length*100);
       setUp(percentage);
-    });
+    }) );
+
+    return `${count} / ${toSyncUp.length}`;
   }
 
   async function getSyncStatus()

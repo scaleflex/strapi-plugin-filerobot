@@ -7,5 +7,6 @@
 	"notification.success.sync_connection": "Connection established successfully.",
 	"notification.error.sync_status": "An error has occured while checking your status. Maybe you entered the wrong Filerobot Directory.",
 	"notification.success.sync_status": "There are %1$d to sync up. There are %2$d to sync down",
-	"label.button.fmaw.export": "Add to Strapi"
+	"label.button.fmaw.export": "Add to Strapi",
+	"notification.success.sync_results": "%1$s files are successfully downloaded from Filerobot. %2$s files are successfully uploaded to Filerobot"
 }
