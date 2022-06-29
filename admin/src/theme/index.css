@@ -6,7 +6,8 @@ button {
 	margin-right: 10px;
 }
 
-.filerobot-Explorer-TopBar-centerSide,
+.filerobot-common-Search,
+.filerobot-Explorer-selectionTopMenu button:not(:first-child),
 .filerobot-Explorer-TopBar-rightSide {
 	display: none !important;
 }
