@@ -83,6 +83,8 @@ module.exports = ({ strapi }) => ({
     var width = (action === 'export') ? file.file.info.img_w : file.info.img_w;
     var height = (action === 'export') ? file.file.info.img_h : file.info.img_h;
 
+    url = this.removeQueryParam(url, 'vh');
+
     // @Todo: check if already exist in DB (name, url, hash, provider=filerobot) (?)
 
     var admins = await strapi.entityService.findMany('admin::user');
@@ -166,7 +168,7 @@ module.exports = ({ strapi }) => ({
 
     const updatedFileEntry = await strapi.entityService.update('plugin::upload.file', file.id, {
       data: {
-        url: uploadResult.file.url.cdn,
+        url: this.removeQueryParam(uploadResult.file.url.cdn, 'vh'),
         hash: uploadResult.file.hash.sha1,
         provider: 'filerobot',
         alternativeText: uploadResult.file.uuid,
@@ -264,5 +266,14 @@ module.exports = ({ strapi }) => ({
 
       return sass;
     }
+  },
+  removeQueryParam(link, paramName)
+  {
+    var url = new URL(link);
+    var params = new URLSearchParams(url.search);
+    params.delete(paramName);
+    var newUrl = params.toString() ? `${url.origin}${url.pathname}?${params.toString()}` : `${url.origin}${url.pathname}`;
+
+    return newUrl;
   },
 });
