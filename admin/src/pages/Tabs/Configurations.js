@@ -49,9 +49,16 @@ const Configurations = (props) => {
   const [down, setDown] = React.useState(0);
   const [up, setUp] = React.useState(0);
 
+  const filerobotApiDomain = 'https://api.filerobot.com';
+
   const update = async (event) => {
     event.preventDefault();
     $("button").attr("disabled", "disabled");
+
+    if (typeof(Storage) !== "undefined" && sessionStorage.getItem("sassKey"))
+    {
+      sessionStorage.removeItem("sassKey");
+    }
 
     var config = [...event.currentTarget.elements]
       .filter((ele) => ele.type !== "submit")
@@ -71,25 +78,35 @@ const Configurations = (props) => {
     }
 
     await request(`/${pluginId}/update-config`, {method: 'PUT', body: config});
+
+    onShowAlert('warning', intl.formatMessage({id:'scaleflex-filerobot.notification.success.update_config'}));
     $("button").attr("disabled", false);
   }
 
   const check_connection = async () => {
     $("button").attr("disabled", "disabled");
 
-    const configs = await request(`/${pluginId}/config`, {method: 'GET'});
-    
-    var domain = 'https://api.filerobot.com';
+    var configs = await request(`/${pluginId}/config`, {method: 'GET'});
+    var sass = await getSass(configs);
+
+    if (sass === false)
+    {
+      onShowAlert('warning', intl.formatMessage({id:'scaleflex-filerobot.notification.error.wrong_sectmp'}));
+      $("button").attr("disabled", false);
+
+      return false;
+    }
 
     var headers = new Headers();
     headers.append("Content-Type", "application/json");
+    headers.append("X-Filerobot-Key", sass);
 
     var requestOptions = {
       method: 'GET',
       headers: headers
     };
 
-    var tokenCheck = await fetch(`${domain}/${configs.token}/v4/files?folder=/&limit=1&`, requestOptions);
+    var tokenCheck = await fetch(`${filerobotApiDomain}/${configs.token}/v4/files?folder=/&limit=1&`, requestOptions);
 
     if (tokenCheck.status != 200)
     {
@@ -98,7 +115,7 @@ const Configurations = (props) => {
 
       return false;
     }
-    
+
     var tokenCheckJson = await tokenCheck.json();
 
     if (tokenCheckJson.status !== 'success')
@@ -108,26 +125,26 @@ const Configurations = (props) => {
 
       return false;
     }
+
+    // var checkSecTemp = await fetch(`${filerobotApiDomain}/${configs.token}/key/${configs.sec_temp}`, requestOptions);
+
+    // if (checkSecTemp.status != 200)
+    // {
+    //   onShowAlert('warning', intl.formatMessage({id:'scaleflex-filerobot.notification.error.check_sectmp_issue'}));
+    //   $("button").attr("disabled", false);
+
+    //   return false;
+    // }
     
-    var checkSecTemp = await fetch(`${domain}/${configs.token}/key/${configs.sec_temp}`, requestOptions);
+    // var checkSecTempJson = await checkSecTemp.json();
 
-    if (checkSecTemp.status != 200)
-    {
-      onShowAlert('warning', intl.formatMessage({id:'scaleflex-filerobot.notification.error.check_sectmp_issue'}));
-      $("button").attr("disabled", false);
+    // if (checkSecTempJson.status !== 'success')
+    // {
+    //   onShowAlert('warning', intl.formatMessage({id:'scaleflex-filerobot.notification.error.wrong_sectmp'}));
+    //   $("button").attr("disabled", false);
 
-      return false;
-    }
-    
-    var checkSecTempJson = await checkSecTemp.json();
-
-    if (checkSecTempJson.status !== 'success')
-    {
-      onShowAlert('warning', intl.formatMessage({id:'scaleflex-filerobot.notification.error.wrong_sectmp'}));
-      $("button").attr("disabled", false);
-
-      return false;
-    }
+    //   return false;
+    // }
 
     onShowAlert('warning', intl.formatMessage({id:'scaleflex-filerobot.notification.success.sync_connection'}));
     $("button").attr("disabled", false);
@@ -137,6 +154,15 @@ const Configurations = (props) => {
 
   const sync_status = async () => {
     var { localMedia, filerobotMedia } = await getSyncStatus();
+
+    if (localMedia === false && filerobotMedia === false)
+    {
+      onShowAlert('warning', intl.formatMessage({id:'scaleflex-filerobot.notification.error.wrong_sectmp'}));
+      $("button").attr("disabled", false);
+
+      return false;
+    }
+
     var toSyncUp = localMedia.nonFilerobot;
     var alreadyDown = localMedia.filerobot;
     var alreadyDownHashs = alreadyDown.map(x => x['hash']);
@@ -216,10 +242,19 @@ const Configurations = (props) => {
 
     var localMedia = await request(`/${pluginId}/db-files`, {method: 'GET'});
     var configs = await request(`/${pluginId}/config`, {method: 'GET'});
-    var domain = 'https://api.filerobot.com';
+    var sass = await getSass(configs);
+
+    if (sass === false)
+    {
+      onShowAlert('warning', intl.formatMessage({id:'scaleflex-filerobot.notification.error.check_sectmp_issue'}));
+      $("button").attr("disabled", false);
+
+      return {'localMedia':false, 'filerobotMedia':false};
+    }
 
     var headers = new Headers();
     headers.append("Content-Type", "application/json");
+    headers.append("X-Filerobot-Key", sass);
 
     var requestOptions = {
       method: 'GET',
@@ -227,20 +262,106 @@ const Configurations = (props) => {
     };
 
     var filerobotDirectory = (configs.folder.charAt(0) === '/') ? configs.folder : `/${configs.folder}`;
-    var filerobotResponse = await fetch(`${domain}/${configs.token}/v4/files?folder=${filerobotDirectory}`, requestOptions);
+    var filerobotResponse = await fetch(`${filerobotApiDomain}/${configs.token}/v4/files?folder=${filerobotDirectory}`, requestOptions);
 
     if (filerobotResponse.status != 200)
     {
       onShowAlert('warning', intl.formatMessage({id:'scaleflex-filerobot.notification.error.sync_status'}));
       $("button").attr("disabled", false);
 
-      return false;
+      return {'localMedia':false, 'filerobotMedia':false};
     }
 
     var filerobotResponseJson = await filerobotResponse.json();
     var filerobotMedia = filerobotResponseJson.files;
 
     return {'localMedia':localMedia, 'filerobotMedia':filerobotMedia};
+  }
+
+  async function validateSass(sassKey, token) 
+  {
+    var headers = new Headers();
+    headers.append("Content-Type", "application/json");
+    headers.append("X-Filerobot-Key", sassKey);
+
+    var requestOptions = {
+      method: 'GET',
+      headers: headers,
+      redirect: 'follow'
+    };
+
+    var response = await fetch(`${filerobotApiDomain}/${token}/v4/files/`, requestOptions);
+
+    return response.json();
+  }
+
+  async function getNewSassKey(config) 
+  {
+    var sassReqHeaders = new Headers();
+    sassReqHeaders.append("Content-Type", "application/json");
+
+    var sassReqOpt = {
+      method: 'GET',
+      headers: sassReqHeaders
+    };
+
+    var sassRes = await fetch(`${filerobotApiDomain}/${config.token}/key/${config.sec_temp}`, sassReqOpt);
+
+    if (sassRes.status != 200)
+    {
+      return false; // @Todo: better erroneous return
+    }
+
+    var sassInfo = await sassRes.json();
+
+    if (sassInfo.status !== "success")
+    {
+      return false; // @Todo: better erroneous return
+    }
+
+    var sass = sassInfo.key;
+
+    if (typeof(Storage) !== "undefined")
+    {
+      sessionStorage.setItem("sassKey", sass);
+    }
+
+    return sass;
+  }
+
+  async function getSass(config)
+  {
+    var sass = '';
+    
+    if (typeof(Storage) !== "undefined" && sessionStorage.getItem("sassKey"))
+    {
+      sass = sessionStorage.getItem("sassKey");
+
+      var sassValidation = await validateSass(sass, config.token);
+
+      if (sassValidation.code === 'KEY_EXPIRED' || sassValidation.code === 'UNAUTHORIZED')
+      {
+        sass = await getNewSassKey(config);
+
+        if (sass === false)
+        {
+          return false;
+        }
+      }
+
+      return sass;
+    }
+    else
+    {
+      sass = await getNewSassKey(config);
+
+      if (sass === false)
+      {
+        return false;
+      }
+
+      return sass;
+    }
   }
 
   return (
@@ -307,10 +428,10 @@ const Configurations = (props) => {
         onClosePress={onCloseAlert}
         pressCloseOnOutsideClick={true}
         showBorderBottom={false}
-        alertStyles={{'min-height': 'fit-content', 'padding': '20px'}}
+        alertStyles={{'minHeight': 'fit-content', 'padding': '20px'}}
         headerStyles={{}}
         textStyles={{}}
-        buttonStyles={{'background-color': 'rgb(0,0,0,0.1)','color': 'black', 'margin': 0}}
+        buttonStyles={{'backgroundColor': 'rgb(0,0,0,0.1)','color': 'black', 'margin': 0}}
       />
     </div>
   );

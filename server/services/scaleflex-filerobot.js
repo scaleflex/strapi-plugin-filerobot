@@ -127,32 +127,11 @@ module.exports = ({ strapi }) => ({
     var pluginStore = this.getPluginStore();
     var config = await pluginStore.get({ key: 'options' });
 
-    var sass = '';
-    
-    if (typeof(Storage) !== "undefined" && sessionStorage.getItem("sassKey"))
+    var sass = await this.getSass(config);
+
+    if (sass === false)
     {
-      sass = sessionStorage.getItem("sassKey");
-
-      var sassValidation = await this.validateSass(sass, config.token);
-
-      if (sassValidation.code === 'KEY_EXPIRED' || sassValidation.code === 'UNAUTHORIZED')
-      {
-        sass = await this.getNewSassKey(config);
-
-        if (sass === false)
-        {
-          return false;
-        }
-      }
-    }
-    else
-    {
-      sass = await this.getNewSassKey(config);
-
-      if (sass === false)
-      {
-        return false;
-      }
+      return false;
     }
 
     var uploadHeaders = new fetch.Headers();
@@ -205,7 +184,7 @@ module.exports = ({ strapi }) => ({
   },
   async validateSass(sassKey, token) 
   {
-    var headers = new Headers();
+    var headers = new fetch.Headers();
     headers.append("Content-Type", "application/json");
     headers.append("X-Filerobot-Key", sassKey);
 
@@ -251,5 +230,39 @@ module.exports = ({ strapi }) => ({
     }
 
     return sass;
+  },
+  async getSass(config)
+  {
+    var sass = '';
+    
+    if (typeof(Storage) !== "undefined" && sessionStorage.getItem("sassKey"))
+    {
+      sass = sessionStorage.getItem("sassKey");
+
+      var sassValidation = await this.validateSass(sass, config.token);
+
+      if (sassValidation.code === 'KEY_EXPIRED' || sassValidation.code === 'UNAUTHORIZED')
+      {
+        sass = await this.getNewSassKey(config);
+
+        if (sass === false)
+        {
+          return false;
+        }
+      }
+
+      return sass;
+    }
+    else
+    {
+      sass = await this.getNewSassKey(config);
+
+      if (sass === false)
+      {
+        return false;
+      }
+
+      return sass;
+    }
   },
 });
