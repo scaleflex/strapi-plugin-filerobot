@@ -172,6 +172,7 @@ module.exports = ({ strapi }) => ({
         hash: uploadResult.file.hash.sha1,
         provider: 'filerobot',
         alternativeText: uploadResult.file.uuid,
+        formats: null,
       },
     });
 
