@@ -65,7 +65,7 @@ const FMAW = (props) => {
       .on('export', async (files, popupExportSucessMsgFn, downloadFilesPackagedFn, downloadFileFn) => {
         $("button.filerobot-common-BaseButton").attr("disabled", "disabled");
 
-        await recordMedia(files, 'export');
+        await recordMedia(files, 'export', config);
 
         $("button.filerobot-common-BaseButton").attr("disabled", false);
       })
@@ -74,7 +74,7 @@ const FMAW = (props) => {
 
         if (successful)
         {
-          await recordMedia(successful, 'complete');
+          await recordMedia(successful, 'complete', config);
 
           $("button.filerobot-common-BaseButton").attr("disabled", false);
         }
@@ -89,9 +89,9 @@ const FMAW = (props) => {
     }
   }, [config]);
 
-  const recordMedia = async (files, action) => {
+  const recordMedia = async (files, action, config) => {
     files.forEach(async (file, index) => {
-      await request(`/${pluginId}/record-file`, {method: 'POST', body: {file:file, action:action}});
+      await request(`/${pluginId}/record-file`, {method: 'POST', body: {file:file, action:action, config:config}});
 
       if (files.length-1==index)
       {

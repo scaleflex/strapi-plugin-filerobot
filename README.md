@@ -10,4 +10,4 @@ https://scaleflexhq.atlassian.net/wiki/spaces/FIL/pages/19104023/Strapi+Plugin
 
 ## Todo
 
-- CNAME
+- Improve code by using constants https://discord.com/channels/811989166782021633/870213780951433217/991682672185315428

@@ -23,6 +23,7 @@ module.exports = ({ strapi }) => ({
 
     if (Object.keys(config).length === 0) {
       return {
+        cname: '',
         token: '',
         sec_temp: '',
         folder: '',
@@ -72,6 +73,7 @@ module.exports = ({ strapi }) => ({
   async recordFile(ctx) {
     var file = ctx.request.body.file;
     var action = ctx.request.body.action;
+    var config = ctx.request.body.config;
 
     var url = (action === 'export') ? file.link : file.url.cdn;
     var name = (action === 'export') ? file.file.name : file.name;
@@ -84,6 +86,7 @@ module.exports = ({ strapi }) => ({
     var height = (action === 'export') ? file.file.info.img_h : file.info.img_h;
 
     url = this.removeQueryParam(url, 'vh');
+    url = this.adjustForCname(url, config);
 
     // @Todo: check if already exist in DB (name, url, hash, provider=filerobot) (?)
 
@@ -112,6 +115,7 @@ module.exports = ({ strapi }) => ({
   },
   async syncUp(ctx) {
     var file = ctx.request.body.file;
+    var config = ctx.request.body.config;
     var imagePath = path.join(strapi.dirs.public, file.url);
     var base64 = '';
 
@@ -166,9 +170,13 @@ module.exports = ({ strapi }) => ({
       return false; // @Todo: better erroneous return
     }
 
+    var url = uploadResult.file.url.cdn;
+    url = this.removeQueryParam(url, 'vh');
+    url = this.adjustForCname(url, config);
+
     const updatedFileEntry = await strapi.entityService.update('plugin::upload.file', file.id, {
       data: {
-        url: this.removeQueryParam(uploadResult.file.url.cdn, 'vh'),
+        url: url,
         hash: uploadResult.file.hash.sha1,
         provider: 'filerobot',
         alternativeText: uploadResult.file.uuid,
@@ -276,5 +284,16 @@ module.exports = ({ strapi }) => ({
     var newUrl = params.toString() ? `${url.origin}${url.pathname}?${params.toString()}` : `${url.origin}${url.pathname}`;
 
     return newUrl;
+  },
+  adjustForCname(link, config)
+  {
+    if (!config.cname)
+    {
+      return link;
+    }
+
+    link = link.replace(`https://${config.token}.filerobot.com/v7`, `https://${config.cname}`);
+
+    return link;
   },
 });

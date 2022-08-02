@@ -201,7 +201,7 @@ const Configurations = (props) => {
     await Promise.all( $(filerobotMedia).map(async function( index ) {
       if ( !alreadyDownHashs.includes(this.hash.sha1) )
       {
-        var result = await request(`/${pluginId}/record-file`, {method: 'POST', body: {file:this, action:'sync-down'}});
+        var result = await request(`/${pluginId}/record-file`, {method: 'POST', body: {file:this, action:'sync-down', config:config}});
 
         if (result !== false)
         {
@@ -221,7 +221,7 @@ const Configurations = (props) => {
     var count = 0;
     
     await Promise.all( $(toSyncUp).map(async function( index ) {
-      var result = await request(`/${pluginId}/sync-up`, {method: 'POST', body: {file:this}});
+      var result = await request(`/${pluginId}/sync-up`, {method: 'POST', body: {file:this, config:config}});
 
       if (result !== false)
       {
@@ -370,6 +370,11 @@ const Configurations = (props) => {
         <h2>Filerobot Configurations</h2>
 
         <Form onSubmit={update}>
+          <Form.Group controlId="cname" className="form-group">
+            <Form.Label>CNAME</Form.Label>
+            <Form.Control name="cname" type="text" defaultValue={config.cname} />
+          </Form.Group>
+
           <Form.Group controlId="token" className="form-group">
             <Form.Label>Token *</Form.Label>
             <Form.Control name="token" type="text" defaultValue={config.token} />
