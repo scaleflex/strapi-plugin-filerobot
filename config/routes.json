@@ -26,6 +26,22 @@
     },
     {
       "method": "GET",
+      "path": "/db-files",
+      "handler": "scaleflex-filerobot.checkDbFiles",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/record-file",
+      "handler": "scaleflex-filerobot.recordFile",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "GET",
       "path": "/media",
       "handler": "scaleflex-filerobot.getMedia",
       "config": {

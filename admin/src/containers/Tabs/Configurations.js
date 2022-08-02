@@ -159,11 +159,72 @@ const Configurations = (props) => {
   }
 
   const sync_status = async () => {
+    var { localMedia, filerobotMedia } = await getSyncStatus();
 
+    if (localMedia === false && filerobotMedia === false)
+    {
+      onShowAlert('warning', intl.formatMessage({id:'scaleflex-filerobot.notification.error.wrong_sectmp'}));
+      $("button").attr("disabled", false);
+
+      return false;
+    }
+
+    var toSyncUp = localMedia.nonFilerobot;
+    var alreadyDown = localMedia.filerobot;
+    var alreadyDownHashs = alreadyDown.map(x => x['hash']);
+    var filerobotMediaHashs = filerobotMedia.map(x => x['hash']['sha1']);
+    var toSyncDown = filerobotMediaHashs.filter(x => !alreadyDownHashs.includes(x));
+
+    onShowAlert('warning', sprintf(intl.formatMessage({id:'scaleflex-filerobot.notification.success.sync_status'}), toSyncUp.length, toSyncDown.length) );
+    $("button").attr("disabled", false);
+
+    return true;
   }
 
   const trigger_sync = async () => {
 
+  }
+
+  async function getSyncStatus()
+  {
+    $("button").attr("disabled", "disabled");
+
+    var localMedia = await request(`/${pluginId.replace(/([A-Z])/g, ' $1').toLowerCase().replace(' ', '-')}/db-files`, {method: 'GET'});
+    var configs = await request(`/${pluginId.replace(/([A-Z])/g, ' $1').toLowerCase().replace(' ', '-')}/config`, {method: 'GET'});
+    var sass = await getSass(configs);
+
+    if (sass === false)
+    {
+      onShowAlert('warning', intl.formatMessage({id:'scaleflex-filerobot.notification.error.check_sectmp_issue'}));
+      $("button").attr("disabled", false);
+
+      return {'localMedia':false, 'filerobotMedia':false};
+    }
+
+    var headers = new Headers();
+    headers.append("Content-Type", "application/json");
+    headers.append("X-Filerobot-Key", sass);
+
+    var requestOptions = {
+      method: 'GET',
+      headers: headers
+    };
+
+    var filerobotDirectory = (configs.folder.charAt(0) === '/') ? configs.folder : `/${configs.folder}`;
+    var filerobotResponse = await fetch(`${filerobotApiDomain}/${configs.token}/v4/files?folder=${filerobotDirectory}`, requestOptions);
+
+    if (filerobotResponse.status != 200)
+    {
+      onShowAlert('warning', intl.formatMessage({id:'scaleflex-filerobot.notification.error.sync_status'}));
+      $("button").attr("disabled", false);
+
+      return {'localMedia':false, 'filerobotMedia':false};
+    }
+
+    var filerobotResponseJson = await filerobotResponse.json();
+    var filerobotMedia = filerobotResponseJson.files;
+
+    return {'localMedia':localMedia, 'filerobotMedia':filerobotMedia};
   }
 
   async function validateSass(sassKey, token) 

@@ -1,5 +1,9 @@
 import React, { useEffect, useRef } from 'react';
 
+import pluginId from '../../pluginId';
+
+import $ from 'jquery';
+
 // https://www.npmjs.com/package/@filerobot/core
 // https://www.npmjs.com/package/@filerobot/explorer#filerobotexplorer
 
@@ -12,7 +16,12 @@ import '@filerobot/explorer/dist/style.min.css';
 
 import { request } from "strapi-helper-plugin";
 
+import { useIntl } from 'react-intl';
+
+import '../../theme/index.css';
+
 const FMAW = (props) => {
+  const intl = useIntl();
   const config = props.config;
   const filerobot = useRef(null);
 
@@ -43,25 +52,35 @@ const FMAW = (props) => {
         },
         target : '#filerobot-widget',
         inline : true,
-        width  : 10000,
-        height : 1000,
         disableExportButton: true, 
         hideExportButtonIcon: true, 
         preventExportDefaultBehavior: true,
         locale: {
           strings: {
-            exportButtonLabel: 'Add'
+            exportButtonLabel: intl.formatMessage({id:'scaleflex-filerobot.label.button.fmaw.export'})
           }
         },
       })
       .use(XHRUpload)
       .on('export', async (files, popupExportSucessMsgFn, downloadFilesPackagedFn, downloadFileFn) => {
-        await uploadMedia(files, 'export');
+        $("button.filerobot-common-BaseButton").attr("disabled", "disabled");
+
+        await recordMedia(files, 'export', config);
+
+        $("button.filerobot-common-BaseButton").attr("disabled", false);
       })
       .on('complete', async ({ failed, uploadID, successful }) => {
+        $("button.filerobot-common-BaseButton").attr("disabled", "disabled");
+
         if (successful)
         {
-          await uploadMedia(successful, 'complete');
+          await recordMedia(successful, 'complete', config);
+
+          $("button.filerobot-common-BaseButton").attr("disabled", false);
+        }
+        else
+        {
+          $("button.filerobot-common-BaseButton").attr("disabled", false);
         }
       });
 
@@ -70,35 +89,20 @@ const FMAW = (props) => {
     }
   }, [config]);
 
-  const uploadMedia = async (files, action) => {
-    // https://strapi.io/blog/a-beginners-guide-to-authentication-and-authorization-in-strapi
-    // https://www.youtube.com/watch?v=N4JpylgjRK0&list=PL4cUxeGkcC9h6OY8_8Oq6JerWqsKdAPxn&index=4
-    const credentials = { "identifier": config.user, "password": config.pass };
-    var authResponse = await request(`/auth/local`, {method: 'POST', body: credentials});
-    console.dir(authResponse.jwt);
-
+  const recordMedia = async (files, action, config) => {
     files.forEach(async (file, index) => {
-      console.dir(file);
-      var url = (action === 'export') ? file.link : file.url.cdn;
-      var name = (action === 'export') ? file.file.name : file.name;
-      var alt = (action === 'export') ? file.file.uuid : file.uuid;
+      await request(`/${pluginId.replace(/([A-Z])/g, ' $1').toLowerCase().replace(' ', '-')}/record-file`, {method: 'POST', body: {file:file, action:action, config:config}});
 
-      var fileResponse = await fetch(url);
-      var fileBlob = await fileResponse.blob();
-
-      var formData = new FormData();
-      formData.append('files', fileBlob);
-      formData.append('fileInfo', JSON.stringify({"alternativeText":alt,"caption":"","name":name}));
-
-      // https://dev.to/bassel17/how-to-upload-an-image-to-strapi-2hhg
-      // https://forum.strapi.io/t/upload-image-url/3484/2
-      var uploadResponse = await fetch(`${strapi.backendURL}/upload`, { method: 'POST', headers: { "Authorization": `Bearer ${authResponse.jwt}` }, body: formData });
-      console.dir(uploadResponse);
-
-      //@Todo: Optional - find out why it won't work when it's like this
-      // https://github.com/strapi/strapi/blob/master/packages/core/helper-plugin/lib/src/utils/request/index.js
-      // var uploadResponse = await request(`/upload`, { method: 'POST', headers: { "Authorization": `Bearer ${authResponse.jwt}` }, body: formData } );
-      // console.dir(uploadResponse);
+      if (files.length-1==index)
+      {
+        // https://stackoverflow.com/questions/69703218/reactjs-bootstrap-tab-active-after-page-reload-or-how-can-i-save-active-tabs-us/69722943#69722943
+        if (typeof(Storage) !== "undefined")
+        {
+          sessionStorage.setItem("activeTab", "fmaw");
+        }
+        
+        window.location.reload();
+      }
     });
   }
 

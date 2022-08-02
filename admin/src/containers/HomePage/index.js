@@ -31,6 +31,17 @@ const HomePage = () => {
 
   useEffect(() => {
     request(`/${pluginId.replace(/([A-Z])/g, ' $1').toLowerCase().replace(' ', '-')}/config`, {method: 'GET'}).then(setConfig);
+
+    if (typeof(Storage) !== "undefined")
+    {
+      var activeTab = sessionStorage.getItem("activeTab");
+      
+      if (activeTab) 
+      {
+        $(`button[id$='tab-${activeTab}']`).click();
+        sessionStorage.removeItem("activeTab");
+      }
+    }
   }, []);
 
   return (

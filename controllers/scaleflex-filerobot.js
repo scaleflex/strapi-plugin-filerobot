@@ -1,23 +1,9 @@
 'use strict';
 
-/**
- * scaleflex-filerobot.js controller
- *
- * @description: A set of functions called "actions" of the `scaleflex-filerobot` plugin.
- */
+// Strapi 3 DB access: https://strapi.gitee.io/documentation/v3.x/concepts/queries.html
 
 module.exports = {
-
-  /**
-   * Default action.
-   *
-   * @return {Object}
-   */
-
   index: async (ctx) => {
-    // Add your own logic here.
-
-    // Send 200 `ok`
     ctx.send({
       message: 'ok'
     });
@@ -45,11 +31,94 @@ module.exports = {
     const config = await pluginStore.get({ key: 'options' });
     ctx.send(config);
   },
-  getMedia: async (ctx) => {
-    // var media = await strapi.entityService.findMany('plugin::upload.file', {
-    //   populate: { category: true },
-    // });
+  checkDbFiles: async (ctx) => {
+    var nonFilerobotMedia = await strapi.entityService.findMany('plugin::upload.file', {
+      filters: {
+        $not: {
+          provider: 'filerobot',
+        },
+      },
+      populate: { category: true },
+    });
+    
+    var filerobotMedia = await strapi.entityService.findMany('plugin::upload.file', {
+      filters: {
+        provider: 'filerobot',
+      },
+      populate: { category: true },
+    });
 
-    // ctx.send(media);
+    var media = {
+      filerobot: filerobotMedia,
+      nonFilerobot: nonFilerobotMedia
+    };
+    
+    return media;
   },
+  recordFile: async (ctx) => {
+    var file = ctx.request.body.file;
+    var action = ctx.request.body.action;
+    var config = ctx.request.body.config;
+
+    var url = (action === 'export') ? file.link : file.url.cdn;
+    var name = (action === 'export') ? file.file.name : file.name;
+    var alt = (action === 'export') ? file.file.uuid : file.uuid;
+    var ext = (action === 'export') ? file.file.extension : file.extension;
+    var mime = (action === 'export') ? file.file.type : file.type;
+    var size = parseFloat( (action === 'export') ? file.file.size.pretty : file.size.pretty );
+    var hash = (action === 'export') ? file.file.hash.sha1 : file.hash.sha1;
+    var width = (action === 'export') ? file.file.info.img_w : file.info.img_w;
+    var height = (action === 'export') ? file.file.info.img_h : file.info.img_h;
+
+    url = this.removeQueryParam(url, 'vh');
+    url = this.adjustForCname(url, config);
+
+    // @Todo: check if already exist in DB (name, url, hash, provider=filerobot) (?)
+
+    var admins = await strapi.entityService.findMany('admin::user');
+    var admin1 = admins[0];
+
+    var result = await strapi.entityService.create('plugin::upload.file', {
+      data: {
+        url: url,
+        name: name,
+        caption: name,
+        alternativeText: alt,
+        provider: 'filerobot',
+        ext: `.${ext}`,
+        mime: mime,
+        size: size,
+        hash: hash,
+        width: width,
+        height: height, 
+        created_by_id: admin1.id,
+        updated_by_id: admin1.id,
+      },
+    });
+
+    return result;
+  },
+  getMedia: async (ctx) => {
+    var media = await strapi.query('file', 'upload').find({});
+
+    ctx.send(media);
+  },
+  removeQueryParam: (link, paramName) => {
+    var url = new URL(link);
+    var params = new URLSearchParams(url.search);
+    params.delete(paramName);
+    var newUrl = params.toString() ? `${url.origin}${url.pathname}?${params.toString()}` : `${url.origin}${url.pathname}`;
+
+    return newUrl;
+  },
+  adjustForCname: (link, config) => {
+    if (!config.cname)
+    {
+      return link;
+    }
+
+    link = link.replace(`https://${config.token}.filerobot.com/v7`, `https://${config.cname}`);
+
+    return link;
+  }
 };
