@@ -1,0 +1,13 @@
+.btn-group {
+	margin-top: 10px;
+	margin-bottom: 10px;
+}
+button {
+	margin-right: 10px;
+}
+
+/*.filerobot-common-Search,*/
+.filerobot-Explorer-selectionTopMenu button:not(:first-child),
+.filerobot-Explorer-TopBar-rightSide {
+	display: none !important;
+}

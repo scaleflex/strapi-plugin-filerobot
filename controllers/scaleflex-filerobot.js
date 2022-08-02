@@ -45,4 +45,11 @@ module.exports = {
     const config = await pluginStore.get({ key: 'options' });
     ctx.send(config);
   },
+  getMedia: async (ctx) => {
+    // var media = await strapi.entityService.findMany('plugin::upload.file', {
+    //   populate: { category: true },
+    // });
+
+    // ctx.send(media);
+  },
 };

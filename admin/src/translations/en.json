@@ -1,1 +1,13 @@
-{}
+{
+	"notification.error.fill_required": "Please fill the required fields *.",
+	"notification.error.check_token_issue": "An issue occured while checking token. Please try again.",
+	"notification.error.wrong_token": "Wrong token. Please use a valid token.",
+	"notification.error.check_sectmp_issue": "An issue occured while checking Security Template ID. Please try again.",
+	"notification.error.wrong_sectmp": "Wrong Security Template ID. Please use a valid one.",
+	"notification.success.sync_connection": "Connection established successfully.",
+	"notification.error.sync_status": "An error has occured while checking your status. Maybe you entered the wrong Filerobot Directory.",
+	"notification.success.sync_status": "There are %1$d to sync up. There are %2$d to sync down",
+	"label.button.fmaw.export": "Add to Strapi",
+	"notification.success.sync_results": "%1$s files are successfully downloaded from Filerobot. %2$s files are successfully uploaded to Filerobot",
+	"notification.success.update_config": "Filerobot configurations has been saved"
+}

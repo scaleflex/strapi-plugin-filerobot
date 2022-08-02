@@ -23,6 +23,14 @@
       "config": {
         "policies": []
       }
+    },
+    {
+      "method": "GET",
+      "path": "/media",
+      "handler": "scaleflex-filerobot.getMedia",
+      "config": {
+        "policies": []
+      }
     }
   ]
 }
