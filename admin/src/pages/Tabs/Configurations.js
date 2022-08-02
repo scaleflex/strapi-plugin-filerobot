@@ -81,6 +81,12 @@ const Configurations = (props) => {
 
     onShowAlert('warning', intl.formatMessage({id:'scaleflex-filerobot.notification.success.update_config'}));
     $("button").attr("disabled", false);
+    await sleep(2000);
+    window.location.reload();
+  }
+
+  const sleep = (milliseconds) => {
+    return new Promise(resolve => setTimeout(resolve, milliseconds));
   }
 
   const check_connection = async () => {
