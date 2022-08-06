@@ -62,4 +62,13 @@ module.exports = [
       auth: false,
     },
   },
+  {
+    method: 'GET',
+    path: '/media-count',
+    handler: 'scaleflexFilerobot.getMediaCount',
+    config: {
+      policies: [],
+      auth: false,
+    },
+  },
 ];

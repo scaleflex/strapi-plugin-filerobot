@@ -47,7 +47,7 @@ const HomePage = () => {
     <Container fluid>
       <Row>
         <Col>
-          <h1>{pluginId.replace(/([A-Z])/g, ' $1').replace(/^./, function(str){ return str.toUpperCase(); })}</h1>
+          <h1>{pluginId.replace('-', ' ').replace(/(?:^|\s)\S/g, function(a) { return a.toUpperCase(); })}</h1>
 
           <Tabs defaultActiveKey="configurations">
             <Tab eventKey="configurations" title="Configurations">

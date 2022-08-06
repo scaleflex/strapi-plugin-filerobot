@@ -43,4 +43,10 @@ module.exports = {
       .service('scaleflexFilerobot')
       .getMedia(ctx);
   },
+  async getMediaCount(ctx) {
+    ctx.body = await strapi
+      .plugin('scaleflex-filerobot')
+      .service('scaleflexFilerobot')
+      .getMediaCount(ctx);
+  },
 };

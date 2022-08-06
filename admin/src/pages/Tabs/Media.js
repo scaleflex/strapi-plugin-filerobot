@@ -1,7 +1,5 @@
 import React, { useEffect, useState } from 'react';
-
 import pluginId from '../../pluginId';
-
 import $ from 'jquery';
 
 import { request } from "@strapi/helper-plugin";
@@ -10,13 +8,37 @@ import { Table } from 'react-bootstrap';
 
 import '../../theme/index.css';
 
-const FMAW = (props) => {
+import Pagination from "react-js-pagination";
+import 'bootstrap/dist/css/bootstrap.min.css';
+
+const Media = (props) => {
   const intl = useIntl();
   const [media, setMedia] = useState([]);
+  const [totalRecords, setTotalRecords] = useState(0);
+  const [currentPage, setCurrentPage] = useState(1);
+  const recordPerPage = 10;
+
+  const handlePageChange = (pageNumber) => {
+    setCurrentPage(pageNumber);
+    request(`/${pluginId}/media?limit=${recordPerPage}&offset=${pageNumber-1}`, {method: 'GET'}).then(setMedia);
+  };
 
   useEffect(() => {
-    request(`/${pluginId}/media`, {method: 'GET'}).then(setMedia);
+    request(`/${pluginId}/media-count`, {method: 'GET'}).then(setTotalRecords);
+
+    request(`/${pluginId}/media?limit=${recordPerPage}&offset=${currentPage-1}`, {method: 'GET'}).then(setMedia);
   }, []);
+
+  useEffect(() => {
+    if (totalRecords > recordPerPage)
+    {
+      $('.page-pagination').show();
+    }
+    else
+    {
+      $('.page-pagination').hide();
+    }
+  }, [totalRecords]);
 
   return (
     <div>
@@ -51,8 +73,23 @@ const FMAW = (props) => {
           })}
         </tbody>
       </Table>
+
+      <div className='page-pagination'>
+        <Pagination
+          prevPageText='Prev'
+          nextPageText='Next'
+          firstPageText='First'
+          lastPageText='Last'
+          activePage={currentPage}
+          itemsCountPerPage={recordPerPage}
+          totalItemsCount={totalRecords}
+          onChange={handlePageChange}
+          itemClass="page-item"
+          linkClass="page-link"
+        />
+      </div>
     </div>
   );
 };
 
-export default FMAW;
+export default Media;

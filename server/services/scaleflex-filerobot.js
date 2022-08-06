@@ -187,11 +187,22 @@ module.exports = ({ strapi }) => ({
     return updatedFileEntry;
   },
   async getMedia(ctx) {
+    var queryParams = ctx.request.query;
+
+    var media = await strapi.entityService.findMany('plugin::upload.file', {
+      populate: { category: true },
+      limit: queryParams.limit,
+      start: queryParams.offset * queryParams.limit,
+    });
+
+    return media;
+  },
+  async getMediaCount(ctx) {
     var media = await strapi.entityService.findMany('plugin::upload.file', {
       populate: { category: true },
     });
 
-    return media;
+    return media.length;
   },
   async validateSass(sassKey, token) 
   {
