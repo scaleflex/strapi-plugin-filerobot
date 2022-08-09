@@ -11,3 +11,15 @@ button {
 .filerobot-Explorer-TopBar-rightSide {
 	display: none !important;
 }
+
+
+.scaleflexHeading {
+    margin: 10px;
+}
+.scaleflexHeading img {
+    margin-right: 10px;
+}
+.scaleflexHeading h1, .myHeading img {
+    display: inline-block;
+    vertical-align: middle;
+}

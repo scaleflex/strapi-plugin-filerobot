@@ -19,6 +19,8 @@ import Media from '../Tabs/Media.js'
 
 import { request } from "@strapi/helper-plugin";
 
+import '../../theme/index.css';
+
 const HomePage = () => {
   const [config, setConfig] = useState({
     token: '',
@@ -47,7 +49,10 @@ const HomePage = () => {
     <Container fluid>
       <Row>
         <Col>
-          <h1>{pluginId.replace('-', ' ').replace(/(?:^|\s)\S/g, function(a) { return a.toUpperCase(); })}</h1>
+          <div className="scaleflexHeading">
+            <img src="https://assets.scaleflex.com/Marketing/Logos/Filerobot+Logos/Favicon/FILEROBOT+favicon.ico" />
+            <h1>Filerobot by Scaleflex</h1>
+          </div>
 
           <Tabs defaultActiveKey="configurations">
             <Tab eventKey="configurations" title="Configurations">

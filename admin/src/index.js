@@ -13,7 +13,7 @@ export default {
       icon: PluginIcon,
       intlLabel: {
         id: `${pluginId}.plugin.name`,
-        defaultMessage: name.replace('-', ' ').replace(/(?:^|\s)\S/g, function(a) { return a.toUpperCase(); }),
+        defaultMessage: 'Filerobot by Scaleflex',
       },
       Component: async () => {
         const component = await import(/* webpackChunkName: "[request]" */ './pages/App');
