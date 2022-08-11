@@ -57,7 +57,7 @@ const FMAW = (props) => {
         preventExportDefaultBehavior: true,
         locale: {
           strings: {
-            exportButtonLabel: intl.formatMessage({id:'scaleflex-filerobot.label.button.fmaw.export'})
+            exportButtonLabel: "Add to Strapi"
           }
         },
       })

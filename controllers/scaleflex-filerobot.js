@@ -32,21 +32,8 @@ module.exports = {
     ctx.send(config);
   },
   checkDbFiles: async (ctx) => {
-    var nonFilerobotMedia = await strapi.entityService.findMany('plugin::upload.file', {
-      filters: {
-        $not: {
-          provider: 'filerobot',
-        },
-      },
-      populate: { category: true },
-    });
-    
-    var filerobotMedia = await strapi.entityService.findMany('plugin::upload.file', {
-      filters: {
-        provider: 'filerobot',
-      },
-      populate: { category: true },
-    });
+    var filerobotMedia = await strapi.query('file', 'upload').find({provider: 'filerobot'});
+    var nonFilerobotMedia = await strapi.query('file', 'upload').find({provider_ne: 'filerobot'});
 
     var media = {
       filerobot: filerobotMedia,
@@ -70,30 +57,28 @@ module.exports = {
     var width = (action === 'export') ? file.file.info.img_w : file.info.img_w;
     var height = (action === 'export') ? file.file.info.img_h : file.info.img_h;
 
-    url = this.removeQueryParam(url, 'vh');
-    url = this.adjustForCname(url, config);
+    url = module.exports.removeQueryParam(url, 'vh');
+    url = module.exports.adjustForCname(url, config);
 
     // @Todo: check if already exist in DB (name, url, hash, provider=filerobot) (?)
 
-    var admins = await strapi.entityService.findMany('admin::user');
+    var admins = await strapi.query('user', 'admin').find({});
     var admin1 = admins[0];
 
-    var result = await strapi.entityService.create('plugin::upload.file', {
-      data: {
-        url: url,
-        name: name,
-        caption: name,
-        alternativeText: alt,
-        provider: 'filerobot',
-        ext: `.${ext}`,
-        mime: mime,
-        size: size,
-        hash: hash,
-        width: width,
-        height: height, 
-        created_by_id: admin1.id,
-        updated_by_id: admin1.id,
-      },
+    var result = await strapi.query('file', 'upload').create({
+      url: url,
+      name: name,
+      caption: name,
+      alternativeText: alt,
+      provider: 'filerobot',
+      ext: `.${ext}`,
+      mime: mime,
+      size: size,
+      hash: hash,
+      width: width,
+      height: height, 
+      created_by_id: admin1.id,
+      updated_by_id: admin1.id,
     });
 
     return result;

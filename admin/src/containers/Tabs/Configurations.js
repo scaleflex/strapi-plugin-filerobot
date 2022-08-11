@@ -71,7 +71,7 @@ const Configurations = (props) => {
 
     if (config.token === '' || config.sec_temp === '' || config.user === '' || config.pass === '')
     {
-      onShowAlert('warning', intl.formatMessage({id:'scaleflex-filerobot.notification.error.fill_required'}));
+      onShowAlert('warning', "Please fill the required fields *.");
       $("button").attr("disabled", false);
 
       return;
@@ -79,7 +79,7 @@ const Configurations = (props) => {
 
     await request(`/${pluginId.replace(/([A-Z])/g, ' $1').toLowerCase().replace(' ', '-')}/update-config`, {method: 'PUT', body: config});
 
-    onShowAlert('warning', intl.formatMessage({id:'scaleflex-filerobot.notification.success.update_config'}));
+    onShowAlert('warning', "Filerobot configurations has been saved");
     $("button").attr("disabled", false);
     await sleep(2000);
     window.location.reload();
@@ -97,7 +97,7 @@ const Configurations = (props) => {
 
     if (sass === false)
     {
-      onShowAlert('warning', intl.formatMessage({id:'scaleflex-filerobot.notification.error.wrong_sectmp'}));
+      onShowAlert('warning', "Wrong Security Template ID. Please use a valid one.");
       $("button").attr("disabled", false);
 
       return false;
@@ -116,7 +116,7 @@ const Configurations = (props) => {
 
     if (tokenCheck.status != 200)
     {
-      onShowAlert('warning', intl.formatMessage({id:'scaleflex-filerobot.notification.error.check_token_issue'}));
+      onShowAlert('warning', "An issue occured while checking token. Please try again.");
       $("button").attr("disabled", false);
 
       return false;
@@ -126,33 +126,13 @@ const Configurations = (props) => {
 
     if (tokenCheckJson.status !== 'success')
     {
-      onShowAlert('warning', intl.formatMessage({id:'scaleflex-filerobot.notification.error.wrong_token'}));
+      onShowAlert('warning', "Wrong token. Please use a valid token.");
       $("button").attr("disabled", false);
 
       return false;
     }
 
-    // var checkSecTemp = await fetch(`${filerobotApiDomain}/${configs.token}/key/${configs.sec_temp}`, requestOptions);
-
-    // if (checkSecTemp.status != 200)
-    // {
-    //   onShowAlert('warning', intl.formatMessage({id:'scaleflex-filerobot.notification.error.check_sectmp_issue'}));
-    //   $("button").attr("disabled", false);
-
-    //   return false;
-    // }
-    
-    // var checkSecTempJson = await checkSecTemp.json();
-
-    // if (checkSecTempJson.status !== 'success')
-    // {
-    //   onShowAlert('warning', intl.formatMessage({id:'scaleflex-filerobot.notification.error.wrong_sectmp'}));
-    //   $("button").attr("disabled", false);
-
-    //   return false;
-    // }
-
-    onShowAlert('warning', intl.formatMessage({id:'scaleflex-filerobot.notification.success.sync_connection'}));
+    onShowAlert('warning', "Connection established successfully.");
     $("button").attr("disabled", false);
 
     return true;
@@ -163,7 +143,7 @@ const Configurations = (props) => {
 
     if (localMedia === false && filerobotMedia === false)
     {
-      onShowAlert('warning', intl.formatMessage({id:'scaleflex-filerobot.notification.error.wrong_sectmp'}));
+      onShowAlert('warning', "Wrong Security Template ID. Please use a valid one.");
       $("button").attr("disabled", false);
 
       return false;
@@ -175,7 +155,7 @@ const Configurations = (props) => {
     var filerobotMediaHashs = filerobotMedia.map(x => x['hash']['sha1']);
     var toSyncDown = filerobotMediaHashs.filter(x => !alreadyDownHashs.includes(x));
 
-    onShowAlert('warning', sprintf(intl.formatMessage({id:'scaleflex-filerobot.notification.success.sync_status'}), toSyncUp.length, toSyncDown.length) );
+    onShowAlert('warning', sprintf("There are %1$d to sync up. There are %2$d to sync down", toSyncUp.length, toSyncDown.length) );
     $("button").attr("disabled", false);
 
     return true;
@@ -195,7 +175,7 @@ const Configurations = (props) => {
 
     if (sass === false)
     {
-      onShowAlert('warning', intl.formatMessage({id:'scaleflex-filerobot.notification.error.check_sectmp_issue'}));
+      onShowAlert('warning', "An issue occured while checking Security Template ID. Please try again.");
       $("button").attr("disabled", false);
 
       return {'localMedia':false, 'filerobotMedia':false};
@@ -215,7 +195,7 @@ const Configurations = (props) => {
 
     if (filerobotResponse.status != 200)
     {
-      onShowAlert('warning', intl.formatMessage({id:'scaleflex-filerobot.notification.error.sync_status'}));
+      onShowAlert('warning', "An error has occured while checking your status. Maybe you entered the wrong Filerobot Directory.");
       $("button").attr("disabled", false);
 
       return {'localMedia':false, 'filerobotMedia':false};
