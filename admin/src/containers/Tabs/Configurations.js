@@ -4,14 +4,11 @@ import pluginId from '../../pluginId';
 import $ from 'jquery';
 
 import { Container, Row, Col, Form, Button } from 'react-bootstrap';
-import 'bootstrap/dist/css/bootstrap.min.css';
 
 import { request } from "strapi-helper-plugin";
 
 import { sprintf } from 'sprintf-js';
 import { useIntl } from 'react-intl';
-
-import '../../theme/index.css';
 
 // https://www.npmjs.com/package/react-popup-alert
 import Alert from 'react-popup-alert'
@@ -71,7 +68,7 @@ const Configurations = (props) => {
 
     if (config.token === '' || config.sec_temp === '' || config.user === '' || config.pass === '')
     {
-      onShowAlert('warning', "Please fill the required fields *.");
+      onShowAlert('warning', intl.formatMessage({id:`${pluginId}.notification.error.fill_required`}));
       $("button").attr("disabled", false);
 
       return;
@@ -79,7 +76,7 @@ const Configurations = (props) => {
 
     await request(`/${pluginId.replace(/([A-Z])/g, ' $1').toLowerCase().replace(' ', '-')}/update-config`, {method: 'PUT', body: config});
 
-    onShowAlert('warning', "Filerobot configurations has been saved");
+    onShowAlert('warning', intl.formatMessage({id:`${pluginId}.notification.success.update_config`}));
     $("button").attr("disabled", false);
     await sleep(2000);
     window.location.reload();
@@ -97,7 +94,7 @@ const Configurations = (props) => {
 
     if (sass === false)
     {
-      onShowAlert('warning', "Wrong Security Template ID. Please use a valid one.");
+      onShowAlert('warning', intl.formatMessage({id:`${pluginId}.notification.error.wrong_sectmp`}));
       $("button").attr("disabled", false);
 
       return false;
@@ -116,7 +113,7 @@ const Configurations = (props) => {
 
     if (tokenCheck.status != 200)
     {
-      onShowAlert('warning', "An issue occured while checking token. Please try again.");
+      onShowAlert('warning', intl.formatMessage({id:`${pluginId}.notification.error.check_token_issue`}));
       $("button").attr("disabled", false);
 
       return false;
@@ -126,13 +123,13 @@ const Configurations = (props) => {
 
     if (tokenCheckJson.status !== 'success')
     {
-      onShowAlert('warning', "Wrong token. Please use a valid token.");
+      onShowAlert('warning', intl.formatMessage({id:`${pluginId}.notification.error.wrong_token`}));
       $("button").attr("disabled", false);
 
       return false;
     }
 
-    onShowAlert('warning', "Connection established successfully.");
+    onShowAlert('warning', intl.formatMessage({id:`${pluginId}.notification.success.sync_connection`}));
     $("button").attr("disabled", false);
 
     return true;
@@ -143,7 +140,7 @@ const Configurations = (props) => {
 
     if (localMedia === false && filerobotMedia === false)
     {
-      onShowAlert('warning', "Wrong Security Template ID. Please use a valid one.");
+      onShowAlert('warning', intl.formatMessage({id:`${pluginId}.notification.error.wrong_sectmp`}));
       $("button").attr("disabled", false);
 
       return false;
@@ -155,7 +152,7 @@ const Configurations = (props) => {
     var filerobotMediaHashs = filerobotMedia.map(x => x['hash']['sha1']);
     var toSyncDown = filerobotMediaHashs.filter(x => !alreadyDownHashs.includes(x));
 
-    onShowAlert('warning', sprintf("There are %1$d to sync up. There are %2$d to sync down", toSyncUp.length, toSyncDown.length) );
+    onShowAlert('warning', sprintf(intl.formatMessage({id:`${pluginId}.notification.success.sync_status`}), toSyncUp.length, toSyncDown.length) );
     $("button").attr("disabled", false);
 
     return true;
@@ -170,7 +167,7 @@ const Configurations = (props) => {
     var downResult = await sync_down(filerobotMedia, alreadyDown);
     var upResult = await sync_up(toSyncUp);
 
-    onShowAlert('warning', sprintf("%1$s files are successfully downloaded from Filerobot. %2$s files are successfully uploaded to Filerobot", downResult, upResult) );
+    onShowAlert('warning', sprintf(intl.formatMessage({id:`${pluginId}.notification.success.sync_results`}), downResult, upResult) );
     $("button").attr("disabled", false);
 
     return true;
@@ -233,7 +230,7 @@ const Configurations = (props) => {
 
     if (sass === false)
     {
-      onShowAlert('warning', "An issue occured while checking Security Template ID. Please try again.");
+      onShowAlert('warning', intl.formatMessage({id:`${pluginId}.notification.error.check_sectmp_issue`}));
       $("button").attr("disabled", false);
 
       return {'localMedia':false, 'filerobotMedia':false};
@@ -253,7 +250,7 @@ const Configurations = (props) => {
 
     if (filerobotResponse.status != 200)
     {
-      onShowAlert('warning', "An error has occured while checking your status. Maybe you entered the wrong Filerobot Directory.");
+      onShowAlert('warning', intl.formatMessage({id:`${pluginId}.notification.error.sync_status`}));
       $("button").attr("disabled", false);
 
       return {'localMedia':false, 'filerobotMedia':false};
@@ -396,7 +393,7 @@ const Configurations = (props) => {
 
         <div className="mb-2 btn-group">
           <Button variant="secondary" size="sm" onClick={check_connection}>Check Connection</Button>
-          <Button variant="secondary" size="sm" onClick={sync_status}>Synchronization Status</Button>
+          <Button variant="secondary" size="sm" onClick={sync_status}>Synchronization Status</Button>{' '}
           <Button variant="secondary" size="sm" onClick={trigger_sync}>Trigger Synchronization</Button>
         </div>
 

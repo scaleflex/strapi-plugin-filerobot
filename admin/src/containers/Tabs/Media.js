@@ -4,11 +4,7 @@ import $ from 'jquery';
 import { request } from "strapi-helper-plugin";
 import { useIntl } from 'react-intl';
 import { Table } from 'react-bootstrap';
-
-import '../../theme/index.css';
-
 import Pagination from "react-js-pagination";
-import 'bootstrap/dist/css/bootstrap.min.css';
 
 const Media = (props) => {
   const intl = useIntl();

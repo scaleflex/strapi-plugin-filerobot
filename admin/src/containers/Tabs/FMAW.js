@@ -18,8 +18,6 @@ import { request } from "strapi-helper-plugin";
 
 import { useIntl } from 'react-intl';
 
-import '../../theme/index.css';
-
 const FMAW = (props) => {
   const intl = useIntl();
   const config = props.config;

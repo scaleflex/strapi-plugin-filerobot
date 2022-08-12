@@ -12,6 +12,7 @@ import $ from 'jquery';
 
 import { Container, Row, Col, Tabs, Tab } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import '../../theme/index.css';
 
 import Configurations from '../Tabs/Configurations.js'
 import FMAW from '../Tabs/FMAW.js'
