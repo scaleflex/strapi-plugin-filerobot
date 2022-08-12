@@ -33,7 +33,7 @@ export default strapi => {
           icon,
           label: {
             id: `${pluginId}.plugin.name`,
-            defaultMessage: name.replace(/([A-Z])/g, ' $1').replace(/^./, function(str){ return str.toUpperCase(); }), // https://stackoverflow.com/a/4149393
+            defaultMessage: 'Filerobot by Scaleflex',
           },
           name,
           permissions: [

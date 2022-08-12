@@ -162,8 +162,66 @@ const Configurations = (props) => {
   }
 
   const trigger_sync = async () => {
+    var { localMedia, filerobotMedia } = await getSyncStatus();
+    var toSyncUp = localMedia.nonFilerobot;
+    var alreadyDown = localMedia.filerobot;
 
+    // Better to sync down then up
+    var downResult = await sync_down(filerobotMedia, alreadyDown);
+    var upResult = await sync_up(toSyncUp);
+
+    onShowAlert('warning', sprintf("%1$s files are successfully downloaded from Filerobot. %2$s files are successfully uploaded to Filerobot", downResult, upResult) );
+    $("button").attr("disabled", false);
+
+    return true;
   }
+  async function sync_down(filerobotMedia, alreadyDown)
+  {
+    var alreadyDownHashs = alreadyDown.map(x => x['hash']);
+    var filerobotMediaHashs = filerobotMedia.map(x => x['hash']['sha1']);
+    var toSyncDown = filerobotMediaHashs.filter(x => !alreadyDownHashs.includes(x));
+    
+    var count = 0;
+    
+    // https://advancedweb.hu/how-to-use-async-functions-with-array-foreach-in-javascript/
+    await Promise.all( $(filerobotMedia).map(async function( index ) {
+      if ( !alreadyDownHashs.includes(this.hash.sha1) )
+      {
+        var result = await request(`/${pluginId.replace(/([A-Z])/g, ' $1').toLowerCase().replace(' ', '-')}/record-file`, {method: 'POST', body: {file:this, action:'sync-down', config:config}});
+
+        if (result !== false)
+        {
+          count++;
+        }
+        
+        console.log(`Synced down ${count} / ${toSyncDown.length}`);
+        var percentage = (toSyncDown.length === 0) ? 100 : Math.ceil(count/toSyncDown.length*100);
+        setDown(percentage);
+      }
+    }) );
+
+    return `${count} / ${toSyncDown.length}`;
+  }
+  async function sync_up(toSyncUp)
+  {
+    var count = 0;
+    
+    await Promise.all( $(toSyncUp).map(async function( index ) {
+      var result = await request(`/${pluginId.replace(/([A-Z])/g, ' $1').toLowerCase().replace(' ', '-')}/sync-up`, {method: 'POST', body: {file:this, config:config}});
+
+      if (result !== false)
+      {
+        count++;
+      }
+        
+      console.log(`Synced up ${count} / ${toSyncUp.length}`);
+      var percentage = (toSyncUp.length === 0) ? 100 : Math.ceil(count/toSyncUp.length*100);
+      setUp(percentage);
+    }) );
+
+    return `${count} / ${toSyncUp.length}`;
+  }
+
 
   async function getSyncStatus()
   {

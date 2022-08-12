@@ -48,7 +48,10 @@ const HomePage = () => {
     <Container fluid>
       <Row>
         <Col>
-          <h1>{pluginId.replace(/([A-Z])/g, ' $1').replace(/^./, function(str){ return str.toUpperCase(); })}</h1>
+          <div className="scaleflexHeading">
+            <img src="https://assets.scaleflex.com/Marketing/Logos/Filerobot+Logos/Favicon/FILEROBOT+favicon.ico" />
+            <h1>Filerobot by Scaleflex</h1>
+          </div>
 
           <Tabs defaultActiveKey="configurations">
             <Tab eventKey="configurations" title="Configurations">

@@ -52,6 +52,8 @@ const FMAW = (props) => {
         },
         target : '#filerobot-widget',
         inline : true,
+        width: '100%',
+        height: '100%',
         disableExportButton: true, 
         hideExportButtonIcon: true, 
         preventExportDefaultBehavior: true,

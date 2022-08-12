@@ -2,10 +2,22 @@
 
 // Strapi 3 DB access: https://strapi.gitee.io/documentation/v3.x/concepts/queries.html
 
+const fs = require('fs');
+const path = require('path');
+const fetch = require("node-fetch");
+const filerobotApiDomain = 'https://api.filerobot.com';
+
 module.exports = {
   index: async (ctx) => {
     ctx.send({
       message: 'ok'
+    });
+  },
+  getPluginStore: () => {
+    return strapi.store({
+      environment: strapi.config.environment,
+      type: 'plugin',
+      name: 'filerobot',
     });
   },
   getConfig: async (ctx) => {
@@ -29,6 +41,7 @@ module.exports = {
     });
     await strapi.config.set('plugins.upload.processorOptions', ctx.request.body);
     const config = await pluginStore.get({ key: 'options' });
+
     ctx.send(config);
   },
   checkDbFiles: async (ctx) => {
@@ -40,7 +53,7 @@ module.exports = {
       nonFilerobot: nonFilerobotMedia
     };
     
-    return media;
+    ctx.send(media);
   },
   recordFile: async (ctx) => {
     var file = ctx.request.body.file;
@@ -81,12 +94,169 @@ module.exports = {
       updated_by_id: admin1.id,
     });
 
-    return result;
+    ctx.send(result);
+  },
+  syncUp: async (ctx) => {
+    var file = ctx.request.body.file;
+    var config = ctx.request.body.config;
+    var imagePath = path.join(strapi.dir, 'public', file.url);
+    var base64 = '';
+
+    try 
+    {
+      base64 = fs.readFileSync(imagePath, {encoding: 'base64'});
+    } 
+    catch (err) 
+    {
+      console.error(err);
+      
+      return false;
+    }
+
+    var pluginStore = module.exports.getPluginStore();
+    var config = await pluginStore.get({ key: 'options' });
+
+    var sass = await module.exports.getSass(config);
+
+    if (sass === false)
+    {
+      return false;
+    }
+
+    var uploadHeaders = new fetch.Headers();
+    uploadHeaders.append("Content-Type", "application/json");
+    uploadHeaders.append("X-Filerobot-Key", sass);
+
+    var raw = JSON.stringify({
+      "name": file.name,
+      "data": base64,
+      "postactions": "decode_base64"
+    });
+
+    var uploadRequestOptions = {
+      method: 'POST',
+      headers: uploadHeaders,
+      body: raw
+    };
+
+    //@Todo: Needs fixing
+    var uploadRes = await fetch(`${filerobotApiDomain}/${config.token}/v4/files?folder=/${config.folder}`, uploadRequestOptions);
+
+    if (uploadRes.status != 200)
+    {
+      return false; // @Todo: better erroneous return
+    }
+
+    var uploadResult = await uploadRes.json();
+
+    if (uploadResult.status !== "success")
+    {
+      return false; // @Todo: better erroneous return
+    }
+
+    var url = uploadResult.file.url.cdn;
+    url = module.exports.removeQueryParam(url, 'vh');
+    url = module.exports.adjustForCname(url, config);
+
+    const updatedFileEntry = await strapi.query('file', 'upload').update(
+      { 
+        id: file.id 
+      },
+      {
+        url: url,
+        hash: uploadResult.file.hash.sha1,
+        provider: 'filerobot',
+        alternativeText: uploadResult.file.uuid,
+        formats: null,
+      }
+    );
+
+    ctx.send(updatedFileEntry);
   },
   getMedia: async (ctx) => {
     var media = await strapi.query('file', 'upload').find({});
 
     ctx.send(media);
+  },
+  getSass: async (config) => {
+    var sass = '';
+    
+    if (typeof(Storage) !== "undefined" && sessionStorage.getItem("sassKey"))
+    {
+      sass = sessionStorage.getItem("sassKey");
+
+      var sassValidation = await module.exports.validateSass(sass, config.token);
+
+      if (sassValidation.code === 'KEY_EXPIRED' || sassValidation.code === 'UNAUTHORIZED')
+      {
+        sass = await module.exports.getNewSassKey(config);
+
+        if (sass === false)
+        {
+          return false;
+        }
+      }
+
+      return sass;
+    }
+    else
+    {
+      sass = await module.exports.getNewSassKey(config);
+
+      if (sass === false)
+      {
+        return false;
+      }
+
+      return sass;
+    }
+  },
+  validateSass: async (sassKey, token) => {
+    var headers = new fetch.Headers();
+    headers.append("Content-Type", "application/json");
+    headers.append("X-Filerobot-Key", sassKey);
+
+    var requestOptions = {
+      method: 'GET',
+      headers: headers,
+      redirect: 'follow'
+    };
+
+    var response = await fetch(`${filerobotApiDomain}/${token}/v4/files/`, requestOptions);
+
+    return response.json();
+  },
+  getNewSassKey: async (config) => {
+    var sassReqHeaders = new fetch.Headers();
+    sassReqHeaders.append("Content-Type", "application/json");
+
+    var sassReqOpt = {
+      method: 'GET',
+      headers: sassReqHeaders
+    };
+
+    var sassRes = await fetch(`${filerobotApiDomain}/${config.token}/key/${config.sec_temp}`, sassReqOpt);
+
+    if (sassRes.status != 200)
+    {
+      return false; // @Todo: better erroneous return
+    }
+
+    var sassInfo = await sassRes.json();
+
+    if (sassInfo.status !== "success")
+    {
+      return false; // @Todo: better erroneous return
+    }
+
+    var sass = sassInfo.key;
+
+    if (typeof(Storage) !== "undefined")
+    {
+      sessionStorage.setItem("sassKey", sass);
+    }
+
+    return sass;
   },
   removeQueryParam: (link, paramName) => {
     var url = new URL(link);

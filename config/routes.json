@@ -47,6 +47,14 @@
       "config": {
         "policies": []
       }
+    },
+    {
+      "method": "POST",
+      "path": "/sync-up",
+      "handler": "scaleflex-filerobot.syncUp",
+      "config": {
+        "policies": []
+      }
     }
   ]
 }
