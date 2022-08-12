@@ -49,6 +49,14 @@
       }
     },
     {
+      "method": "GET",
+      "path": "/media-count",
+      "handler": "scaleflex-filerobot.getMediaCount",
+      "config": {
+        "policies": []
+      }
+    },
+    {
       "method": "POST",
       "path": "/sync-up",
       "handler": "scaleflex-filerobot.syncUp",

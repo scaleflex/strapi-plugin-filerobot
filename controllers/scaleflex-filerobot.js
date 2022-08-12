@@ -174,9 +174,19 @@ module.exports = {
     ctx.send(updatedFileEntry);
   },
   getMedia: async (ctx) => {
-    var media = await strapi.query('file', 'upload').find({});
+    var queryParams = ctx.request.query;
+
+    var media = await strapi.query('file', 'upload').find({
+      _limit: queryParams.limit,
+      _start: queryParams.offset * queryParams.limit
+    });
 
     ctx.send(media);
+  },
+  getMediaCount: async (ctx) => {
+    var media = await strapi.query('file', 'upload').find({});
+
+    ctx.send(media.length);
   },
   getSass: async (config) => {
     var sass = '';

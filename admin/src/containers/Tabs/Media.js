@@ -7,13 +7,37 @@ import { Table } from 'react-bootstrap';
 
 import '../../theme/index.css';
 
+import Pagination from "react-js-pagination";
+import 'bootstrap/dist/css/bootstrap.min.css';
+
 const Media = (props) => {
   const intl = useIntl();
   const [media, setMedia] = useState([]);
+  const [totalRecords, setTotalRecords] = useState(0);
+  const [currentPage, setCurrentPage] = useState(1);
+  const recordPerPage = 3;
+
+  const handlePageChange = (pageNumber) => {
+    setCurrentPage(pageNumber);
+    request(`/${pluginId.replace(/([A-Z])/g, ' $1').toLowerCase().replace(' ', '-')}/media?limit=${recordPerPage}&offset=${pageNumber-1}`, {method: 'GET'}).then(setMedia);
+  };
 
   useEffect(() => {
-    request(`/${pluginId.replace(/([A-Z])/g, ' $1').toLowerCase().replace(' ', '-')}/media`, {method: 'GET'}).then(setMedia);
+    request(`/${pluginId.replace(/([A-Z])/g, ' $1').toLowerCase().replace(' ', '-')}/media-count`, {method: 'GET'}).then(setTotalRecords);
+
+    request(`/${pluginId.replace(/([A-Z])/g, ' $1').toLowerCase().replace(' ', '-')}/media?limit=${recordPerPage}&offset=${currentPage-1}`, {method: 'GET'}).then(setMedia);
   }, []);
+
+  useEffect(() => {
+    if (totalRecords > recordPerPage)
+    {
+      $('.page-pagination').show();
+    }
+    else
+    {
+      $('.page-pagination').hide();
+    }
+  }, [totalRecords]);
 
   return (
     <div>
@@ -48,6 +72,21 @@ const Media = (props) => {
           })}
         </tbody>
       </Table>
+
+      <div className='page-pagination'>
+        <Pagination
+          prevPageText='Prev'
+          nextPageText='Next'
+          firstPageText='First'
+          lastPageText='Last'
+          activePage={currentPage}
+          itemsCountPerPage={recordPerPage}
+          totalItemsCount={totalRecords}
+          onChange={handlePageChange}
+          itemClass="page-item"
+          linkClass="page-link"
+        />
+      </div>
     </div>
   );
 };
