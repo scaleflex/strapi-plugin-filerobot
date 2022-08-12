@@ -139,7 +139,6 @@ module.exports = {
       body: raw
     };
 
-    //@Todo: Needs fixing
     var uploadRes = await fetch(`${filerobotApiDomain}/${config.token}/v4/files?folder=/${config.folder}`, uploadRequestOptions);
 
     if (uploadRes.status != 200)

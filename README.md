@@ -25,7 +25,9 @@ However, now that's unnecessary, because we can just run: `yarn develop`.
 	- https://developpaper.com/gyp-err-find-python-solution/
 	- https://github.com/mapbox/node-sqlite3/issues/1424#issuecomment-934302012
 	- Windows have problems installing strapi-plugin-upload > sharp > libvips . https://github.com/lovell/sharp/issues/1627
+	- Windows may also have this problem when using fetch https://github.com/nodejs/help/issues/2470
 
 ## Todo
 
 - Language https://discord.com/channels/811989166782021633/845300588312789063/1003939483718254663
+- CSS and appearance
