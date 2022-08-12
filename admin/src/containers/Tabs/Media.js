@@ -15,7 +15,7 @@ const Media = (props) => {
   const [media, setMedia] = useState([]);
   const [totalRecords, setTotalRecords] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
-  const recordPerPage = 3;
+  const recordPerPage = 10;
 
   const handlePageChange = (pageNumber) => {
     setCurrentPage(pageNumber);
