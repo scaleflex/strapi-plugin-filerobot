@@ -1,5 +1,5 @@
 {
-  "name": "Strapi v3 plugin for Filerobot by Scaleflex",
+  "name": "strapi-content-provider",
   "version": "1.0.1",
   "description": "Strapi v3 plugin for Filerobot by Scaleflex",
   "strapi": {
