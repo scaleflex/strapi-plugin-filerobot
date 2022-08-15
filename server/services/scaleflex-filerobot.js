@@ -21,7 +21,8 @@ module.exports = ({ strapi }) => ({
 
     const config = await pluginStore.get({ key: 'options' });
 
-    if (Object.keys(config).length === 0) {
+    if (config && Object.keys(config).length === 0) {
+
       return {
         cname: '',
         token: '',
