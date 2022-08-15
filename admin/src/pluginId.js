@@ -1,5 +1,5 @@
 const pluginPkg = require('../../package.json');
-const pluginId = pluginPkg.name.replace(
+const pluginId = "strapi-plugin-scaleflexFilerobot".replace(
   /^strapi-plugin-/i,
   ''
 );

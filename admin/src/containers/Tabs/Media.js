@@ -61,8 +61,8 @@ const Media = (props) => {
                 <td>{file.url}</td>
                 <td>{file.hash}</td>
                 <td>{file.alternativeText}</td>
-                <td>{file.createdAt}</td>
-                <td>{file.updatedAt}</td>
+                <td>{file.created_at}</td>
+                <td>{file.updated_at}</td>
               </tr>
             );
           })}
