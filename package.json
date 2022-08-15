@@ -1,7 +1,7 @@
 {
-  "name": "scaleflex-filerobot",
+  "name": "Strapi v4 plugin for Filerobot by Scaleflex",
   "version": "1.0.1",
-  "description": "Scaleflex Filerobot",
+  "description": "Strapi v4 plugin for Filerobot by Scaleflex",
   "strapi": {
     "name": "scaleflex-filerobot",
     "description": "Scaleflex Filerobot",
@@ -20,7 +20,7 @@
     "sprintf-js": "^1.1.2"
   },
   "author": {
-    "name": "Ruslan Aliyev"
+    "name": "Scaleflex"
   },
   "maintainers": [
     {
@@ -31,5 +31,10 @@
     "node": ">=12.x. <=16.x.x",
     "npm": ">=6.0.0"
   },
-  "license": "MIT"
+  "license": "MIT",
+  "keywords": [
+    "scaleflex",
+    "filerobot",
+    "strapi"
+  ]
 }
