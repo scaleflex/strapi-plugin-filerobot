@@ -4,7 +4,6 @@ import App from './containers/App';
 import Initializer from './containers/Initializer';
 import lifecycles from './lifecycles';
 import trads from './translations';
-import pluginLogo from './assets/images/logo.ico';
 
 export default strapi => {
   const pluginDescription = pluginPkg.strapi.description || pluginPkg.description;
@@ -25,7 +24,6 @@ export default strapi => {
     lifecycles,
     mainComponent: App,
     name,
-    //pluginLogo,
     preventComponentRendering: false,
     trads,
     menu: {
