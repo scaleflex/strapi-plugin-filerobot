@@ -5,7 +5,7 @@ import $ from 'jquery';
 
 import { Container, Row, Col, Form, Button } from 'react-bootstrap';
 
-import { request } from "strapi-helper-plugin";
+import { request, auth } from "strapi-helper-plugin";
 
 import { sprintf } from 'sprintf-js';
 import { useIntl } from 'react-intl';
@@ -74,7 +74,7 @@ const Configurations = (props) => {
       return;
     }
 
-    await request(`/${pluginId}/update-config`, {method: 'PUT', body: config});
+    await request(`/${pluginId}/update-config`, {method: 'PUT', headers:{'Authorization':`Bearer ${auth.getToken()}`}, body: config});
 
     onShowAlert('warning', intl.formatMessage({id:`${pluginId}.notification.success.update_config`}));
     $("button").attr("disabled", false);
@@ -89,7 +89,7 @@ const Configurations = (props) => {
   const check_connection = async () => {
     $("button").attr("disabled", "disabled");
 
-    var configs = await request(`/${pluginId}/config`, {method: 'GET'});
+    var configs = await request(`/${pluginId}/config`, {method: 'GET', headers:{'Authorization':`Bearer ${auth.getToken()}`}});
     var sass = await getSass(configs);
 
     if (sass === false)
@@ -184,7 +184,7 @@ const Configurations = (props) => {
     await Promise.all( $(filerobotMedia).map(async function( index ) {
       if ( !alreadyDownHashs.includes(this.hash.sha1) )
       {
-        var result = await request(`/${pluginId}/record-file`, {method: 'POST', body: {file:this, action:'sync-down', config:config}});
+        var result = await request(`/${pluginId}/record-file`, {method: 'POST', headers:{'Authorization':`Bearer ${auth.getToken()}`}, body: {file:this, action:'sync-down', config:config}});
 
         if (result !== false)
         {
@@ -204,7 +204,7 @@ const Configurations = (props) => {
     var count = 0;
     
     await Promise.all( $(toSyncUp).map(async function( index ) {
-      var result = await request(`/${pluginId}/sync-up`, {method: 'POST', body: {file:this, config:config}});
+      var result = await request(`/${pluginId}/sync-up`, {method: 'POST', headers:{'Authorization':`Bearer ${auth.getToken()}`}, body: {file:this, config:config}});
 
       if (result !== false)
       {
@@ -224,8 +224,8 @@ const Configurations = (props) => {
   {
     $("button").attr("disabled", "disabled");
 
-    var localMedia = await request(`/${pluginId}/db-files`, {method: 'GET'});
-    var configs = await request(`/${pluginId}/config`, {method: 'GET'});
+    var localMedia = await request(`/${pluginId}/db-files`, {method: 'GET', headers:{'Authorization':`Bearer ${auth.getToken()}`}});
+    var configs = await request(`/${pluginId}/config`, {method: 'GET', headers:{'Authorization':`Bearer ${auth.getToken()}`}});
     var sass = await getSass(configs);
 
     if (sass === false)

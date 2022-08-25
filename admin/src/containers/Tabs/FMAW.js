@@ -14,7 +14,7 @@ import XHRUpload from '@filerobot/xhr-upload';
 import '@filerobot/core/dist/style.min.css';
 import '@filerobot/explorer/dist/style.min.css';
 
-import { request } from "strapi-helper-plugin";
+import { request, auth } from "strapi-helper-plugin";
 
 import { useIntl } from 'react-intl';
 
@@ -91,7 +91,7 @@ const FMAW = (props) => {
 
   const recordMedia = async (files, action, config) => {
     files.forEach(async (file, index) => {
-      await request(`/${pluginId}/record-file`, {method: 'POST', body: {file:file, action:action, config:config}});
+      await request(`/${pluginId}/record-file`, {method: 'POST', headers:{'Authorization':`Bearer ${auth.getToken()}`}, body: {file:file, action:action, config:config}});
 
       if (files.length-1==index)
       {

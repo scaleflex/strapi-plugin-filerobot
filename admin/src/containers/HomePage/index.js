@@ -29,8 +29,7 @@ const HomePage = () => {
   });
 
   useEffect(() => {
-    request(`/${pluginId}/config`, {method: 'GET'}).then(setConfig);
-    console.dir(auth.getToken());
+    request(`/${pluginId}/config`, {method: 'GET', headers:{'Authorization':`Bearer ${auth.getToken()}`}}).then(setConfig);
 
     if (typeof(Storage) !== "undefined")
     {

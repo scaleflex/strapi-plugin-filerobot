@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import pluginId from '../../pluginId';
 import $ from 'jquery';
-import { request } from "strapi-helper-plugin";
+import { request, auth } from "strapi-helper-plugin";
 import { useIntl } from 'react-intl';
 import { Table } from 'react-bootstrap';
 import Pagination from "react-js-pagination";
@@ -15,13 +15,13 @@ const Media = (props) => {
 
   const handlePageChange = (pageNumber) => {
     setCurrentPage(pageNumber);
-    request(`/${pluginId}/media?limit=${recordPerPage}&offset=${pageNumber-1}`, {method: 'GET'}).then(setMedia);
+    request(`/${pluginId}/media?limit=${recordPerPage}&offset=${pageNumber-1}`, {method: 'GET', headers:{'Authorization':`Bearer ${auth.getToken()}`}}).then(setMedia);
   };
 
   useEffect(() => {
-    request(`/${pluginId}/media-count`, {method: 'GET'}).then(setTotalRecords);
+    request(`/${pluginId}/media-count`, {method: 'GET', headers:{'Authorization':`Bearer ${auth.getToken()}`}}).then(setTotalRecords);
 
-    request(`/${pluginId}/media?limit=${recordPerPage}&offset=${currentPage-1}`, {method: 'GET'}).then(setMedia);
+    request(`/${pluginId}/media?limit=${recordPerPage}&offset=${currentPage-1}`, {method: 'GET', headers:{'Authorization':`Bearer ${auth.getToken()}`}}).then(setMedia);
   }, []);
 
   useEffect(() => {
