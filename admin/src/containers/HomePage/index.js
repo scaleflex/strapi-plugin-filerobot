@@ -31,7 +31,7 @@ const HomePage = () => {
   });
 
   useEffect(() => {
-    request(`/${pluginId.replace(/([A-Z])/g, ' $1').toLowerCase().replace(' ', '-')}/config`, {method: 'GET'}).then(setConfig);
+    request(`/${pluginId}/config`, {method: 'GET'}).then(setConfig);
 
     if (typeof(Storage) !== "undefined")
     {

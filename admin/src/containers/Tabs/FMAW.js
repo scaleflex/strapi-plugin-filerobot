@@ -91,7 +91,7 @@ const FMAW = (props) => {
 
   const recordMedia = async (files, action, config) => {
     files.forEach(async (file, index) => {
-      await request(`/${pluginId.replace(/([A-Z])/g, ' $1').toLowerCase().replace(' ', '-')}/record-file`, {method: 'POST', body: {file:file, action:action, config:config}});
+      await request(`/${pluginId}/record-file`, {method: 'POST', body: {file:file, action:action, config:config}});
 
       if (files.length-1==index)
       {

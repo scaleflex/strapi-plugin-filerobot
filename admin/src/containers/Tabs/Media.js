@@ -15,13 +15,13 @@ const Media = (props) => {
 
   const handlePageChange = (pageNumber) => {
     setCurrentPage(pageNumber);
-    request(`/${pluginId.replace(/([A-Z])/g, ' $1').toLowerCase().replace(' ', '-')}/media?limit=${recordPerPage}&offset=${pageNumber-1}`, {method: 'GET'}).then(setMedia);
+    request(`/${pluginId}/media?limit=${recordPerPage}&offset=${pageNumber-1}`, {method: 'GET'}).then(setMedia);
   };
 
   useEffect(() => {
-    request(`/${pluginId.replace(/([A-Z])/g, ' $1').toLowerCase().replace(' ', '-')}/media-count`, {method: 'GET'}).then(setTotalRecords);
+    request(`/${pluginId}/media-count`, {method: 'GET'}).then(setTotalRecords);
 
-    request(`/${pluginId.replace(/([A-Z])/g, ' $1').toLowerCase().replace(' ', '-')}/media?limit=${recordPerPage}&offset=${currentPage-1}`, {method: 'GET'}).then(setMedia);
+    request(`/${pluginId}/media?limit=${recordPerPage}&offset=${currentPage-1}`, {method: 'GET'}).then(setMedia);
   }, []);
 
   useEffect(() => {

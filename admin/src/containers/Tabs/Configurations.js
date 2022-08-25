@@ -74,7 +74,7 @@ const Configurations = (props) => {
       return;
     }
 
-    await request(`/${pluginId.replace(/([A-Z])/g, ' $1').toLowerCase().replace(' ', '-')}/update-config`, {method: 'PUT', body: config});
+    await request(`/${pluginId}/update-config`, {method: 'PUT', body: config});
 
     onShowAlert('warning', intl.formatMessage({id:`${pluginId}.notification.success.update_config`}));
     $("button").attr("disabled", false);
@@ -89,7 +89,7 @@ const Configurations = (props) => {
   const check_connection = async () => {
     $("button").attr("disabled", "disabled");
 
-    var configs = await request(`/${pluginId.replace(/([A-Z])/g, ' $1').toLowerCase().replace(' ', '-')}/config`, {method: 'GET'});
+    var configs = await request(`/${pluginId}/config`, {method: 'GET'});
     var sass = await getSass(configs);
 
     if (sass === false)
@@ -184,7 +184,7 @@ const Configurations = (props) => {
     await Promise.all( $(filerobotMedia).map(async function( index ) {
       if ( !alreadyDownHashs.includes(this.hash.sha1) )
       {
-        var result = await request(`/${pluginId.replace(/([A-Z])/g, ' $1').toLowerCase().replace(' ', '-')}/record-file`, {method: 'POST', body: {file:this, action:'sync-down', config:config}});
+        var result = await request(`/${pluginId}/record-file`, {method: 'POST', body: {file:this, action:'sync-down', config:config}});
 
         if (result !== false)
         {
@@ -204,7 +204,7 @@ const Configurations = (props) => {
     var count = 0;
     
     await Promise.all( $(toSyncUp).map(async function( index ) {
-      var result = await request(`/${pluginId.replace(/([A-Z])/g, ' $1').toLowerCase().replace(' ', '-')}/sync-up`, {method: 'POST', body: {file:this, config:config}});
+      var result = await request(`/${pluginId}/sync-up`, {method: 'POST', body: {file:this, config:config}});
 
       if (result !== false)
       {
@@ -224,8 +224,8 @@ const Configurations = (props) => {
   {
     $("button").attr("disabled", "disabled");
 
-    var localMedia = await request(`/${pluginId.replace(/([A-Z])/g, ' $1').toLowerCase().replace(' ', '-')}/db-files`, {method: 'GET'});
-    var configs = await request(`/${pluginId.replace(/([A-Z])/g, ' $1').toLowerCase().replace(' ', '-')}/config`, {method: 'GET'});
+    var localMedia = await request(`/${pluginId}/db-files`, {method: 'GET'});
+    var configs = await request(`/${pluginId}/config`, {method: 'GET'});
     var sass = await getSass(configs);
 
     if (sass === false)
