@@ -66,7 +66,7 @@ const Configurations = (props) => {
         })
         .reduce((a, b) => ({ ...a, [Object.keys(b)[0]]: b[Object.keys(b)[0]] }), {});
 
-    if (config.token === '' || config.sec_temp === '' || config.user === '' || config.pass === '')
+    if (config.token === '' || config.sec_temp === '')
     {
       onShowAlert('warning', intl.formatMessage({id:`${pluginId}.notification.error.fill_required`}));
       $("button").attr("disabled", false);
@@ -372,16 +372,6 @@ const Configurations = (props) => {
           <Form.Group controlId="folder" className="form-group">
             <Form.Label>Folder</Form.Label>
             <Form.Control name="folder" type="text" defaultValue={config.folder} />
-          </Form.Group>
-
-          <Form.Group controlId="user" className="form-group">
-            <Form.Label>Strapi Authenticated User *</Form.Label>
-            <Form.Control name="user" type="text" defaultValue={config.user} />
-          </Form.Group>
-
-          <Form.Group controlId="pass" className="form-group">
-            <Form.Label>Strapi Authenticated User Password *</Form.Label>
-            <Form.Control name="pass" type="password" defaultValue={config.pass} />
           </Form.Group>
 
           <Form.Group className="btn-group">

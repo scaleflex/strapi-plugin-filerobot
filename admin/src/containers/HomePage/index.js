@@ -18,20 +18,19 @@ import Configurations from '../Tabs/Configurations.js'
 import FMAW from '../Tabs/FMAW.js'
 import Media from '../Tabs/Media.js'
 
-import { request } from "strapi-helper-plugin";
+import { request, auth } from "strapi-helper-plugin";
 
 const HomePage = () => {
   const [config, setConfig] = useState({
+    cname: '',
     token: '',
     sec_temp: '',
-    folder: '',
-    fr_url: '',
-    user: '',
-    pass: ''
+    folder: ''
   });
 
   useEffect(() => {
     request(`/${pluginId}/config`, {method: 'GET'}).then(setConfig);
+    console.dir(auth.getToken());
 
     if (typeof(Storage) !== "undefined")
     {
