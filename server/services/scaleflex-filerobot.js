@@ -27,9 +27,7 @@ module.exports = ({ strapi }) => ({
         cname: '',
         token: '',
         sec_temp: '',
-        folder: '',
-        user: '',
-        pass: ''
+        folder: ''
       };
     } else {
       return config;

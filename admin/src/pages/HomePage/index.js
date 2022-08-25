@@ -23,11 +23,10 @@ import '../../theme/index.css';
 
 const HomePage = () => {
   const [config, setConfig] = useState({
+    cname: '',
     token: '',
     sec_temp: '',
-    folder: '',
-    user: '',
-    pass: ''
+    folder: ''
   });
 
   useEffect(() => {
