@@ -23,6 +23,15 @@ const Configurations = (props) => {
 
   const config = props.config;
 
+  if (!config.token || !config.sec_temp)
+  {
+    $("button.btn-secondary").attr("disabled", "disabled");
+  }
+  else
+  {
+    $("button.btn-secondary").attr("disabled", false);
+  }
+
   const [alert, setAlert] = React.useState({
     type: 'warning',
     text: '',
