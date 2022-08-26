@@ -99,8 +99,10 @@ module.exports = {
     ctx.send(result);
   },
   syncUp: async (ctx) => {
-    var file = ctx.request.body.file;
-    var config = ctx.request.body.config;
+    var body = JSON.parse(ctx.request.body);
+
+    var file = body.file;
+    var config = body.config;
     var imagePath = path.join(strapi.dir, 'public', file.url);
     var base64 = '';
 
