@@ -107,6 +107,7 @@ module.exports = ({ strapi }) => ({
         height: height, 
         created_by_id: admin1.id,
         updated_by_id: admin1.id,
+        folderPath: '/',
       },
     });
 
