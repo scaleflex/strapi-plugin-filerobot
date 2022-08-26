@@ -26,6 +26,17 @@ const Configurations = (props) => {
 
   const config = props.config;
 
+  React.useEffect(() => {
+    if (!config.token || !config.sec_temp)
+    {
+      $("button.btn-secondary").attr("disabled", "disabled");
+    }
+    else
+    {
+      $("button.btn-secondary").attr("disabled", false);
+    }
+  }, [config]);
+
   const [alert, setAlert] = React.useState({
     type: 'warning',
     text: '',
@@ -73,6 +84,7 @@ const Configurations = (props) => {
     {
       onShowAlert('warning', intl.formatMessage({id:'scaleflex-filerobot.notification.error.fill_required'}));
       $("button").attr("disabled", false);
+      $("button.btn-secondary").attr("disabled", "disabled");
 
       return;
     }
