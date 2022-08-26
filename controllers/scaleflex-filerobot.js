@@ -56,9 +56,11 @@ module.exports = {
     ctx.send(media);
   },
   recordFile: async (ctx) => {
-    var file = ctx.request.body.file;
-    var action = ctx.request.body.action;
-    var config = ctx.request.body.config;
+    var body = JSON.parse(ctx.request.body);
+
+    var file = body.file;
+    var action = body.action;
+    var config = body.config;
 
     var url = (action === 'export') ? file.link : file.url.cdn;
     var name = (action === 'export') ? file.file.name : file.name;
