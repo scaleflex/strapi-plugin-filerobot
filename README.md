@@ -2,4 +2,4 @@
 
 ## Usage
 
-https://docs.filerobot.com/go/filerobot-documentation/en/plugins-and-integrations/third-party-integrations/strapi-plugin
+https://docs.filerobot.com/go/filerobot-documentation/en/plugins-and-integrations/third-party-integrations/strapi-plugins/strapi-v4-plugin
