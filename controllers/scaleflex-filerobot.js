@@ -119,8 +119,9 @@ module.exports = {
 
     var pluginStore = module.exports.getPluginStore();
     var config = await pluginStore.get({ key: 'options' });
+    config = JSON.parse(config);
 
-    var sass = await module.exports.getSass(config);
+    var sass = await module.exports.getNewSassKey(config);
 
     if (sass === false)
     {
