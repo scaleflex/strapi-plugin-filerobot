@@ -4,7 +4,7 @@
   "description": "Strapi v3 plugin for Filerobot by Scaleflex",
   "strapi": {
     "name": "Scaleflex Filerobot",
-    "icon": "plug",
+    "icon": "file-image",
     "description": "Scaleflex Filerobot"
   },
   "dependencies": {
