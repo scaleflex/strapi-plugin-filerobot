@@ -116,7 +116,9 @@ module.exports = ({ strapi }) => ({
   async syncUp(ctx) {
     var file = ctx.request.body.file;
     var config = ctx.request.body.config;
-    var imagePath = path.join(strapi.dirs.public, file.url);
+    var imagePath = strapi.dirs.public 
+      ? path.join(strapi.dirs.public, file.url) 
+      : path.join(strapi.dirs.static.public, file.url); // To accomodate for Strapi v4.3.x
     var base64 = '';
 
     try 
