@@ -57,7 +57,7 @@ const FMAW = (props) => {
         preventExportDefaultBehavior: true,
         locale: {
           strings: {
-            exportButtonLabel: "Add to Strapi"
+            mutualizedExportButtonLabel: "Add to Strapi"
           }
         },
       })
