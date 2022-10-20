@@ -39,7 +39,7 @@ module.exports = {
       key: 'options',
       value: ctx.request.body
     });
-    await strapi.config.set('plugins.upload.processorOptions', ctx.request.body);
+
     const config = await pluginStore.get({ key: 'options' });
 
     ctx.send(config);
