@@ -59,7 +59,7 @@ const FMAW = (props) => {
         preventExportDefaultBehavior: true,
         locale: {
           strings: {
-            exportButtonLabel: intl.formatMessage({id:'scaleflex-filerobot.label.button.fmaw.export'})
+            mutualizedExportButtonLabel: intl.formatMessage({id:'scaleflex-filerobot.label.button.fmaw.export'})
           }
         },
       })
