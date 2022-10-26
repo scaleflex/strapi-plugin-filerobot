@@ -14,11 +14,11 @@ Strapi v4: https://docs.strapi.io/developer-docs/latest/getting-started/quick-st
 
 At this point, assuming that you already have an Strapi CMS installed and setup, and that you already have an super-admin user configured. It's time to install the Scaleflex Filerobot plugin for Strapi v4:
 
-`npm install @filerobot-strapi/content-provider`
+`npm install @filerobot-strapi/content-plugin`
 
 or
 
-`yarn add @filerobot-strapi/content-provider`
+`yarn add @filerobot-strapi/content-plugin`
 
 ## After you install the plugin
 
