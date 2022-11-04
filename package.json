@@ -1,6 +1,6 @@
 {
   "name": "@filerobot-strapi/content-plugin",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "description": "Strapi v4 plugin for Filerobot by Scaleflex",
   "strapi": {
     "name": "scaleflex-filerobot",
@@ -18,6 +18,9 @@
     "react-js-pagination": "^3.0.3",
     "react-popup-alert": "^2.0.0",
     "sprintf-js": "^1.1.2"
+  },
+  "peerDependencies": {
+    "@strapi/strapi": "4.3.0"
   },
   "author": {
     "name": "Scaleflex"
