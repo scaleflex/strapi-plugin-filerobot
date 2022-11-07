@@ -1,6 +1,6 @@
 {
   "name": "strapi-plugin-filerobot",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "description": "Strapi v3 plugin for Filerobot by Scaleflex",
   "strapi": {
     "name": "Scaleflex Filerobot",
@@ -13,9 +13,10 @@
     "@filerobot/xhr-upload": "^1.0.108-rc.1",
     "bootstrap": "^5.1.3",
     "jquery": "^3.6.0",
+    "minimist": "^1.2.6",
     "react-bootstrap": "^2.4.0",
     "react-intl": "^6.0.5",
-    "react-js-pagination": "^3.0.3",
+    "react-js-pagination": "https://github.com/wwwaiser/react-js-pagination.git",
     "react-popup-alert": "^2.0.0",
     "sprintf-js": "^1.1.2"
   },
