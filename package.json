@@ -1,6 +1,6 @@
 {
   "name": "@filerobot-strapi/content-plugin",
-  "version": "1.0.10",
+  "version": "1.0.11",
   "description": "Strapi v4 plugin for Filerobot by Scaleflex",
   "strapi": {
     "name": "scaleflex-filerobot",
