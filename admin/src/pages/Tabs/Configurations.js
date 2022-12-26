@@ -2,7 +2,6 @@ import React, {useState} from "react";
 import { Stack, Field, FieldLabel, Box, FieldInput, Button, Alert, ProgressBar, Typography } from '@strapi/design-system';
 import { sprintf } from 'sprintf-js';
 import { useIntl } from 'react-intl';
-import $ from 'jquery';
 import pluginId from '../../pluginId';
 import { request } from "@strapi/helper-plugin";
 
