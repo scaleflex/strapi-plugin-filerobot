@@ -17,6 +17,7 @@ const Configurations = (props) => {
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState(false);
   const [syncMessage, setSyncMessage] = useState(false);
+  const [disabledAllButtons, setDisabledAllButtons] = useState(false)
   const [up, setUp] = useState(0);
   const [down, setDown] = useState(0);
 
@@ -28,6 +29,8 @@ const Configurations = (props) => {
       folder: folder
     }
 
+    setDisabledAllButtons(true)
+
     await fetch(filerobotApiDomain + "/" + token + "/key/" + secTemp).then(async (response) => {
       if (response.status === 200) {
         await request(`/${pluginId}/update-config`, {method: 'PUT', body: config}).then(data => {
@@ -36,6 +39,8 @@ const Configurations = (props) => {
       } else {
         setError(true);
       }
+
+      setDisabledAllButtons(false)
 
       setTimeout(() => {
         setError(false)
@@ -141,6 +146,8 @@ const Configurations = (props) => {
   }
 
   const syncStatus = async () => {
+    setDisabledAllButtons(true)
+
     const { localMedia, filerobotMedia } = await getSyncStatus();
 
     if (localMedia === false && filerobotMedia === false){
@@ -153,6 +160,7 @@ const Configurations = (props) => {
     const filerobotMediaHashs = filerobotMedia.map(x => x['hash']['sha1']);
     const toSyncDown = filerobotMediaHashs.filter(x => !alreadyDownHashs.includes(x));
     setSyncMessage(sprintf(intl.formatMessage({id:'scaleflex-filerobot.notification.success.sync_status'}), toSyncUp.length, toSyncDown.length))
+    setDisabledAllButtons(false)
 
     setTimeout(() => {
       setSyncMessage(false)
@@ -160,12 +168,14 @@ const Configurations = (props) => {
   }
 
   const triggerSync = async () => {
+    setDisabledAllButtons(true)
     const { localMedia, filerobotMedia } = await getSyncStatus();
     const toSyncUp = localMedia.nonFilerobot;
     const alreadyDown = localMedia.filerobot;
     const downResult = await syncDown(filerobotMedia, alreadyDown);
     const upResult = await syncUp(toSyncUp);
     setSyncMessage(sprintf(intl.formatMessage({id:'scaleflex-filerobot.notification.success.sync_results'}), downResult, upResult))
+    setDisabledAllButtons(false)
   }
   const syncDown = async (filerobotMedia, alreadyDown) => {
     const alreadyDownHashs = alreadyDown.map(x => x['hash']);
@@ -250,11 +260,11 @@ const Configurations = (props) => {
         </Stack>
       </Field>
       <Box width={200}>
-        <Button onClick={() => saveConfiguration()}>Save configuration</Button>
+        <Button disabled={disabledAllButtons} onClick={() => saveConfiguration()}>Save configuration</Button>
       </Box>
       <Stack horizontal spacing={4}>
-        <Button onClick={() => syncStatus()} variant={'secondary'}>Synchronization Status</Button>
-        <Button onClick={() => triggerSync()} variant={'secondary'}>Trigger Synchronization</Button>
+        <Button  disabled={disabledAllButtons} onClick={() => syncStatus()} variant={'secondary'}>Synchronization Status</Button>
+        <Button  disabled={disabledAllButtons} onClick={() => triggerSync()} variant={'secondary'}>Trigger Synchronization</Button>
       </Stack>
       {up !== 0 && (
         <Stack spacing={2}>
