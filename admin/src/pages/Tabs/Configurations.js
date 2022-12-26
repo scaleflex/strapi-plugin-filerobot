@@ -1,453 +1,276 @@
-import React from "react";
-import pluginId from '../../pluginId';
-
-import $ from 'jquery';
-
-import { Container, Row, Col, Form, Button } from 'react-bootstrap';
-import 'bootstrap/dist/css/bootstrap.min.css';
-
-import { request } from "@strapi/helper-plugin";
-
+import React, {useState} from "react";
+import { Stack, Field, FieldLabel, Box, FieldInput, Button, Alert, ProgressBar, Typography } from '@strapi/design-system';
 import { sprintf } from 'sprintf-js';
 import { useIntl } from 'react-intl';
-
-import '../../theme/index.css';
-
-// https://www.npmjs.com/package/react-popup-alert
-import Alert from 'react-popup-alert'
-import 'react-popup-alert/dist/index.css';
-
-// https://react-bootstrap.github.io/components/progress/
-// https://www.youtube.com/watch?v=3sH_Kq9e5hQ
-import ProgressBar from 'react-bootstrap/ProgressBar'
+import $ from 'jquery';
+import pluginId from '../../pluginId';
+import { request } from "@strapi/helper-plugin";
 
 const Configurations = (props) => {
+  const filerobotApiDomain = 'https://api.filerobot.com';
   const intl = useIntl();
-
   const config = props.config;
 
-  React.useEffect(() => {
-    if (!config.token || !config.sec_temp)
-    {
-      $("button.btn-secondary").attr("disabled", "disabled");
-    }
-    else
-    {
-      $("button.btn-secondary").attr("disabled", false);
-    }
-  }, [config]);
+  const [cname, setCname] = useState(config.cname ? config.cname : '');
+  const [token, setToken] = useState(config.token ? config.token : '');
+  const [secTemp, setSecTemp] = useState(config.sec_temp ? config.sec_temp : '');
+  const [folder, setFolder] = useState(config.folder ? config.folder : '');
+  const [success, setSuccess] = useState(false);
+  const [error, setError] = useState(false);
+  const [syncMessage, setSyncMessage] = useState(false);
+  const [up, setUp] = useState(0);
+  const [down, setDown] = useState(0);
 
-  const [alert, setAlert] = React.useState({
-    type: 'warning',
-    text: '',
-    show: false
-  })
-  function onCloseAlert() {
-    setAlert({
-      type: '',
-      text: '',
-      show: false
+  const saveConfiguration = async () => {
+    const config = {
+      cname: cname,
+      token: token,
+      sec_temp: secTemp,
+      folder: folder
+    }
+
+    await fetch(filerobotApiDomain + "/" + token + "/key/" + secTemp).then(async (response) => {
+      if (response.status === 200) {
+        await request(`/${pluginId}/update-config`, {method: 'PUT', body: config}).then(data => {
+          setSuccess(true)
+        });
+      } else {
+        setError(true);
+      }
+
+      setTimeout(() => {
+        setError(false)
+        setSuccess(false)
+      }, 4000)
     })
   }
-  function onShowAlert(type, text) {
-    setAlert({
-      type: type,
-      text: text,
-      show: true
-    })
-  }
 
-  const [down, setDown] = React.useState(0);
-  const [up, setUp] = React.useState(0);
-
-  const filerobotApiDomain = 'https://api.filerobot.com';
-
-  const update = async (event) => {
-    event.preventDefault();
-    $("button").attr("disabled", "disabled");
-
-    if (typeof(Storage) !== "undefined" && sessionStorage.getItem("sassKey"))
-    {
-      sessionStorage.removeItem("sassKey");
-    }
-
-    var config = [...event.currentTarget.elements]
-      .filter((ele) => ele.type !== "submit")
-      .map((ele) => {
-        return {
-          [ele.getAttribute("name")]: ele.value,
-        };
-      })
-      .reduce((a, b) => ({ ...a, [Object.keys(b)[0]]: b[Object.keys(b)[0]] }), {});
-
-    if (config.token === '' || config.sec_temp === '')
-    {
-      onShowAlert('warning', intl.formatMessage({id:'scaleflex-filerobot.notification.error.fill_required'}));
-      $("button").attr("disabled", false);
-      $("button.btn-secondary").attr("disabled", "disabled");
-
-      return;
-    }
-
-    await request(`/${pluginId}/update-config`, {method: 'PUT', body: config});
-
-    onShowAlert('warning', intl.formatMessage({id:'scaleflex-filerobot.notification.success.update_config'}));
-    $("button").attr("disabled", false);
-    await sleep(2000);
-    window.location.reload();
-  }
-
-  const sleep = (milliseconds) => {
-    return new Promise(resolve => setTimeout(resolve, milliseconds));
-  }
-
-  const check_connection = async () => {
-    $("button").attr("disabled", "disabled");
-
-    var configs = await request(`/${pluginId}/config`, {method: 'GET'});
-    var sass = await getSass(configs);
-
-    if (sass === false)
-    {
-      onShowAlert('warning', intl.formatMessage({id:'scaleflex-filerobot.notification.error.wrong_sectmp'}));
-      $("button").attr("disabled", false);
-
-      return false;
-    }
-
-    var headers = new Headers();
-    headers.append("Content-Type", "application/json");
-    headers.append("X-Filerobot-Key", sass);
-
-    var requestOptions = {
-      method: 'GET',
-      headers: headers
-    };
-
-    var tokenCheck = await fetch(`${filerobotApiDomain}/${configs.token}/v4/files?folder=/&limit=1&`, requestOptions);
-
-    if (tokenCheck.status != 200)
-    {
-      onShowAlert('warning', intl.formatMessage({id:'scaleflex-filerobot.notification.error.check_token_issue'}));
-      $("button").attr("disabled", false);
-
-      return false;
-    }
-
-    var tokenCheckJson = await tokenCheck.json();
-
-    if (tokenCheckJson.status !== 'success')
-    {
-      onShowAlert('warning', intl.formatMessage({id:'scaleflex-filerobot.notification.error.wrong_token'}));
-      $("button").attr("disabled", false);
-
-      return false;
-    }
-
-    // var checkSecTemp = await fetch(`${filerobotApiDomain}/${configs.token}/key/${configs.sec_temp}`, requestOptions);
-
-    // if (checkSecTemp.status != 200)
-    // {
-    //   onShowAlert('warning', intl.formatMessage({id:'scaleflex-filerobot.notification.error.check_sectmp_issue'}));
-    //   $("button").attr("disabled", false);
-
-    //   return false;
-    // }
-    
-    // var checkSecTempJson = await checkSecTemp.json();
-
-    // if (checkSecTempJson.status !== 'success')
-    // {
-    //   onShowAlert('warning', intl.formatMessage({id:'scaleflex-filerobot.notification.error.wrong_sectmp'}));
-    //   $("button").attr("disabled", false);
-
-    //   return false;
-    // }
-
-    onShowAlert('warning', intl.formatMessage({id:'scaleflex-filerobot.notification.success.sync_connection'}));
-    $("button").attr("disabled", false);
-
-    return true;
-  }
-
-  const sync_status = async () => {
-    var { localMedia, filerobotMedia } = await getSyncStatus();
-
-    if (localMedia === false && filerobotMedia === false)
-    {
-      onShowAlert('warning', intl.formatMessage({id:'scaleflex-filerobot.notification.error.wrong_sectmp'}));
-      $("button").attr("disabled", false);
-
-      return false;
-    }
-
-    var toSyncUp = localMedia.nonFilerobot;
-    var alreadyDown = localMedia.filerobot;
-    var alreadyDownHashs = alreadyDown.map(x => x['hash']);
-    var filerobotMediaHashs = filerobotMedia.map(x => x['hash']['sha1']);
-    var toSyncDown = filerobotMediaHashs.filter(x => !alreadyDownHashs.includes(x));
-
-    onShowAlert('warning', sprintf(intl.formatMessage({id:'scaleflex-filerobot.notification.success.sync_status'}), toSyncUp.length, toSyncDown.length) );
-    $("button").attr("disabled", false);
-
-    return true;
-  }
-
-  const trigger_sync = async () => {
-    var { localMedia, filerobotMedia } = await getSyncStatus();
-    var toSyncUp = localMedia.nonFilerobot;
-    var alreadyDown = localMedia.filerobot;
-
-    // Better to sync down then up
-    var downResult = await sync_down(filerobotMedia, alreadyDown);
-    var upResult = await sync_up(toSyncUp);
-
-    onShowAlert('warning', sprintf(intl.formatMessage({id:'scaleflex-filerobot.notification.success.sync_results'}), downResult, upResult) );
-    $("button").attr("disabled", false);
-
-    return true;
-  }
-  async function sync_down(filerobotMedia, alreadyDown)
-  {
-    var alreadyDownHashs = alreadyDown.map(x => x['hash']);
-    var filerobotMediaHashs = filerobotMedia.map(x => x['hash']['sha1']);
-    var toSyncDown = filerobotMediaHashs.filter(x => !alreadyDownHashs.includes(x));
-    
-    var count = 0;
-    
-    // https://advancedweb.hu/how-to-use-async-functions-with-array-foreach-in-javascript/
-    await Promise.all( $(filerobotMedia).map(async function( index ) {
-      if ( !alreadyDownHashs.includes(this.hash.sha1) )
-      {
-        var result = await request(`/${pluginId}/record-file`, {method: 'POST', body: {file:this, action:'sync-down', config:config}});
-
-        if (result !== false)
-        {
-          count++;
-        }
-        
-        console.log(`Synced down ${count} / ${toSyncDown.length}`);
-        var percentage = (toSyncDown.length === 0) ? 100 : Math.ceil(count/toSyncDown.length*100);
-        setDown(percentage);
-      }
-    }) );
-
-    return `${count} / ${toSyncDown.length}`;
-  }
-  async function sync_up(toSyncUp)
-  {
-    var count = 0;
-    
-    await Promise.all( $(toSyncUp).map(async function( index ) {
-      var result = await request(`/${pluginId}/sync-up`, {method: 'POST', body: {file:this, config:config}});
-
-      if (result !== false)
-      {
-        count++;
-      }
-        
-      console.log(`Synced up ${count} / ${toSyncUp.length}`);
-      var percentage = (toSyncUp.length === 0) ? 100 : Math.ceil(count/toSyncUp.length*100);
-      setUp(percentage);
-    }) );
-
-    return `${count} / ${toSyncUp.length}`;
-  }
-
-  async function getSyncStatus()
-  {
-    $("button").attr("disabled", "disabled");
-
-    var localMedia = await request(`/${pluginId}/db-files`, {method: 'GET'});
-    var configs = await request(`/${pluginId}/config`, {method: 'GET'});
-    var sass = await getSass(configs);
-
-    if (sass === false)
-    {
-      onShowAlert('warning', intl.formatMessage({id:'scaleflex-filerobot.notification.error.check_sectmp_issue'}));
-      $("button").attr("disabled", false);
-
-      return {'localMedia':false, 'filerobotMedia':false};
-    }
-
-    var headers = new Headers();
-    headers.append("Content-Type", "application/json");
-    headers.append("X-Filerobot-Key", sass);
-
-    var requestOptions = {
-      method: 'GET',
-      headers: headers
-    };
-
-    var filerobotDirectory = (configs.folder.charAt(0) === '/') ? configs.folder : `/${configs.folder}`;
-    var filerobotResponse = await fetch(`${filerobotApiDomain}/${configs.token}/v4/files?folder=${filerobotDirectory}`, requestOptions);
-
-    if (filerobotResponse.status != 200)
-    {
-      onShowAlert('warning', intl.formatMessage({id:'scaleflex-filerobot.notification.error.sync_status'}));
-      $("button").attr("disabled", false);
-
-      return {'localMedia':false, 'filerobotMedia':false};
-    }
-
-    var filerobotResponseJson = await filerobotResponse.json();
-    var filerobotMedia = filerobotResponseJson.files;
-
-    return {'localMedia':localMedia, 'filerobotMedia':filerobotMedia};
-  }
-
-  async function validateSass(sassKey, token) 
-  {
-    var headers = new Headers();
+  const validateSass = async (sassKey, token) => {
+    let headers = new Headers();
     headers.append("Content-Type", "application/json");
     headers.append("X-Filerobot-Key", sassKey);
 
-    var requestOptions = {
+    const requestOptions = {
       method: 'GET',
       headers: headers,
       redirect: 'follow'
     };
-
-    var response = await fetch(`${filerobotApiDomain}/${token}/v4/files/`, requestOptions);
-
+    const response = await fetch(`${filerobotApiDomain}/${token}/v4/files/`, requestOptions);
     return response.json();
   }
 
-  async function getNewSassKey(config) 
-  {
-    var sassReqHeaders = new Headers();
+  const getNewSassKey = async (config) => {
+    let sassReqHeaders = new Headers();
     sassReqHeaders.append("Content-Type", "application/json");
 
-    var sassReqOpt = {
+    const sassReqOpt = {
       method: 'GET',
       headers: sassReqHeaders
     };
-
-    var sassRes = await fetch(`${filerobotApiDomain}/${config.token}/key/${config.sec_temp}`, sassReqOpt);
-
-    if (sassRes.status != 200)
-    {
-      return false; // @Todo: better erroneous return
+    const sassRes = await fetch(`${filerobotApiDomain}/${config.token}/key/${config.sec_temp}`, sassReqOpt);
+    if (sassRes.status !== 200) {
+      return false;
     }
 
-    var sassInfo = await sassRes.json();
-
-    if (sassInfo.status !== "success")
-    {
-      return false; // @Todo: better erroneous return
+    const sassInfo = await sassRes.json();
+    if (sassInfo.status !== "success") {
+      return false;
     }
-
-    var sass = sassInfo.key;
-
-    if (typeof(Storage) !== "undefined")
-    {
+    const sass = sassInfo.key;
+    if (typeof(Storage) !== "undefined") {
       sessionStorage.setItem("sassKey", sass);
     }
-
     return sass;
   }
 
-  async function getSass(config)
-  {
-    var sass = '';
-    
-    if (typeof(Storage) !== "undefined" && sessionStorage.getItem("sassKey"))
-    {
+  const getSass = async (config) => {
+    let sass;
+    if (typeof(Storage) !== "undefined" && sessionStorage.getItem("sassKey")) {
       sass = sessionStorage.getItem("sassKey");
-
-      var sassValidation = await validateSass(sass, config.token);
-
-      if (sassValidation.code === 'KEY_EXPIRED' || sassValidation.code === 'UNAUTHORIZED')
-      {
+      const sassValidation = await validateSass(sass, config.token);
+      if (sassValidation.code === 'KEY_EXPIRED' || sassValidation.code === 'UNAUTHORIZED') {
         sass = await getNewSassKey(config);
-
-        if (sass === false)
-        {
-          return false;
-        }
       }
-
-      return sass;
-    }
-    else
-    {
+    } else {
       sass = await getNewSassKey(config);
-
-      if (sass === false)
-      {
-        return false;
-      }
-
-      return sass;
     }
+    return sass;
+  }
+
+  const getSyncStatus = async () => {
+    const localMedia = await request(`/${pluginId}/db-files`, {method: 'GET'});
+    const configs = await request(`/${pluginId}/config`, {method: 'GET'});
+    const sass = await getSass(configs);
+
+    if (!sass) {
+      setSyncMessage(intl.formatMessage({id:'scaleflex-filerobot.notification.error.check_sectmp_issue'}))
+
+      return {
+        localMedia: false,
+        filerobotMedia: false
+      }
+    }
+
+
+    let headers = new Headers();
+    headers.append("Content-Type", "application/json");
+    headers.append("X-Filerobot-Key", sass);
+
+    const requestOptions = {
+      method: 'GET',
+      headers: headers
+    };
+
+    const filerobotDirectory = (configs.folder.charAt(0) === '/') ? configs.folder : `/${configs.folder}`;
+    const filerobotResponse = await fetch(`${filerobotApiDomain}/${configs.token}/v4/files?folder=${filerobotDirectory}`, requestOptions);
+
+    if (filerobotResponse.status !== 200) {
+      setSyncMessage(intl.formatMessage({id:'scaleflex-filerobot.notification.error.sync_status'}))
+      return {
+        localMedia:false,
+        filerobotMedia:false
+      }
+    }
+
+    const filerobotResponseJson = await filerobotResponse.json();
+    const filerobotMedia = filerobotResponseJson.files;
+
+    return {
+      localMedia:localMedia,
+      filerobotMedia:filerobotMedia
+    };
+  }
+
+  const syncStatus = async () => {
+    const { localMedia, filerobotMedia } = await getSyncStatus();
+
+    if (localMedia === false && filerobotMedia === false){
+      setSyncMessage(intl.formatMessage({id:'scaleflex-filerobot.notification.error.wrong_sectmp'}));
+    }
+
+    const toSyncUp = localMedia.nonFilerobot;
+    const alreadyDown = localMedia.filerobot;
+    const alreadyDownHashs = alreadyDown.map(x => x['hash']);
+    const filerobotMediaHashs = filerobotMedia.map(x => x['hash']['sha1']);
+    const toSyncDown = filerobotMediaHashs.filter(x => !alreadyDownHashs.includes(x));
+    setSyncMessage(sprintf(intl.formatMessage({id:'scaleflex-filerobot.notification.success.sync_status'}), toSyncUp.length, toSyncDown.length))
+
+    setTimeout(() => {
+      setSyncMessage(false)
+    }, 4000)
+  }
+
+  const triggerSync = async () => {
+    const { localMedia, filerobotMedia } = await getSyncStatus();
+    const toSyncUp = localMedia.nonFilerobot;
+    const alreadyDown = localMedia.filerobot;
+    const downResult = await syncDown(filerobotMedia, alreadyDown);
+    const upResult = await syncUp(toSyncUp);
+    setSyncMessage(sprintf(intl.formatMessage({id:'scaleflex-filerobot.notification.success.sync_results'}), downResult, upResult))
+  }
+  const syncDown = async (filerobotMedia, alreadyDown) => {
+    const alreadyDownHashs = alreadyDown.map(x => x['hash']);
+    const filerobotMediaHashs = filerobotMedia.map(x => x['hash']['sha1']);
+    const toSyncDown = filerobotMediaHashs.filter(x => !alreadyDownHashs.includes(x));
+
+    let count = 0;
+    await Promise.all( $(filerobotMedia).map(async function( index ) {
+      if ( !alreadyDownHashs.includes(this.hash.sha1)) {
+        const result = await request(`/${pluginId}/record-file`, {method: 'POST', body: {file:this, action:'sync-down', config:config}});
+
+        if (result) {
+          count++;
+        }
+        const percentage = (toSyncDown.length === 0) ? 100 : Math.ceil(count/toSyncDown.length*100);
+        setDown(percentage);
+      }
+    }) );
+    return `${count} / ${toSyncDown.length}`;
+  }
+  const syncUp = async (toSyncUp) => {
+    let count = 0;
+
+    await Promise.all( $(toSyncUp).map(async function( index ) {
+      const result = await request(`/${pluginId}/sync-up`, {method: 'POST', body: {file:this, config:config}});
+      if (result) {
+        count++;
+      }
+      const percentage = (toSyncUp.length === 0) ? 100 : Math.ceil(count/toSyncUp.length*100);
+      setUp(percentage);
+    }) );
+    return `${count} / ${toSyncUp.length}`;
   }
 
   return (
-    <div>
-      <Container>
-        <h2>Filerobot Configurations</h2>
-
-        <Form onSubmit={update}>
-          <Form.Group controlId="cname" className="form-group">
-            <Form.Label>CNAME</Form.Label>
-            <Form.Control name="cname" type="text" defaultValue={config.cname} />
-          </Form.Group>
-
-          <Form.Group controlId="token" className="form-group">
-            <Form.Label>Token *</Form.Label>
-            <Form.Control name="token" type="text" defaultValue={config.token} />
-          </Form.Group>
-
-          <Form.Group controlId="sec_temp" className="form-group">
-            <Form.Label>Security Template Identifier *</Form.Label>
-            <Form.Control name="sec_temp" type="text" defaultValue={config.sec_temp} />
-          </Form.Group>
-
-          <Form.Group controlId="folder" className="form-group">
-            <Form.Label>Folder</Form.Label>
-            <Form.Control name="folder" type="text" defaultValue={config.folder} />
-          </Form.Group>
-
-          <Form.Group className="btn-group">
-            <Button className="btn btn-primary" type="submit">
-              Submit
-            </Button>
-          </Form.Group>
-        </Form>
-
-        <div className="mb-2 btn-group">
-          <Button variant="secondary" size="sm" onClick={check_connection}>Check Connection</Button>
-          <Button variant="secondary" size="sm" onClick={sync_status}>Synchronization Status</Button>
-          <Button variant="secondary" size="sm" onClick={trigger_sync}>Trigger Synchronization</Button>
-        </div>
-
-        <Row className="progress-bars">
-          <Col>
-            <ProgressBar now={down} label={`${down}%`} />
-          </Col>
-          <Col>
-            <ProgressBar now={up} label={`${up}%`} />
-          </Col>
-        </Row>
-
-      </Container>
-
-      <Alert
-        header={'Scaleflex Filerobot'}
-        btnText={'Close'}
-        text={alert.text}
-        type={alert.type}
-        show={alert.show}
-        onClosePress={onCloseAlert}
-        pressCloseOnOutsideClick={true}
-        showBorderBottom={false}
-        alertStyles={{'minHeight': 'fit-content', 'padding': '20px'}}
-        headerStyles={{}}
-        textStyles={{}}
-        buttonStyles={{'backgroundColor': 'rgb(0,0,0,0.1)','color': 'black', 'margin': 0}}
-      />
-    </div>
-  );
+    <Stack spacing={4} padding={4}>
+      {success && (
+        <Alert title="Successfully" onClose={() => setSuccess(false)} closeLabel="Close alert" variant={'success'} >
+          Configuration updated
+        </Alert>
+      )}
+      {error && (
+        <Alert title="Failed"  onClose={() => setError(false)} closeLabel="Close alert" variant={'danger'} >
+          Please check your configuration setting
+        </Alert>
+      )}
+      {syncMessage && (
+        <Alert title="Synchronization" onClose={() => setSyncMessage(false)} closeLabel="Close alert" variant={'default'} >
+          {syncMessage}
+        </Alert>
+      )}
+      <Field name="cname">
+        <Stack spacing={1}>
+          <FieldLabel>CNAME</FieldLabel>
+          <FieldInput type="text" placeholder="CNAME" value={cname} onChange={(e) => {
+            setCname(e.target.value)
+          }} />
+        </Stack>
+      </Field>
+      <Field name="token">
+        <Stack spacing={1}>
+          <FieldLabel>Token</FieldLabel>
+          <FieldInput type="text" placeholder="Token" value={token} onChange={(e) => {
+            setToken(e.target.value)
+          }} />
+        </Stack>
+      </Field>
+      <Field name="sec_temp">
+        <Stack spacing={1}>
+          <FieldLabel>Security template</FieldLabel>
+          <FieldInput type="text" placeholder="Security template" value={secTemp} onChange={(e) => {
+            setSecTemp(e.target.value)
+          }} />
+        </Stack>
+      </Field>
+      <Field name="folder">
+        <Stack spacing={1}>
+          <FieldLabel>Folder</FieldLabel>
+          <FieldInput type="text" placeholder="Folder" value={folder} onChange={(e) => {
+            setFolder(e.target.value)
+          }} />
+        </Stack>
+      </Field>
+      <Box width={200}>
+        <Button onClick={() => saveConfiguration()}>Save configuration</Button>
+      </Box>
+      <Stack horizontal spacing={4}>
+        <Button onClick={() => syncStatus()} variant={'secondary'}>Synchronization Status</Button>
+        <Button onClick={() => triggerSync()} variant={'secondary'}>Trigger Synchronization</Button>
+      </Stack>
+      {up !== 0 && (
+        <Stack spacing={2}>
+          <Typography>Sync up</Typography>
+          <ProgressBar value={up}>{syncMessage}</ProgressBar>
+        </Stack>
+      )}
+      {down !== 0 && (
+        <Stack spacing={2}>
+          <Typography>Sync down</Typography>
+          <ProgressBar value={down}>{syncMessage}</ProgressBar>
+        </Stack>
+      )}
+    </Stack>
+  )
 };
 
 export default Configurations;

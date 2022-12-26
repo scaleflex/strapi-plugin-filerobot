@@ -12,11 +12,6 @@
     "@filerobot/explorer": "^1.0.108-rc.1",
     "@filerobot/xhr-upload": "^1.0.108-rc.1",
     "@strapi/helper-plugin": "^4.1.11",
-    "bootstrap": "^5.1.3",
-    "jquery": "^3.6.0",
-    "react-bootstrap": "^2.2.0",
-    "react-js-pagination": "https://github.com/wwwaiser/react-js-pagination.git",
-    "react-popup-alert": "^2.0.0",
     "sprintf-js": "^1.1.2"
   },
   "peerDependencies": {

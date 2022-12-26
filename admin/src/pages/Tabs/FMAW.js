@@ -1,52 +1,38 @@
-import React, { useEffect, useRef } from 'react';
-
+import React, { useEffect, useRef, useState } from 'react';
 import pluginId from '../../pluginId';
-
-import $ from 'jquery';
-
-// https://www.npmjs.com/package/@filerobot/core
-// https://www.npmjs.com/package/@filerobot/explorer#filerobotexplorer
-
 import Filerobot from '@filerobot/core';
 import Explorer from '@filerobot/explorer';
 import XHRUpload from '@filerobot/xhr-upload';
-
 import '@filerobot/core/dist/style.min.css';
 import '@filerobot/explorer/dist/style.min.css';
-
 import { request } from "@strapi/helper-plugin";
-
 import { useIntl } from 'react-intl';
-
-import '../../theme/index.css';
+import { Box, Alert } from '@strapi/design-system';
 
 const FMAW = (props) => {
   const intl = useIntl();
   const config = props.config;
   const filerobot = useRef(null);
 
+  const [success, setSuccess] = useState(false)
+
   useEffect(() => {
-    if (config.token === '' || config.sec_temp === '')
-    {
+    if (config.token === '' || config.sec_temp === '') {
       return;
     }
 
-    var folder = config.folder;
+    let folder = config.folder;
 
-    if (folder === '')
-    {
+    if (folder === '') {
       folder = '/';
-    }
-    else if ( !folder.startsWith('/') )
-    {
+    } else if ( !folder.startsWith('/') ) {
       folder = '/' + folder;
     }
 
     filerobot.current = Filerobot({
       securityTemplateID : config.sec_temp,
       container          : config.token
-    })
-      .use(Explorer, {
+    }).use(Explorer, {
         config: {
           rootFolderPath: folder
         },
@@ -54,8 +40,8 @@ const FMAW = (props) => {
         inline : true,
         width: '100%',
         height: '100%',
-        disableExportButton: true, 
-        hideExportButtonIcon: true, 
+        disableExportButton: true,
+        hideExportButtonIcon: true,
         preventExportDefaultBehavior: true,
         locale: {
           strings: {
@@ -64,25 +50,12 @@ const FMAW = (props) => {
         },
       })
       .use(XHRUpload)
-      .on('export', async (files, popupExportSucessMsgFn, downloadFilesPackagedFn, downloadFileFn) => {
-        $("button.filerobot-common-BaseButton").attr("disabled", "disabled");
-
+      .on('export', async (files, popupExportSuccessMsgFn, downloadFilesPackagedFn, downloadFileFn) => {
         await recordMedia(files, 'export', config);
-
-        $("button.filerobot-common-BaseButton").attr("disabled", false);
       })
       .on('complete', async ({ failed, uploadID, successful }) => {
-        $("button.filerobot-common-BaseButton").attr("disabled", "disabled");
-
-        if (successful)
-        {
+        if (successful) {
           await recordMedia(successful, 'complete', config);
-
-          $("button.filerobot-common-BaseButton").attr("disabled", false);
-        }
-        else
-        {
-          $("button.filerobot-common-BaseButton").attr("disabled", false);
         }
       });
 
@@ -92,28 +65,32 @@ const FMAW = (props) => {
   }, [config]);
 
   const recordMedia = async (files, action, config) => {
-    files.forEach(async (file, index) => {
+    for (const file of files) {
+      const index = files.indexOf(file);
       await request(`/${pluginId}/record-file`, {method: 'POST', body: {file:file, action:action, config:config}});
 
-      if (files.length-1==index)
-      {
-        // https://stackoverflow.com/questions/69703218/reactjs-bootstrap-tab-active-after-page-reload-or-how-can-i-save-active-tabs-us/69722943#69722943
-        if (typeof(Storage) !== "undefined")
-        {
-          sessionStorage.setItem("activeTab", "fmaw");
-        }
-        
-        window.location.reload();
+      if (files.length-1==index) {
+        setSuccess(true)
+
+        setTimeout(() => {
+          setSuccess(false)
+        }, 4000)
       }
-    });
+    }
   }
 
   return (
-    <div>
-      <h2>Filerobot Media Asset Widget</h2>
-
-      <div id="filerobot-widget"></div>
-    </div>
+    <>
+      {success && (
+        <Box marginTop={2}>
+          <Alert title="Successfully" onClose={() => setSuccess(false)} closeLabel="Close alert" variant={'success'} >
+            Added to Strapi
+          </Alert>
+        </Box>
+      )}
+      <Box marginTop={2} id="filerobot-widget"></Box>
+      <Box paddingTop={10}></Box>
+    </>
   );
 };
 

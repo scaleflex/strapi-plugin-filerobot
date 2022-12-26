@@ -1,21 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import pluginId from '../../pluginId';
-import $ from 'jquery';
-
 import { request } from "@strapi/helper-plugin";
 import { useIntl } from 'react-intl';
-import { Table } from 'react-bootstrap';
+import { Table, Thead, Tbody, Tr, Td, Th, Avatar, Typography, Box, Button, Stack, Flex  } from '@strapi/design-system';
 
-import '../../theme/index.css';
-
-import Pagination from "react-js-pagination";
-import 'bootstrap/dist/css/bootstrap.min.css';
-
-const Media = (props) => {
+const Media = () => {
   const intl = useIntl();
   const [media, setMedia] = useState([]);
   const [totalRecords, setTotalRecords] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
+  const [pageCount, setPageCount] = useState(0);
+  const [loadingPage, setLoadingPage] = useState(true);
   const recordPerPage = 10;
 
   const handlePageChange = (pageNumber) => {
@@ -24,71 +19,72 @@ const Media = (props) => {
   };
 
   useEffect(() => {
-    request(`/${pluginId}/media-count`, {method: 'GET'}).then(setTotalRecords);
-
+    request(`/${pluginId}/media-count`, {method: 'GET'}).then((itemCounts) => {
+      setTotalRecords(totalRecords)
+      setPageCount(Math.ceil(itemCounts/recordPerPage))
+    });
     request(`/${pluginId}/media?limit=${recordPerPage}&offset=${currentPage-1}`, {method: 'GET'}).then(setMedia);
+    setLoadingPage(false)
   }, []);
 
-  useEffect(() => {
-    if (totalRecords > recordPerPage)
-    {
-      $('.page-pagination').show();
-    }
-    else
-    {
-      $('.page-pagination').hide();
-    }
-  }, [totalRecords]);
-
   return (
-    <div>
-      <h2>Media</h2>
-      <Table>
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>Name</th>
-            <th>Provider</th>
-            <th>URL</th>
-            <th>Hash</th>
-            <th>Alt</th>
-            <th>Created</th>
-            <th>Updated</th>
-          </tr>
-        </thead>
-        <tbody>
-          {media.map(( file, index ) => {
-            return (
-              <tr key={index}>
-                <td>{file.id}</td>
-                <td>{file.name}</td>
-                <td>{file.provider}</td>
-                <td>{file.url}</td>
-                <td>{file.hash}</td>
-                <td>{file.alternativeText}</td>
-                <td>{file.createdAt}</td>
-                <td>{file.updatedAt}</td>
-              </tr>
-            );
-          })}
-        </tbody>
-      </Table>
+    <>
+      {loadingPage && (
+        <Box paddingTop={10}>fetching data...</Box>
+      )}
+      {!loadingPage && (
+        <Box padding={4}>
+          <Table colCount={5} rowCount={recordPerPage}>
+            <Thead>
+              <Tr>
+                <Th>
+                  <Typography variant="sigma">ID</Typography>
+                </Th>
+                <Th>
+                  <Typography variant="sigma">Image</Typography>
+                </Th>
+                <Th>
+                  <Typography variant="sigma">Name</Typography>
+                </Th>
+                <Th>
+                  <Typography variant="sigma">Provider</Typography>
+                </Th>
+              </Tr>
+            </Thead>
+            <Tbody>
+              {media.map((entry, index) => <Tr key={index}>
+                <Td>
+                  <Typography textColor="neutral800">{entry.id}</Typography>
+                </Td>
+                <Td>
+                  <Avatar src={entry.url}/>
+                </Td>
+                <Td>
+                  <Typography textColor="neutral800">{entry.name}</Typography>
+                </Td>
+                <Td>
+                  <Typography textColor="neutral800">{entry.provider}</Typography>
+                </Td>
+              </Tr>)}
+            </Tbody>
+          </Table>
 
-      <div className='page-pagination'>
-        <Pagination
-          prevPageText='Prev'
-          nextPageText='Next'
-          firstPageText='First'
-          lastPageText='Last'
-          activePage={currentPage}
-          itemsCountPerPage={recordPerPage}
-          totalItemsCount={totalRecords}
-          onChange={handlePageChange}
-          itemClass="page-item"
-          linkClass="page-link"
-        />
-      </div>
-    </div>
+          <Box marginTop={5}>
+            <Flex justifyContent={'space-between'}>
+              {currentPage > 1 && currentPage <= pageCount && (
+                <Button onClick={() => handlePageChange(currentPage - 1)} variant={'default'}>Prev Page</Button>
+              )}
+              {currentPage < pageCount && (
+                <>
+                  {currentPage === 1 && <Box />}
+                  <Button onClick={() => handlePageChange(currentPage + 1)} variant={'default'}>Next Page</Button>
+                </>
+              )}
+            </Flex>
+          </Box>
+        </Box>
+      )}
+    </>
   );
 };
 
