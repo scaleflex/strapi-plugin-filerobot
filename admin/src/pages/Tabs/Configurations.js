@@ -187,7 +187,7 @@ const Configurations = (props) => {
       if (!alreadyDownHashs.includes(index.hash.sha1)) {
         const result = await request(`/${pluginId}/record-file`, {
           method: 'POST',
-          body: {file: this, action: 'sync-down', config: config}
+          body: {file: index, action: 'sync-down', config: config}
         });
 
         if (result) {
@@ -203,7 +203,7 @@ const Configurations = (props) => {
     let count = 0;
 
     await Promise.all(toSyncUp.map(async (index) => {
-      const result = await request(`/${pluginId}/sync-up`, {method: 'POST', body: {file: this, config: config}});
+      const result = await request(`/${pluginId}/sync-up`, {method: 'POST', body: {file: index, config: config}});
       if (result) {
         count++;
       }
