@@ -32,7 +32,7 @@ const HomePage = () => {
           <Typography variant={'alpha'}>Filerobot by Scaleflex</Typography>
         </Box>
         <Box padding={8} >
-          <TabGroup label="Some stuff for the label" id="tabs" onTabChange={selected => console.log(selected)}>
+          <TabGroup label="Filerobot Managemement" id="tabs">
             <Tabs>
               <Tab>Configurations</Tab>
               <Tab>Asset Manager</Tab>
