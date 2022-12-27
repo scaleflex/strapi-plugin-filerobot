@@ -65,18 +65,18 @@ const FMAW = (props) => {
   }, [config]);
 
   const recordMedia = async (files, action, config) => {
+    let isSuccess = false;
+
     for (const file of files) {
       const index = files.indexOf(file);
       await request(`/${pluginId}/record-file`, {method: 'POST', body: {file:file, action:action, config:config}});
-
-      if (files.length-1==index) {
-        setSuccess(true)
-
-        setTimeout(() => {
-          setSuccess(false)
-        }, 4000)
-      }
+      isSuccess = (files.length-1 === index)
     }
+    setSuccess(isSuccess);
+
+    setTimeout(() => {
+      setSuccess(false)
+    }, 4000)
   }
 
   return (
@@ -84,7 +84,7 @@ const FMAW = (props) => {
       {success && (
         <Box marginTop={2}>
           <Alert title="Successfully" onClose={() => setSuccess(false)} closeLabel="Close alert" variant={'success'} >
-            Added to Strapi
+            Item(s) added to Strapi Media
           </Alert>
         </Box>
       )}

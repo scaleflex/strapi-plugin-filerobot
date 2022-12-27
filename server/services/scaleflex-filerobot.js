@@ -5,7 +5,7 @@ const path = require('path');
 const fetch = require("node-fetch");
 const filerobotApiDomain = 'https://api.filerobot.com';
 
-module.exports = ({ strapi }) => ({
+module.exports = ({strapi}) => ({
   getWelcomeMessage() {
     return 'Thank you for using Scaleflex Filerobot';
   },
@@ -19,19 +19,19 @@ module.exports = ({ strapi }) => ({
   async getConfig() {
     const pluginStore = this.getPluginStore();
 
-    const config = await pluginStore.get({ key: 'options' });
-
-    if (config && Object.keys(config).length === 0) {
-
-      return {
-        cname: '',
-        token: '',
-        sec_temp: '',
-        folder: ''
-      };
-    } else {
-      return config;
+    let config = {
+      cname: '',
+      token: '',
+      sec_temp: '',
+      folder: ''
     }
+
+    const storedConfig = await pluginStore.get({key: 'options'})
+    if (storedConfig) {
+      config = storedConfig;
+    }
+
+    return config
   },
   async updateConfig(ctx) {
     const pluginStore = this.getPluginStore();
@@ -41,58 +41,58 @@ module.exports = ({ strapi }) => ({
       value: ctx.request.body
     });
 
-    const config = await pluginStore.get({ key: 'options' });
+    const config = await pluginStore.get({key: 'options'});
 
     return config;
   },
   async checkDbFiles() {
-    var nonFilerobotMedia = await strapi.entityService.findMany('plugin::upload.file', {
+    const nonFilerobotMedia = await strapi.entityService.findMany('plugin::upload.file', {
       filters: {
         $not: {
           provider: 'filerobot',
         },
       },
-      populate: { category: true },
+      populate: {category: true},
     });
-    
-    var filerobotMedia = await strapi.entityService.findMany('plugin::upload.file', {
+
+    const filerobotMedia = await strapi.entityService.findMany('plugin::upload.file', {
       filters: {
         provider: 'filerobot',
       },
-      populate: { category: true },
+      populate: {category: true},
     });
 
-    var media = {
+    const media = {
       filerobot: filerobotMedia,
       nonFilerobot: nonFilerobotMedia
     };
-    
+
     return media;
   },
   async recordFile(ctx) {
-    var file = ctx.request.body.file;
-    var action = ctx.request.body.action;
-    var config = ctx.request.body.config;
+    const file = ctx.request.body.file;
+    const action = ctx.request.body.action;
+    const config = ctx.request.body.config;
 
-    var url = (action === 'export') ? file.link : file.url.cdn;
-    var name = (action === 'export') ? file.file.name : file.name;
-    var alt = (action === 'export') ? file.file.uuid : file.uuid;
-    var ext = (action === 'export') ? file.file.extension : file.extension;
-    var mime = (action === 'export') ? file.file.type : file.type;
-    var size = parseFloat( (action === 'export') ? file.file.size.pretty : file.size.pretty );
-    var hash = (action === 'export') ? file.file.hash.sha1 : file.hash.sha1;
-    var width = (action === 'export') ? file.file.info.img_w : file.info.img_w;
-    var height = (action === 'export') ? file.file.info.img_h : file.info.img_h;
+    let url = (action === 'export') ? file.link : file.url.cdn;
+    const name = (action === 'export') ? file.file.name : file.name;
+    const alt = (action === 'export') ? file.file.uuid : file.uuid;
+    const ext = (action === 'export') ? file.file.extension : file.extension;
+    const mime = (action === 'export') ? file.file.type : file.type;
+    const size = parseFloat((action === 'export') ? file.file.size.pretty : file.size.pretty);
+    const hash = (action === 'export') ? file.file.hash.sha1 : file.hash.sha1;
+    const width = (action === 'export') ? file.file.info.img_w : file.info.img_w;
+    const height = (action === 'export') ? file.file.info.img_h : file.info.img_h;
 
     url = this.removeQueryParam(url, 'vh');
     url = this.adjustForCname(url, config);
 
     // @Todo: check if already exist in DB (name, url, hash, provider=filerobot) (?)
 
-    var admins = await strapi.entityService.findMany('admin::user');
-    var admin1 = admins[0];
+    const admins = await strapi.entityService.findMany('admin::user');
+    const admin1 = admins[0];
 
-    var result = await strapi.entityService.create('plugin::upload.file', {
+    const result = await strapi.entityService.create('plugin::upload.file', {
       data: {
         url: url,
         name: name,
@@ -104,7 +104,7 @@ module.exports = ({ strapi }) => ({
         size: size,
         hash: hash,
         width: width,
-        height: height, 
+        height: height,
         created_by_id: admin1.id,
         updated_by_id: admin1.id,
         folderPath: '/',
@@ -114,65 +114,57 @@ module.exports = ({ strapi }) => ({
     return result;
   },
   async syncUp(ctx) {
-    var file = ctx.request.body.file;
-    var config = ctx.request.body.config;
-    var imagePath = strapi.dirs.public 
-      ? path.join(strapi.dirs.public, file.url) 
+    const file = ctx.request.body.file;
+    const config = ctx.request.body.config;
+    const imagePath = strapi.dirs.public
+      ? path.join(strapi.dirs.public, file.url)
       : path.join(strapi.dirs.static.public, file.url); // To accomodate for Strapi v4.3.x
-    var base64 = '';
+    let base64 = '';
 
-    try 
-    {
+    try {
       base64 = fs.readFileSync(imagePath, {encoding: 'base64'});
-    } 
-    catch (err) 
-    {
-      console.error(err);
-      
+    } catch (err) {
       return false;
     }
 
-    var pluginStore = this.getPluginStore();
-    var config = await pluginStore.get({ key: 'options' });
+    const pluginStore = this.getPluginStore();
+    const pluginConfig = await pluginStore.get({key: 'options'});
 
-    var sass = await this.getSass(config);
+    const sass = await this.getSass(pluginConfig);
 
-    if (sass === false)
-    {
+    if (!sass) {
       return false;
     }
 
-    var uploadHeaders = new fetch.Headers();
+    let uploadHeaders = new fetch.Headers();
     uploadHeaders.append("Content-Type", "application/json");
     uploadHeaders.append("X-Filerobot-Key", sass);
 
-    var raw = JSON.stringify({
+    const raw = JSON.stringify({
       "name": file.name,
       "data": base64,
       "postactions": "decode_base64"
     });
 
-    var uploadRequestOptions = {
+    const uploadRequestOptions = {
       method: 'POST',
       headers: uploadHeaders,
       body: raw
     };
 
-    var uploadRes = await fetch(`${filerobotApiDomain}/${config.token}/v4/files?folder=/${config.folder}`, uploadRequestOptions);
+    const uploadRes = await fetch(`${filerobotApiDomain}/${config.token}/v4/files?folder=/${config.folder}`, uploadRequestOptions);
 
-    if (uploadRes.status != 200)
-    {
-      return false; // @Todo: better erroneous return
+    if (uploadRes.status !== 200) {
+      return false;
     }
 
-    var uploadResult = await uploadRes.json();
+    const uploadResult = await uploadRes.json();
 
-    if (uploadResult.status !== "success")
-    {
-      return false; // @Todo: better erroneous return
+    if (uploadResult.status !== "success") {
+      return false;
     }
 
-    var url = uploadResult.file.url.cdn;
+    let url = uploadResult.file.url.cdn;
     url = this.removeQueryParam(url, 'vh');
     url = this.adjustForCname(url, config);
 
@@ -189,10 +181,10 @@ module.exports = ({ strapi }) => ({
     return updatedFileEntry;
   },
   async getMedia(ctx) {
-    var queryParams = ctx.request.query;
+    const queryParams = ctx.request.query;
 
-    var media = await strapi.entityService.findMany('plugin::upload.file', {
-      populate: { category: true },
+    const media = await strapi.entityService.findMany('plugin::upload.file', {
+      populate: {category: true},
       limit: queryParams.limit,
       start: queryParams.offset * queryParams.limit,
     });
@@ -200,108 +192,93 @@ module.exports = ({ strapi }) => ({
     return media;
   },
   async getMediaCount(ctx) {
-    var media = await strapi.entityService.findMany('plugin::upload.file', {
-      populate: { category: true },
+    const media = await strapi.entityService.findMany('plugin::upload.file', {
+      populate: {category: true},
     });
 
     return media.length;
   },
-  async validateSass(sassKey, token) 
-  {
-    var headers = new fetch.Headers();
+  async validateSass(sassKey, token) {
+    const headers = new fetch.Headers();
     headers.append("Content-Type", "application/json");
     headers.append("X-Filerobot-Key", sassKey);
 
-    var requestOptions = {
+    const requestOptions = {
       method: 'GET',
       headers: headers,
       redirect: 'follow'
     };
 
-    var response = await fetch(`${filerobotApiDomain}/${token}/v4/files/`, requestOptions);
+    const response = await fetch(`${filerobotApiDomain}/${token}/v4/files/`, requestOptions);
 
     return response.json();
   },
-  async getNewSassKey(config) 
-  {
-    var sassReqHeaders = new fetch.Headers();
+  async getNewSassKey(config) {
+    const sassReqHeaders = new fetch.Headers();
     sassReqHeaders.append("Content-Type", "application/json");
 
-    var sassReqOpt = {
+    const sassReqOpt = {
       method: 'GET',
       headers: sassReqHeaders
     };
 
-    var sassRes = await fetch(`${filerobotApiDomain}/${config.token}/key/${config.sec_temp}`, sassReqOpt);
+    const sassRes = await fetch(`${filerobotApiDomain}/${config.token}/key/${config.sec_temp}`, sassReqOpt);
 
-    if (sassRes.status != 200)
-    {
+    if (sassRes.status != 200) {
       return false; // @Todo: better erroneous return
     }
 
-    var sassInfo = await sassRes.json();
+    const sassInfo = await sassRes.json();
 
-    if (sassInfo.status !== "success")
-    {
+    if (sassInfo.status !== "success") {
       return false; // @Todo: better erroneous return
     }
 
-    var sass = sassInfo.key;
+    const sass = sassInfo.key;
 
-    if (typeof(Storage) !== "undefined")
-    {
+    if (typeof (Storage) !== "undefined") {
       sessionStorage.setItem("sassKey", sass);
     }
 
     return sass;
   },
-  async getSass(config)
-  {
-    var sass = '';
-    
-    if (typeof(Storage) !== "undefined" && sessionStorage.getItem("sassKey"))
-    {
+  async getSass(config) {
+    let sass = '';
+
+    if (typeof (Storage) !== "undefined" && sessionStorage.getItem("sassKey")) {
       sass = sessionStorage.getItem("sassKey");
 
-      var sassValidation = await this.validateSass(sass, config.token);
+      const sassValidation = await this.validateSass(sass, config.token);
 
-      if (sassValidation.code === 'KEY_EXPIRED' || sassValidation.code === 'UNAUTHORIZED')
-      {
+      if (sassValidation.code === 'KEY_EXPIRED' || sassValidation.code === 'UNAUTHORIZED') {
         sass = await this.getNewSassKey(config);
 
-        if (sass === false)
-        {
+        if (sass === false) {
           return false;
         }
       }
 
       return sass;
-    }
-    else
-    {
+    } else {
       sass = await this.getNewSassKey(config);
 
-      if (sass === false)
-      {
+      if (sass === false) {
         return false;
       }
 
       return sass;
     }
   },
-  removeQueryParam(link, paramName)
-  {
-    var url = new URL(link);
-    var params = new URLSearchParams(url.search);
+  removeQueryParam(link, paramName) {
+    const url = new URL(link);
+    const params = new URLSearchParams(url.search);
     params.delete(paramName);
-    var newUrl = params.toString() ? `${url.origin}${url.pathname}?${params.toString()}` : `${url.origin}${url.pathname}`;
+    const newUrl = params.toString() ? `${url.origin}${url.pathname}?${params.toString()}` : `${url.origin}${url.pathname}`;
 
     return newUrl;
   },
-  adjustForCname(link, config)
-  {
-    if (!config.cname)
-    {
+  adjustForCname(link, config) {
+    if (!config.cname) {
       return link;
     }
 
