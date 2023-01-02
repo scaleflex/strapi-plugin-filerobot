@@ -10,6 +10,10 @@ If you are not familiar with using the Strapi CMS, here are some quick tutorials
 
 Strapi v4: https://docs.strapi.io/developer-docs/latest/getting-started/quick-start.html
 
+## Install Strapi CMS
+
+You can run, for example: `npx create-strapi-app@4.3.0`
+
 ## Plugin
 
 https://www.npmjs.com/package/@filerobot-strapi/content-plugin
