@@ -10,15 +10,15 @@ If you are not familiar with using the Strapi CMS, here are some quick tutorials
 
 Strapi v4: https://docs.strapi.io/developer-docs/latest/getting-started/quick-start.html
 
-## Install the plugin
+## Plugin
 
-At this point, assuming that you already have an Strapi CMS installed and setup, and that you already have an super-admin user configured. It's time to install the Scaleflex Filerobot plugin for Strapi v4:
+https://www.npmjs.com/package/@filerobot-strapi/content-plugin
+
+At this point, assuming that you already have a Strapi CMS installed and set up, and that you already have a super-admin user configured. It's time to install the Scaleflex Filerobot plugin for Strapi v4:
 
 `npm install @filerobot-strapi/content-plugin`
 
-or
-
-`yarn add @filerobot-strapi/content-plugin`
+(Use `npm install @filerobot-strapi/content-plugin --legacy-peer-deps` if you need to)
 
 ## After you install the plugin
 
@@ -38,8 +38,8 @@ module.exports = [
                 useDefaults: true,
                 directives: {
                     'connect-src': ["'self'", 'https:'],
-                    'img-src': ["'self'", 'data:', 'blob:', 'assets.scaleflex.com', 'scaleflex.cloudimg.io'],
-                    'media-src': ["'self'", 'data:', 'blob:', 'assets.scaleflex.com', 'scaleflex.cloudimg.io'],
+                    'img-src': ["'self'", 'data:', 'blob:', 'assets.scaleflex.com', 'scaleflex.cloudimg.io', '{YOUR FILEROBOT TOKEN}.filerobot.com'],
+                    'media-src': ["'self'", 'data:', 'blob:', 'assets.scaleflex.com', 'scaleflex.cloudimg.io', '{YOUR FILEROBOT TOKEN}.filerobot.com'],
                     upgradeInsecureRequests: null,
                 },
             },
@@ -66,28 +66,20 @@ For the proper display of Scaleflex’s logos
 
 ## Configure
 
-Click "Filerobot from Scaleflex" on the left vertical menu (under the plugins section)
+Click "Filerobot by Scaleflex" on the left vertical menu (under the plugins section)
 
-![](https://store.filerobot.com/opendocs-global/project_test/63887c7d178ac8659516300ceace211e25f610e79b9150173f3bd56453c95a0e.png)
+![image](https://user-images.githubusercontent.com/20809372/210230101-1740f1c5-9491-4391-b28c-db3a729d0d3d.png)
 
 - **CNAME** should be without `https://`
 - **Folder** can have a preceding `/` , but it's not necessary. So both `/folder_name` and `folder_name` are ok
 
 ## Usage
 
-Now you can make use of the "Check Connection", "Synchronization Status" and "Trigger Synchronization" buttons.
-
-### Check Connection
-
-![](https://store.filerobot.com/opendocs-global/project_test/17859c5262871017dde10dbaeb379db8602a989bcd4a9df23c5a27aaacd5b180.png)
-
-### Synchronization Status
-
-![](https://store.filerobot.com/opendocs-global/36266491c6571f8e69dd9f877afce2afd3c99a85dff087aa441f346b4c2abad1.png)
+Now you can make use of the "Synchronization Status" and "Trigger Synchronization" buttons.
 
 ### Media Tab
 
-![](https://store.filerobot.com/opendocs-global/427c3b751f20a5bede8917e3df76009a62e41134f86d584012cdd342e645e913.png)
+![image](https://user-images.githubusercontent.com/20809372/210230292-c9c90b68-a311-4981-977b-3b9802ea5243.png)
 
 The **Media Tab** keeps a "log" of all your media assets.
 
@@ -101,7 +93,7 @@ And there are indeed 4 remote images on the **Filerobot platform** that are yet 
 
 ### Trigger Synchronization
 
-![](https://store.filerobot.com/opendocs-global/891159f73d2c5c771070d0cd455a4d4718284f482e25a9acde923566a0776150.png)
+![image](https://user-images.githubusercontent.com/20809372/210230408-8d37d416-5a64-4986-8b42-6575c4564ed7.png)
 
 Afterwards, the logs will be updated:
 
