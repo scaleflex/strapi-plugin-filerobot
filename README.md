@@ -26,6 +26,42 @@ At this point, assuming that you already have a Strapi CMS installed and set up,
 
 ## After you install the plugin
 
+### Middleware
+
+`vim config/middlewares.js`
+
+Edit the `'strapi::security',` section:
+
+```
+module.exports = [
+    'strapi::errors',
+    { // ---- FROM HERE
+        name: 'strapi::security',
+        config: {
+            contentSecurityPolicy: {
+                useDefaults: true,
+                directives: {
+                    'connect-src': ["'self'", 'https:'],
+                    'img-src': ["'self'", 'data:', 'blob:', 'assets.scaleflex.com', 'scaleflex.cloudimg.io', '{YOUR FILEROBOT TOKEN}.filerobot.com'],
+                    'media-src': ["'self'", 'data:', 'blob:', 'assets.scaleflex.com', 'scaleflex.cloudimg.io', '{YOUR FILEROBOT TOKEN}.filerobot.com'],
+                    upgradeInsecureRequests: null,
+                },
+            },
+        },
+    }, // ---- TO HERE
+    'strapi::cors',
+    'strapi::poweredBy',
+    'strapi::logger',
+    'strapi::query',
+    'strapi::body',
+    'strapi::session',
+    'strapi::favicon',
+    'strapi::public',
+];
+```
+
+For the proper display of Scaleflex’s logos
+
 ## Run
 
 `yarn build`
