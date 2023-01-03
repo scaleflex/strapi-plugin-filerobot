@@ -7,7 +7,7 @@ module.exports = ({ strapi }) => {
       contentSecurityPolicy: {
         useDefaults: true,
         directives: {
-          'connect-src': ["'self'", 'https:'], //@Todo: merge these arrays! dont just overwrite them
+          'connect-src': ["'self'", 'https:'],
           'img-src': ["'self'", 'data:', 'blob:', 'scaleflex.cloudimg.io', 'assets.scaleflex.com', '*.filerobot.com'],
           'media-src': ["'self'", 'data:', 'blob:', 'scaleflex.cloudimg.io', 'assets.scaleflex.com', '*.filerobot.com'],
           upgradeInsecureRequests: null,
@@ -19,9 +19,14 @@ module.exports = ({ strapi }) => {
   // Merge a `source` object to a `target` recursively
   const merge = (target, source) => {
     // Iterate through `source` properties and if an `Object` set property to merge of `target` and `source` properties
-    for (const key of Object.keys(source)) 
+    for (const key of Object.keys(source))
     {
-      if (source[key] instanceof Object)
+      if (Array.isArray(source[key]))
+      {
+        Object.assign(source[key], [...new Set(target[key].concat(source[key]))]);
+      }
+
+      if (source[key] instanceof Object && !Array.isArray(source[key]))
       {
         Object.assign(source[key], merge(target[key], source[key]));
       }
