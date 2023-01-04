@@ -1,5 +1,5 @@
 'use strict';
-//@Todo: Think about how this can be done in a cluster of may servers. Maybe persist the plugin's middleware settings in DB, then load it into that memory object upon start
+
 module.exports = ({ strapi }) => {
   const pluginMiddleware = {
     name: 'strapi::security',
