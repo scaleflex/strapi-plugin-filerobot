@@ -1,6 +1,6 @@
 {
   "name": "@filerobot-strapi/content-plugin",
-  "version": "1.0.15",
+  "version": "1.0.16",
   "description": "Strapi v4 plugin for Filerobot by Scaleflex",
   "strapi": {
     "name": "scaleflex-filerobot",
@@ -9,7 +9,7 @@
   },
   "dependencies": {
     "@filerobot/core": "^1.0.108-rc.1",
-    "@filerobot/explorer": "*",
+    "@filerobot/explorer": "1.0.131-alpha.2",
     "@filerobot/xhr-upload": "^1.0.108-rc.1",
     "@strapi/helper-plugin": "^4.1.11",
     "sprintf-js": "^1.1.2"
