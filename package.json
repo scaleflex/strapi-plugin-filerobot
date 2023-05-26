@@ -1,32 +1,44 @@
 {
   "name": "@filerobot-strapi/content-plugin",
-  "version": "1.0.16",
+  "version": "1.0.17",
   "description": "Strapi v4 plugin for Filerobot by Scaleflex",
   "strapi": {
-    "name": "scaleflex-filerobot",
-    "description": "Scaleflex Filerobot",
+    "name": "filerobot-by-scaleflex",
+    "description": "Filerobot by Scaleflex normalizes, resizes, optimizes and distributes your images rocket fast around the world.",
     "kind": "plugin"
   },
   "dependencies": {
-    "@filerobot/core": "^1.0.108-rc.1",
-    "@filerobot/explorer": "1.0.131-alpha.2",
-    "@filerobot/xhr-upload": "^1.0.108-rc.1",
-    "@strapi/helper-plugin": "^4.1.11",
-    "sprintf-js": "^1.1.2"
+    "@filerobot/core": "^1.8.0",
+    "@filerobot/explorer": "^1.8.0",
+    "@filerobot/xhr-upload": "^1.8.0",
+    "@strapi/helper-plugin": "^4.10.6",
+    "sprintf-js": "^1.1.2",
+    "@strapi/design-system": "^1.6.3",
+    "@strapi/icons": "^1.6.3",
+    "prop-types": "^15.7.2"
+  },
+  "devDependencies": {
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
+    "react-router-dom": "^5.3.4",
+    "styled-components": "^5.3.6"
   },
   "peerDependencies": {
-    "@strapi/strapi": "^4.3.0"
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
+    "react-router-dom": "^5.3.4",
+    "styled-components": "^5.3.6"
   },
   "author": {
     "name": "Scaleflex"
   },
   "maintainers": [
     {
-      "name": "Ruslan Aliyev"
+      "name": "Scaleflex"
     }
   ],
   "engines": {
-    "node": ">=12.x. <=16.x.x",
+    "node": ">=14.19.1 <=18.x.x",
     "npm": ">=6.0.0"
   },
   "license": "MIT",

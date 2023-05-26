@@ -107,7 +107,7 @@ const Configurations = (props) => {
     const sass = await getSass(configs);
 
     if (!sass) {
-      setSyncMessage(intl.formatMessage({id: 'scaleflex-filerobot.notification.error.check_sectmp_issue'}))
+      setSyncMessage(intl.formatMessage({id: 'filerobot-by-scaleflex.notification.error.check_sectmp_issue'}))
 
       return {
         localMedia: false,
@@ -129,7 +129,7 @@ const Configurations = (props) => {
     const filerobotResponse = await fetch(`${filerobotApiDomain}/${configs.token}/v4/files?folder=${filerobotDirectory}`, requestOptions);
 
     if (filerobotResponse.status !== 200) {
-      setSyncMessage(intl.formatMessage({id: 'scaleflex-filerobot.notification.error.sync_status'}))
+      setSyncMessage(intl.formatMessage({id: 'filerobot-by-scaleflex.notification.error.sync_status'}))
       return {
         localMedia: false,
         filerobotMedia: false
@@ -151,7 +151,7 @@ const Configurations = (props) => {
     const {localMedia, filerobotMedia} = await getSyncStatus();
 
     if (localMedia === false && filerobotMedia === false) {
-      setSyncMessage(intl.formatMessage({id: 'scaleflex-filerobot.notification.error.wrong_sectmp'}));
+      setSyncMessage(intl.formatMessage({id: 'filerobot-by-scaleflex.notification.error.wrong_sectmp'}));
     }
 
     const toSyncUp = localMedia.nonFilerobot;
@@ -159,7 +159,7 @@ const Configurations = (props) => {
     const alreadyDownHashs = alreadyDown.map(x => x['hash']);
     const filerobotMediaHashs = filerobotMedia.map(x => x['hash']['sha1']);
     const toSyncDown = filerobotMediaHashs.filter(x => !alreadyDownHashs.includes(x));
-    setSyncMessage(sprintf(intl.formatMessage({id: 'scaleflex-filerobot.notification.success.sync_status'}), toSyncUp.length, toSyncDown.length))
+    setSyncMessage(sprintf(intl.formatMessage({id: 'filerobot-by-scaleflex.notification.success.sync_status'}), toSyncUp.length, toSyncDown.length))
     setDisabledAllButtons(false)
 
     setTimeout(() => {
@@ -174,7 +174,7 @@ const Configurations = (props) => {
     const alreadyDown = localMedia.filerobot;
     const downResult = await syncDown(filerobotMedia, alreadyDown);
     const upResult = await syncUp(toSyncUp);
-    setSyncMessage(sprintf(intl.formatMessage({id: 'scaleflex-filerobot.notification.success.sync_results'}), downResult, upResult))
+    setSyncMessage(sprintf(intl.formatMessage({id: 'filerobot-by-scaleflex.notification.success.sync_results'}), downResult, upResult))
     setDisabledAllButtons(false)
   }
   const syncDown = async (filerobotMedia, alreadyDown) => {

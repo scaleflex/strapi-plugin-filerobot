@@ -1,8 +1,8 @@
+import Filerobot from "@filerobot/core";
+import Explorer from "@filerobot/explorer";
+import XHRUpload from "@filerobot/xhr-upload";
 import React, { useEffect, useRef, useState } from 'react';
 import pluginId from '../../pluginId';
-import Filerobot from '@filerobot/core';
-import Explorer from '@filerobot/explorer';
-import XHRUpload from '@filerobot/xhr-upload';
 import '@filerobot/core/dist/style.min.css';
 import '@filerobot/explorer/dist/style.min.css';
 import { request } from "@strapi/helper-plugin";
@@ -14,41 +14,36 @@ const FMAW = (props) => {
   const config = props.config;
   const filerobot = useRef(null);
 
-  const [success, setSuccess] = useState(false)
+  const [success, setSuccess] = useState(false);
 
   useEffect(() => {
     if (config.token === '' || config.sec_temp === '') {
       return;
     }
 
-    let folder = config.folder;
-
-    if (folder === '') {
-      folder = '/';
-    } else if ( !folder.startsWith('/') ) {
-      folder = '/' + folder;
-    }
-
     filerobot.current = Filerobot({
       securityTemplateID : config.sec_temp,
       container          : config.token
     }).use(Explorer, {
-        config: {
-          rootFolderPath: folder
-        },
-        target : '#filerobot-widget',
-        inline : true,
-        width: '100%',
-        height: '100%',
-        disableExportButton: true,
-        hideExportButtonIcon: true,
-        preventExportDefaultBehavior: true,
-        locale: {
-          strings: {
-            mutualizedExportButtonLabel: intl.formatMessage({id:'scaleflex-filerobot.label.button.fmaw.export'})
-          }
-        },
-      })
+    config: {
+      rootFolderPath: config.folder
+    },
+    target : '#filerobot-widget',
+    inline : true,
+    width: '100%',
+    height: '700px',
+    disableExportButton: true,
+    hideExportButtonIcon: true,
+    preventExportDefaultBehavior: true,
+    resetAfterClose: true,
+    dismissUrlPathQueryUpdate: true,
+    locale: {
+      strings: {
+        mutualizedExportButtonLabel: intl.formatMessage({id:'filerobot-by-scaleflex.label.button.fmaw.export'}),
+        mutualizedDownloadButton: intl.formatMessage({id:'filerobot-by-scaleflex.label.button.fmaw.export'}),
+      }
+    },
+  })
       .use(XHRUpload)
       .on('export', async (files, popupExportSuccessMsgFn, downloadFilesPackagedFn, downloadFileFn) => {
         await recordMedia(files, 'export', config);

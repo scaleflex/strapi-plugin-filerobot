@@ -4,7 +4,7 @@ import pluginId from './pluginId';
 import Initializer from './components/Initializer';
 import PluginIcon from './components/PluginIcon';
 
-const name = "scaleflex-filerobot";
+const name = "filerobot-by-scaleflex";
 
 export default {
   register(app) {
