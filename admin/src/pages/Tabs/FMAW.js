@@ -5,6 +5,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import pluginId from '../../pluginId';
 import '@filerobot/core/dist/style.min.css';
 import '@filerobot/explorer/dist/style.min.css';
+import './custom-style.css';
 import { request } from "@strapi/helper-plugin";
 import { useIntl } from 'react-intl';
 import { Box, Alert } from '@strapi/design-system';
