@@ -8,9 +8,9 @@
     "kind": "plugin"
   },
   "dependencies": {
-    "@filerobot/core": "^1.8.0",
-    "@filerobot/explorer": "^1.8.0",
-    "@filerobot/xhr-upload": "^1.8.0",
+    "@filerobot/core": "^2.5.0",
+    "@filerobot/explorer": "^2.5.0",
+    "@filerobot/xhr-upload": "^2.5.0",
     "@strapi/helper-plugin": "^4.10.6",
     "sprintf-js": "^1.1.2",
     "@strapi/design-system": "^1.6.3",

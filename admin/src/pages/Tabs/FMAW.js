@@ -32,7 +32,7 @@ const FMAW = (props) => {
     inline : true,
     width: '100%',
     height: '700px',
-    disableExportButton: true,
+    disableExportButton: false,
     hideExportButtonIcon: true,
     preventExportDefaultBehavior: true,
     resetAfterClose: true,
