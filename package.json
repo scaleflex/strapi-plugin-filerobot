@@ -1,6 +1,6 @@
 {
   "name": "@filerobot-strapi/content-plugin",
-  "version": "1.0.17",
+  "version": "1.0.18",
   "description": "Strapi v4 plugin for Filerobot by Scaleflex",
   "strapi": {
     "name": "filerobot-by-scaleflex",
@@ -8,9 +8,10 @@
     "kind": "plugin"
   },
   "dependencies": {
-    "@filerobot/core": "^2.5.0",
-    "@filerobot/explorer": "^2.5.0",
-    "@filerobot/xhr-upload": "^2.5.0",
+    "@filerobot/core": "^3.8.8",
+    "@filerobot/explorer": "^3.8.8",
+    "@filerobot/xhr-upload": "^3.8.8",
+    "@filerobot/progress-panel": "^3.8.8",
     "@strapi/helper-plugin": "^4.10.6",
     "sprintf-js": "^1.1.2",
     "@strapi/design-system": "^1.6.3",
@@ -18,10 +19,10 @@
     "prop-types": "^15.7.2"
   },
   "devDependencies": {
-    "react": "^17.0.2",
-    "react-dom": "^17.0.2",
+    "react": "^18.0.0",
+    "react-dom": "^18.0.0",
     "react-router-dom": "^5.3.4",
-    "styled-components": "^5.3.6"
+    "styled-components": "5.3.3"
   },
   "peerDependencies": {
     "react": "^17.0.2",
@@ -38,7 +39,7 @@
     }
   ],
   "engines": {
-    "node": ">=14.19.1 <=18.x.x",
+    "node": ">=18.0.0 <=20.x.x",
     "npm": ">=6.0.0"
   },
   "license": "MIT",

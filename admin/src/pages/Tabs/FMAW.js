@@ -33,11 +33,13 @@ const FMAW = (props) => {
     inline : true,
     width: '100%',
     height: '700px',
-    disableExportButton: false,
+    disableExportButton: true,
     hideExportButtonIcon: true,
     preventExportDefaultBehavior: true,
-    resetAfterClose: true,
     dismissUrlPathQueryUpdate: true,
+    disableDownloadButton: false,
+    hideDownloadButtonIcon: true,
+    preventDownloadDefaultBehavior: true,
     locale: {
       strings: {
         mutualizedExportButtonLabel: intl.formatMessage({id:'filerobot-by-scaleflex.label.button.fmaw.export'}),
