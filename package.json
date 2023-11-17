@@ -5,7 +5,8 @@
   "strapi": {
     "name": "filerobot-by-scaleflex",
     "description": "Filerobot by Scaleflex normalizes, resizes, optimizes and distributes your images rocket fast around the world.",
-    "kind": "plugin"
+    "kind": "plugin",
+    "displayName": "Filerobot by Scaleflex"
   },
   "dependencies": {
     "@filerobot/core": "^3.8.8",
