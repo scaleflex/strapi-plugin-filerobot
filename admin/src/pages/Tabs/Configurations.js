@@ -49,20 +49,6 @@ const Configurations = (props) => {
     })
   }
 
-  const validateSass = async (sassKey, token) => {
-    let headers = new Headers();
-    headers.append("Content-Type", "application/json");
-    headers.append("X-Filerobot-Key", sassKey);
-
-    const requestOptions = {
-      method: 'GET',
-      headers: headers,
-      redirect: 'follow'
-    };
-    const response = await fetch(`${filerobotApiDomain}/${token}/v4/files/`, requestOptions);
-    return response.json();
-  }
-
   const getNewSassKey = async (config) => {
     let sassReqHeaders = new Headers();
     sassReqHeaders.append("Content-Type", "application/json");
@@ -89,15 +75,7 @@ const Configurations = (props) => {
 
   const getSass = async (config) => {
     let sass;
-    if (typeof (Storage) !== "undefined" && sessionStorage.getItem("sassKey")) {
-      sass = sessionStorage.getItem("sassKey");
-      const sassValidation = await validateSass(sass, config.token);
-      if (sassValidation.code === 'KEY_EXPIRED' || sassValidation.code === 'UNAUTHORIZED') {
-        sass = await getNewSassKey(config);
-      }
-    } else {
-      sass = await getNewSassKey(config);
-    }
+    sass = await getNewSassKey(config);
     return sass;
   }
 

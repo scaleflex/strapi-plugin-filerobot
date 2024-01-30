@@ -198,21 +198,7 @@ module.exports = ({strapi}) => ({
 
     return media.length;
   },
-  async validateSass(sassKey, token) {
-    const headers = new fetch.Headers();
-    headers.append("Content-Type", "application/json");
-    headers.append("X-Filerobot-Key", sassKey);
 
-    const requestOptions = {
-      method: 'GET',
-      headers: headers,
-      redirect: 'follow'
-    };
-
-    const response = await fetch(`${filerobotApiDomain}/${token}/v4/files/`, requestOptions);
-
-    return response.json();
-  },
   async getNewSassKey(config) {
     const sassReqHeaders = new fetch.Headers();
     sassReqHeaders.append("Content-Type", "application/json");
@@ -245,29 +231,13 @@ module.exports = ({strapi}) => ({
   async getSass(config) {
     let sass = '';
 
-    if (typeof (Storage) !== "undefined" && sessionStorage.getItem("sassKey")) {
-      sass = sessionStorage.getItem("sassKey");
+    sass = await this.getNewSassKey(config);
 
-      const sassValidation = await this.validateSass(sass, config.token);
-
-      if (sassValidation.code === 'KEY_EXPIRED' || sassValidation.code === 'UNAUTHORIZED') {
-        sass = await this.getNewSassKey(config);
-
-        if (sass === false) {
-          return false;
-        }
-      }
-
-      return sass;
-    } else {
-      sass = await this.getNewSassKey(config);
-
-      if (sass === false) {
-        return false;
-      }
-
-      return sass;
+    if (sass === false) {
+      return false;
     }
+
+    return sass;
   },
   removeQueryParam(link, paramName) {
     const url = new URL(link);
