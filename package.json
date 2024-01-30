@@ -32,11 +32,14 @@
     "styled-components": "^5.3.6"
   },
   "author": {
-    "name": "Scaleflex"
+    "name": "Scaleflex",
+    "email": "register@scaleflex.com",
+    "url": "https://www.scaleflex.com"
   },
   "maintainers": [
     {
-      "name": "Scaleflex"
+      "name": "Scaleflex",
+      "email": "plugins@scaleflex.com"
     }
   ],
   "engines": {
