@@ -31,16 +31,9 @@
     "react-router-dom": "^5.3.4",
     "styled-components": "^5.3.6"
   },
-  "author": {
-    "name": "Scaleflex",
-    "email": "register@scaleflex.com",
-    "url": "https://www.scaleflex.com"
-  },
+  "author": "Scaleflex <register@scaleflex.com> (https://www.scaleflex.com)",
   "maintainers": [
-    {
-      "name": "Scaleflex",
-      "email": "plugins@scaleflex.com"
-    }
+    "Scaleflex <plugins@scaleflex.com>"
   ],
   "engines": {
     "node": ">=18.0.0 <=20.x.x",
@@ -51,5 +44,17 @@
     "scaleflex",
     "filerobot",
     "strapi"
-  ]
+  ],
+  "main": "strapi-admin.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/scaleflex/strapi-plugin-filerobot.git"
+  },
+  "bugs": {
+    "url": "https://github.com/scaleflex/strapi-plugin-filerobot/issues"
+  },
+  "homepage": "https://github.com/scaleflex/strapi-plugin-filerobot#readme"
 }
