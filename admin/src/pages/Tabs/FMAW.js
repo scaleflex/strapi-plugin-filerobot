@@ -1,6 +1,3 @@
-import Filerobot from "@filerobot/core";
-import Explorer from "@filerobot/explorer";
-import XHRUpload from "@filerobot/xhr-upload";
 import React, { useEffect, useRef, useState } from 'react';
 import pluginId from '../../pluginId';
 import '@filerobot/core/dist/style.min.css';
@@ -9,8 +6,17 @@ import './custom-style.css';
 import { request } from "@strapi/helper-plugin";
 import { useIntl } from 'react-intl';
 import { Box, Alert } from '@strapi/design-system';
+import Filerobot from "@filerobot/core";
+import Explorer from "@filerobot/explorer";
+import XHRUpload from "@filerobot/xhr-upload";
 
 const FMAW = (props) => {
+  window.process = {
+    env: {
+      REACT_APP_GITLAB_REVIEW_ENV: false
+    }
+  }
+
   const intl = useIntl();
   const config = props.config;
   const filerobot = useRef(null);
@@ -35,10 +41,10 @@ const FMAW = (props) => {
     height: '700px',
     disableExportButton: true,
     hideExportButtonIcon: true,
-    preventExportDefaultBehavior: true,
     dismissUrlPathQueryUpdate: true,
     disableDownloadButton: false,
     hideDownloadButtonIcon: true,
+    preventExportDefaultBehavior: true,
     preventDownloadDefaultBehavior: true,
     locale: {
       strings: {

@@ -1,18 +1,18 @@
 {
   "name": "@filerobot-strapi/content-plugin",
-  "version": "1.0.19",
-  "description": "Strapi v4 plugin for Filerobot by Scaleflex",
+  "version": "1.0.20",
+  "description": "Scaleflex DAM plugin for Strapi v4",
   "strapi": {
-    "name": "filerobot-by-scaleflex",
-    "description": "Filerobot by Scaleflex normalizes, resizes, optimizes and distributes your images rocket fast around the world.",
+    "name": "scaleflex-dam",
+    "description": "Scaleflex DAM normalizes, resizes, optimizes and distributes your images rocket fast around the world.",
     "kind": "plugin",
-    "displayName": "Filerobot by Scaleflex"
+    "displayName": "Scaleflex DAM"
   },
   "dependencies": {
-    "@filerobot/core": "^3.8.8",
-    "@filerobot/explorer": "^3.8.8",
-    "@filerobot/xhr-upload": "^3.8.8",
-    "@filerobot/progress-panel": "^3.8.8",
+    "@filerobot/core": "^3.64.1",
+    "@filerobot/explorer": "^3.64.1",
+    "@filerobot/progress-panel": "^3.64.1",
+    "@filerobot/xhr-upload": "^3.64.1",
     "@strapi/helper-plugin": "^4.10.6",
     "sprintf-js": "^1.1.2",
     "@strapi/design-system": "^1.6.3",
