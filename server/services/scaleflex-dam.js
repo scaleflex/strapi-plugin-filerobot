@@ -7,13 +7,13 @@ const filerobotApiDomain = 'https://api.filerobot.com';
 
 module.exports = ({strapi}) => ({
   getWelcomeMessage() {
-    return 'Thank you for using Scaleflex Filerobot';
+    return 'Thank you for using Scaleflex DAM';
   },
   getPluginStore() {
     return strapi.store({
       environment: strapi.config.environment,
       type: 'plugin',
-      name: 'filerobot',
+      name: 'scaleflex-dam',
     });
   },
   async getConfig() {

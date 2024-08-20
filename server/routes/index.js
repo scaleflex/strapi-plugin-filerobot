@@ -2,7 +2,7 @@ module.exports = [
   {
     method: 'GET',
     path: '/',
-    handler: 'scaleflexFilerobot.index',
+    handler: 'scaleflexDAM.index',
     config: {
       policies: [],
       auth: false,
@@ -11,7 +11,7 @@ module.exports = [
   {
     method: 'GET',
     path: '/config',
-    handler: 'scaleflexFilerobot.getConfig',
+    handler: 'scaleflexDAM.getConfig',
     config: {
       policies: [],
       auth: false,
@@ -20,7 +20,7 @@ module.exports = [
   {
     method: 'PUT',
     path: '/update-config',
-    handler: 'scaleflexFilerobot.updateConfig',
+    handler: 'scaleflexDAM.updateConfig',
     config: {
       policies: [],
       auth: false,
@@ -29,7 +29,7 @@ module.exports = [
   {
     method: 'GET',
     path: '/db-files',
-    handler: 'scaleflexFilerobot.checkDbFiles',
+    handler: 'scaleflexDAM.checkDbFiles',
     config: {
       policies: [],
       auth: false,
@@ -38,7 +38,7 @@ module.exports = [
   {
     method: 'POST',
     path: '/record-file',
-    handler: 'scaleflexFilerobot.recordFile',
+    handler: 'scaleflexDAM.recordFile',
     config: {
       policies: [],
       auth: false,
@@ -47,7 +47,7 @@ module.exports = [
   {
     method: 'POST',
     path: '/sync-up',
-    handler: 'scaleflexFilerobot.syncUp',
+    handler: 'scaleflexDAM.syncUp',
     config: {
       policies: [],
       auth: false,
@@ -56,7 +56,7 @@ module.exports = [
   {
     method: 'GET',
     path: '/media',
-    handler: 'scaleflexFilerobot.getMedia',
+    handler: 'scaleflexDAM.getMedia',
     config: {
       policies: [],
       auth: false,
@@ -65,7 +65,7 @@ module.exports = [
   {
     method: 'GET',
     path: '/media-count',
-    handler: 'scaleflexFilerobot.getMediaCount',
+    handler: 'scaleflexDAM.getMediaCount',
     config: {
       policies: [],
       auth: false,

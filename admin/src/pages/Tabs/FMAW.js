@@ -48,8 +48,8 @@ const FMAW = (props) => {
     preventDownloadDefaultBehavior: true,
     locale: {
       strings: {
-        mutualizedExportButtonLabel: intl.formatMessage({id:'filerobot-by-scaleflex.label.button.fmaw.export'}),
-        mutualizedDownloadButton: intl.formatMessage({id:'filerobot-by-scaleflex.label.button.fmaw.export'}),
+        mutualizedExportButtonLabel: intl.formatMessage({id:'scaleflex-dam.label.button.fmaw.export'}),
+        mutualizedDownloadButton: intl.formatMessage({id:'scaleflex-dam.label.button.fmaw.export'}),
       }
     },
   })

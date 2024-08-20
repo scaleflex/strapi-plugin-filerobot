@@ -29,7 +29,7 @@ const HomePage = () => {
     <>
       <Stack spacing={4} padding={3}>
         <Box paddingLeft={8} paddingTop={5} paddingRight={8}>
-          <Typography variant={'alpha'}>Filerobot by Scaleflex</Typography>
+          <Typography variant={'alpha'}>Scaleflex DAM</Typography>
         </Box>
         <Box padding={8} >
           <TabGroup label="Filerobot Managemement" id="tabs">

@@ -4,7 +4,7 @@ import pluginId from './pluginId';
 import Initializer from './components/Initializer';
 import PluginIcon from './components/PluginIcon';
 
-const name = "filerobot-by-scaleflex";
+const name = "scaleflex-dam";
 
 export default {
   register(app) {
@@ -13,7 +13,7 @@ export default {
       icon: PluginIcon,
       intlLabel: {
         id: `${pluginId}.plugin.name`,
-        defaultMessage: 'Filerobot by Scaleflex',
+        defaultMessage: 'Scaleflex DAM',
       },
       Component: async () => {
         const component = await import(/* webpackChunkName: "[request]" */ './pages/App');

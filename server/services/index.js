@@ -1,7 +1,7 @@
 'use strict';
 
-const scaleflexFilerobot = require('./filerobot-by-scaleflex');
+const scaleflexDAM = require('./scaleflex-dam');
 
 module.exports = {
-  scaleflexFilerobot,
+  scaleflexDAM,
 };
