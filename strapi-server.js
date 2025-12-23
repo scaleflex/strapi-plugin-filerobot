@@ -1,3 +1,9 @@
-'use strict';
-
-module.exports = require('./server');
+module.exports = () => {
+  return {
+    register,
+    config,
+    controllers,
+    contentTypes,
+    routes,
+  };
+};

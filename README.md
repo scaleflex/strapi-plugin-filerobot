@@ -1,8 +1,8 @@
-# Scaleflex DAM plugin for Strapi v4
+# Scaleflex DAM plugin for Strapi v5
 
 ## Intro
 
-Strapi v4.x.x
+Strapi v5.x.x
 
 To know which versions of Node goes with which versions of Strapi, refer to here: https://github.com/strapi/strapi/releases
 
@@ -12,7 +12,7 @@ Strapi v4: https://docs.strapi.io/developer-docs/latest/getting-started/quick-st
 
 ## Install Strapi CMS
 
-You can run, for example: `npx create-strapi-app@4.3.0`
+You can run, for example: `npx create-strapi-app@5.33.0`
 
 ## Plugin
 
@@ -63,7 +63,7 @@ Afterwards, the logs will be updated:
 
 ## FMAW Tab
 
-When you **Upload**, the image will be uploaded to the **Scaleflex DAM**. Also, the same image (with Filerobot's URL) will go into the Strapi CMS:
+When you **Upload**, the image will be uploaded to the **Scaleflex DAM**. Also, the same image (with **Scaleflex DAM** URL) will go into the Strapi CMS:
 
 ![image](docs/5.png)
 
@@ -126,3 +126,4 @@ curl --location --request GET '{domain}/api/tests/1' \
 Note: If your content-type contains Media fields, then you have to append this query parameter for media info to show `?populate=%2A`
 
 https://docs.strapi.io/developer-docs/latest/developer-resources/database-apis-reference/rest/populating-fields.html#population
+
