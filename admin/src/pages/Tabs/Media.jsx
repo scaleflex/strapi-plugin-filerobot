@@ -16,16 +16,16 @@ const Media = () => {
 
   const handlePageChange = async (pageNumber) => {
     setCurrentPage(pageNumber);
-    let listMedia = await get(`/${PLUGIN_ID}/media?limit=${recordPerPage}&offset=${pageNumber-1}`).then(setMedia);
-    setMedia(listMedia);
+    let listMedia = await get(`/${PLUGIN_ID}/media?limit=${recordPerPage}&offset=${pageNumber-1}`);
+    setMedia(listMedia.data);
   };
 
   useEffect(() => {
     const countMedia = async () => {
       try {
         const itemCounts = await get(`/${PLUGIN_ID}/media-count`);
-        setTotalRecords(itemCounts);
-        setPageCount(Math.ceil(itemCounts/recordPerPage))
+        setTotalRecords(itemCounts.data);
+        setPageCount(Math.ceil(itemCounts.data/recordPerPage))
       } catch (err) {
         console.error(err);
       }
@@ -43,8 +43,9 @@ const Media = () => {
       }
     };
     fetchMedia();
-  }, [get]);
 
+  }, [get]);
+  console.log(media);
   return (
     <>
       {loadingPage && (

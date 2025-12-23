@@ -34,7 +34,7 @@ At this point, assuming that you already have a Strapi CMS installed and set up,
 
 Click "Scaleflex DAM" on the left vertical menu (under the plugins section)
 
-![image](docs/1.png)
+![image](https://raw.githubusercontent.com/scaleflex/strapi-plugin-filerobot/v5/docs/1.png)
 
 - **CNAME** should be without `https://`
 - **Folder** can have a preceding `/` , but it's not necessary. So both `/folder_name` and `folder_name` are ok
@@ -45,7 +45,7 @@ Now you can make use of the "Synchronization Status" and "Trigger Synchronizatio
 
 ### Media Tab
 
-![image](docs/2.png)
+![image](https://raw.githubusercontent.com/scaleflex/strapi-plugin-filerobot/v5/docs/2.png)
 
 The **Media Tab** keeps a "log" of all your media assets.
 
@@ -55,19 +55,19 @@ And there are indeed 4 remote images on the **Scaleflex DAM** that are yet to be
 
 ### Trigger Synchronization
 
-![image](docs/3.png)
+![image](https://raw.githubusercontent.com/scaleflex/strapi-plugin-filerobot/v5/docs/3.png)
 
 Afterwards, the logs will be updated:
 
-![image](docs/4.png)
+![image](https://raw.githubusercontent.com/scaleflex/strapi-plugin-filerobot/v5/docs/4.png)
 
-## FMAW Tab
+## Asset Manager Tab
 
 When you **Upload**, the image will be uploaded to the **Scaleflex DAM**. Also, the same image (with **Scaleflex DAM** URL) will go into the Strapi CMS:
 
-![image](docs/5.png)
+![image](https://raw.githubusercontent.com/scaleflex/strapi-plugin-filerobot/v5/docs/5.png)
 
 If you know that `city.jpg` only exists on the **Scaleflex DAM** (ie: haven't yet been synchronized down to the Strapi CMS), then you can check it and press "**Add to Strapi**":
 
-![image](docs/6.png)
+![image](https://raw.githubusercontent.com/scaleflex/strapi-plugin-filerobot/v5/docs/6.png)
 

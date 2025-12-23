@@ -186,8 +186,7 @@ const service = ({strapi}) => ({
   },
   async getMediaCount(ctx) {
     const media = await strapi.entityService.count('plugin::upload.file');
-
-    return media.length;
+    return media;
   },
 
   async getNewSassKey(config) {
