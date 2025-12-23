@@ -1,6 +1,10 @@
 {
-  "version": "1.0.0",
-  "keywords": [],
+  "version": "2.0.0",
+  "keywords": [
+    "scaleflex",
+    "filerobot",
+    "strapi"
+  ],
   "type": "commonjs",
   "exports": {
     "./package.json": "./package.json",
@@ -63,8 +67,11 @@
     "displayName": "Scaleflex DAM",
     "description": "Scaleflex DAM normalizes, resizes, optimizes and distributes your images rocket fast around the world."
   },
-  "name": "strapi-plugin-scaleflex-dam",
+  "name": "@filerobot-strapi/content-plugin",
   "description": "Scaleflex DAM normalizes, resizes, optimizes and distributes your images rocket fast around the world.",
   "license": "MIT",
-  "author": "Scaleflex <plugins@scaleflex.com>"
+  "author": "Scaleflex <register@scaleflex.com> (https://www.scaleflex.com)",
+  "maintainers": [
+    "Scaleflex <plugins@scaleflex.com>"
+  ]
 }
