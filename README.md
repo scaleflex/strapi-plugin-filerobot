@@ -8,7 +8,7 @@ To know which versions of Node goes with which versions of Strapi, refer to here
 
 If you are not familiar with using the Strapi CMS, here are some quick tutorials:
 
-Strapi v4: https://docs.strapi.io/developer-docs/latest/getting-started/quick-start.html
+Strapi v5: https://docs.strapi.io/cms/quick-start
 
 ## Install Strapi CMS
 
@@ -18,7 +18,7 @@ You can run, for example: `npx create-strapi-app@5.33.0`
 
 https://www.npmjs.com/package/@filerobot-strapi/content-plugin
 
-At this point, assuming that you already have a Strapi CMS installed and set up, and that you already have a super-admin user configured. It's time to install the Scaleflex DAM plugin for Strapi v4:
+At this point, assuming that you already have a Strapi CMS installed and set up, and that you already have a super-admin user configured. It's time to install the Scaleflex DAM plugin for Strapi v5:
 
 `npm install @filerobot-strapi/content-plugin`
 
@@ -70,60 +70,4 @@ When you **Upload**, the image will be uploaded to the **Scaleflex DAM**. Also, 
 If you know that `city.jpg` only exists on the **Scaleflex DAM** (ie: haven't yet been synchronized down to the Strapi CMS), then you can check it and press "**Add to Strapi**":
 
 ![image](docs/6.png)
-
-## REST API
-
-**Give the appropriate permissions to the authenticated user**
-
-![](https://store.filerobot.com/opendocs-global/project_test/113df0317493b932791a716f3e0962d92a26211e42110fdb248d6046507c92e1.png)
-
-**Get the auth token**
-
-https://www.youtube.com/watch?v=TIK9CYDgs5k&list=PL2dKqfImstaROBMu304aaEfIVTGodkdHh&index=3 (even though this tutorial is for Strapi v3, it's still applicable to Strapi v4)
-
-```
-curl --location --request POST '{domain}/api/auth/local' 
---form 'identifier="{an authenticated user's email}"' \
---form 'password="{an authenticated user's password'}"'
-```
-
-**Retrieve Media**
-
-https://docs.strapi.io/developer-docs/latest/plugins/upload.html#endpoints
-
-GET all media
-
-```
-curl --location --request GET '{domain}/api/upload/files' \
---header 'Authorization: Bearer {token}'
-```
-
-GET one media
-
-```
-curl --location --request GET '{domain}/api/upload/files/3' \
---header 'Authorization: Bearer {token}'
-```
-
-**Retrieve custom content-types**
-
-https://docs.strapi.io/developer-docs/latest/developer-resources/database-apis-reference/rest-api.html
-
-GET collection-type contents
-
-```
-curl --location --request GET '{domain}/api/tests' \
---header 'Authorization: Bearer {token}'
-```
-
-GET one collection-type content
-
-```
-curl --location --request GET '{domain}/api/tests/1' \
---header 'Authorization: Bearer {token}'
-```
-
-Note: If your content-type contains Media fields, then you have to append this query parameter for media info to show `?populate=%2A`
-
-https://docs.strapi.io/developer-docs/latest/developer-resources/database-apis-reference/rest/populating-fields.html#population
 
