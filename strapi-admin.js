@@ -1,3 +1,5 @@
-'use strict';
-
-module.exports = require('./admin/src').default;
+export default {
+  register(app) {},
+  bootstrap() {},
+  registerTrads({ locales }) {},
+};
