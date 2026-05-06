@@ -1,5 +1,9 @@
 const register = ({ strapi }) => {
-  // register phase
+  strapi.customFields.register({
+    name: 'scaleflex-asset',
+    plugin: 'scaleflex-dam',
+    type: 'string',
+  });
 };
 
 export default register;

@@ -1,4 +1,4 @@
-# Scaleflex DAM plugin for Strapi v5
+# Scaleflex DAM plugin for Strapi
 
 ## Intro
 
