@@ -31,35 +31,29 @@
     "verify": "strapi-plugin verify"
   },
   "dependencies": {
-    "@filerobot/core": "^3.114.5",
-    "@filerobot/dropbox": "^3.114.5",
-    "@filerobot/explorer": "^3.114.5",
-    "@filerobot/google-drive": "^3.114.5",
-    "@filerobot/onedrive": "^3.114.5",
-    "@filerobot/progress-panel": "^3.114.5",
-    "@filerobot/url": "^3.114.5",
-    "@filerobot/xhr-upload": "^3.114.5",
-    "@strapi/design-system": "^2.0.0-rc.30",
-    "@strapi/icons": "^2.0.0-rc.30",
+    "@scaleflex/asset-picker": "latest",
+    "@scaleflex/uploader": "latest",
+    "@strapi/design-system": "^2.2.0",
+    "@strapi/icons": "^2.2.0",
     "react-intl": "^7.1.14",
     "react-konva": "^18.2.10"
   },
   "devDependencies": {
-    "@strapi/sdk-plugin": "^5.3.2",
-    "@strapi/strapi": "^5.33.0",
+    "@strapi/sdk-plugin": "^6.1.0",
+    "@strapi/strapi": "^5.44.0",
     "prettier": "^3.7.4",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-router-dom": "^6.30.2",
-    "styled-components": "^6.1.19"
+    "styled-components": "^6.4.1"
   },
   "peerDependencies": {
-    "@strapi/sdk-plugin": "^5.3.2",
-    "@strapi/strapi": "^5.33.0",
+    "@strapi/sdk-plugin": "^6.1.0",
+    "@strapi/strapi": "^5.44.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-router-dom": "^6.30.2",
-    "styled-components": "^6.1.19"
+    "styled-components": "^6.4.1"
   },
   "strapi": {
     "kind": "plugin",

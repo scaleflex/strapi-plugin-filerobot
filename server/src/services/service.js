@@ -68,15 +68,40 @@ const service = ({strapi}) => ({
     const action = ctx.request.body.action;
     const config = ctx.request.body.config;
 
-    let url = (action === 'export') ? file.link : file.url.cdn;
-    const name = (action === 'export') ? file.file.name : file.name;
-    const alt = (action === 'export') ? file.file.uuid : file.uuid;
-    const ext = (action === 'export') ? file.file.extension : file.extension;
-    const mime = (action === 'export') ? file.file.type : file.type;
-    const size = parseFloat((action === 'export') ? file.file.size.pretty : file.size.pretty);
-    const hash = (action === 'export') ? file.file.hash.sha1 : file.hash.sha1;
-    const width = (action === 'export') ? file.file.info.img_w : file.info.img_w;
-    const height = (action === 'export') ? file.file.info.img_h : file.info.img_h;
+    let url, name, alt, ext, mime, size, hash, width, height;
+
+    if (action === 'export') {
+      url = file.link;
+      name = file.file.name;
+      alt = file.file.uuid;
+      ext = file.file.extension;
+      mime = file.file.type;
+      size = parseFloat(file.file.size.pretty);
+      hash = file.file.hash.sha1;
+      width = file.file.info.img_w;
+      height = file.file.info.img_h;
+    } else if (action === 'complete') {
+      url = file.url.cdn;
+      name = file.name;
+      alt = file.uuid;
+      ext = file.extension;
+      mime = file.type;
+      size = parseFloat(file.size.pretty);
+      hash = file.hash.sha1;
+      width = file.info.img_w;
+      height = file.info.img_h;
+    } else {
+      // 'picker' — @scaleflex/asset-picker ap-select format: cdn at top level, metadata in attributes
+      url = file.cdn || file.url?.cdn || file.url?.public || '';
+      name = file.name;
+      alt = file.uuid;
+      ext = file.extension;
+      mime = file.type;
+      size = parseFloat(file.size?.pretty || '0');
+      hash = file.uuid; // no sha1 in this format; uuid is a stable unique identifier
+      width = file.attributes?.info?.img_w ?? null;
+      height = file.attributes?.info?.img_h ?? null;
+    }
 
     url = this.removeQueryParam(url, 'vh');
     url = this.adjustForCname(url, config);
