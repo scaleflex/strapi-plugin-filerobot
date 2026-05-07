@@ -136,38 +136,7 @@ export default {
                   id: `${PLUGIN_ID}.custom-fields.asset.options.limit.description`,
                   defaultMessage: 'Maximum number of assets to select (e.g. 1 for thumbnail, 10 for gallery). Leave empty for no limit.',
                 },
-              },
-              {
-                name: 'options.multiSelect',
-                type: 'select',
-                defaultValue: true,
-                intlLabel: {
-                  id: `${PLUGIN_ID}.custom-fields.asset.options.multiSelect.label`,
-                  defaultMessage: 'Allow multiple selection',
-                },
-                description: {
-                  id: `${PLUGIN_ID}.custom-fields.asset.options.multiSelect.description`,
-                  defaultMessage: 'Let users select more than one asset at a time',
-                },
-                options: [
-                  {
-                    key: 'allow', value: true, metadatas: {
-                      intlLabel: {
-                        id: `${PLUGIN_ID}.custom-fields.asset.options.multiSelect.allow`,
-                        defaultMessage: "Allow",
-                      },
-                    }
-                  },
-                  {
-                    key: 'disallow', value: false, metadatas: {
-                      intlLabel: {
-                        id: `${PLUGIN_ID}.custom-fields.asset.options.multiSelect.disallow`,
-                        defaultMessage: "Disallow",
-                      },
-                    }
-                  }
-                ],
-              },
+              }
             ],
           },
         ],
